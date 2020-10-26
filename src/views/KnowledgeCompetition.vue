@@ -34,11 +34,11 @@
           <!-- // 正确答案的判断:ABCD四个选项中,选中的是A,正确答案是A,item A selectOption A rightValue A -->
           <!-- // this.selectOptions === this.rightValue选中的就是正确的答案，那么当前选中的添加right属性，其他的不用处理 -->
           <!-- // this.selectOption !== this.rightValue 给正确的选项添加right属性，给已经选中的添加错误类属性 -->
-          <div 
+          <div
             class="question-container-area-subject-option"
             :class="{ 'right': selectOption === rightAnswer && value === rightAnswer || (selectOption !== value && rightAnswer === value), 'disabled': disabled, 'error': rightAnswer && selectOption !== rightAnswer && value === selectOption, 'selecting': selectOption === value && !disabled }"
-            @click="getOption(value)" 
-            v-for="(item, value) in activeSubject.question" 
+            @click="getOption(value)"
+            v-for="(item, value) in activeSubject.question"
             :key="value">
             <div class="content" :class="{ 'right': selectOption === rightAnswer && value === rightAnswer || (selectOption !== value && rightAnswer === value), 'disabled': disabled, 'error': rightAnswer && selectOption !== rightAnswer && value === selectOption }">
               <span>{{ value }}.</span>
@@ -51,7 +51,10 @@
           </div>
         </div>
       </div>
-      <div class="question-container-button" @click="submit">{{ buttonText }}</div>
+      <!-- 确定按钮用来判断答案 -->
+      <div class="question-container-button" v-if="!isNext" :class="{ 'disabled': !selectOption }" @click="submit">确定</div>
+      <!-- 下一题按钮用来跳转到下一个题目 -->
+      <div class="question-container-button" v-if="isNext" @click="next">下一题</div>
     </div>
   </div>
 </template>
@@ -73,7 +76,7 @@ export default {
       rightAnswer: '',
       buttonText: '确定',
       // 用来标记当前点击的是下一题还是确定按钮，偶数-确定，奇数-下一题
-      tag: 0,
+      isNext: false,
       mockSubject: [
         {
           title: '关于定向资产管理业务的内部控制，下列说法中正确的是：',
@@ -113,7 +116,7 @@ export default {
             C: '有价证券可以在证券市场上买卖和流通，客观上具有了交易价格',
             D: '有价证券价格总额并不等于所代表的真实资本的账面价格'
           },
-          answer: 'A'
+          answer: 'B'
         },
         {
           title: '关于有价证券的定义和特点，下列描述错误的是?',
@@ -123,7 +126,7 @@ export default {
             C: '有价证券可以在证券市场上买卖和流通，客观上具有了交易价格',
             D: '有价证券价格总额并不等于所代表的真实资本的账面价格'
           },
-          answer: 'A'
+          answer: 'D'
         },
         {
           title: '关于有价证券的定义和特点，下列描述错误的是?',
@@ -133,7 +136,7 @@ export default {
             C: '有价证券可以在证券市场上买卖和流通，客观上具有了交易价格',
             D: '有价证券价格总额并不等于所代表的真实资本的账面价格'
           },
-          answer: 'A'
+          answer: 'C'
         }
       ]
     }
@@ -168,16 +171,19 @@ export default {
     },
     // 提交判断答案
     submit () {
-      // 这里加入用户不选择的操作Toast提示就可以了，不选择不能进入下一步
-      // 第一题的操作
-      if (this.activeSubjectIndex === 1) {
-        console.log(1)
-        this.disabled = true
-        // 判断答案，设置跳转到下一题
-        this.rightAnswer = this.activeSubject.answer
-        this.buttonText = '下一题' 
+      this.isNext = true
+      this.disabled = true
+      this.rightAnswer = this.activeSubject.answer
+      if (this.activeSubjectIndex === this.mockSubject.length) {
+        this.isNext = false
       }
-      // this.activeSubjectIndex++
+    },
+    next () {
+      this.activeSubjectIndex++
+      this.isNext = false
+      this.rightAnswer = ''
+      this.selectOption = ''
+      this.disabled = false
     },
     back () {
       this.$dialog.confirm({
@@ -205,7 +211,7 @@ body /deep/ .van-dialog__message {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  
+
   .iconfont {
     font-size: 21px;
     font-weight: 500;
@@ -242,7 +248,7 @@ body /deep/ .van-dialog__message {
     border-radius: 8px;
     background-color: #fff;
     position: relative;
-    
+
     &-progress {
       position: absolute;
       padding: 4px;
@@ -258,10 +264,10 @@ body /deep/ .van-dialog__message {
       justify-content: center;
       align-items: center;
     }
-    
+
     &-subject {
       padding: 45px 20px 31px 20px;
-      
+
       &-title {
         margin-bottom: 15px;
         font-family: PingFangSC-Regular;
@@ -282,7 +288,7 @@ body /deep/ .van-dialog__message {
         line-height: 22px;
         justify-content: space-between;
         margin-bottom: 14px;
-        
+
         .content {
           display: flex;
           font-size: 14px;
@@ -292,23 +298,23 @@ body /deep/ .van-dialog__message {
             width: 14px;
             margin-right: 2px;
           }
-          
+
           span:last-of-type {
             flex: 1;
           }
         }
-        
+
         .content.error {
           color: #e92322;
         }
         .content.right {
           color: #409fea;
         }
-        
+
         .iconfont-container {
           width: 21px;
           height: 21px;
-          
+
           .icon-close-circle-fill,
           .icon-check-circle-fill {
             width: 21px;
@@ -330,19 +336,19 @@ body /deep/ .van-dialog__message {
         .icon-check-circle-fill {
           display: block;
         }
-        
+
       }
       &-option.selecting {
         background: rgba(25,133,242,0.08);
         border-radius: 2px;
       }
-      
+
       &-option.disabled {
         pointer-events: none;
       }
     }
   }
-  
+
   &-button {
     background-image: linear-gradient(90deg, #FF4050 8%, #FF9EA6 100%);
     // background-image: linear-gradient(90deg, #FFAFBD 8%, #ffc3a0 100%);
@@ -355,6 +361,11 @@ body /deep/ .van-dialog__message {
     text-align: center;
     font-size: 18px;
     color: #fff;
+  }
+
+  &-button.disabled {
+    background-image: linear-gradient(90deg, #bbb 8%, #eee 100%);
+    pointer-events: none;
   }
 }
 .question-container /deep/ .van-circle__text {

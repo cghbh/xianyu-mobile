@@ -9,7 +9,7 @@
       </template>
     </van-nav-bar>
     <div class="dynamic-publish-container">
-      <div class="content-editable" placeholder="发表原创文字,沉淀灵感,刘准思考" contenteditable="true" @input="divInput" :value="value" ></div>
+      <div class="content-editable" placeholder="发表原创文字,沉淀灵感,留住思考" contenteditable="true" @input="divInput" :value="value" ></div>
       <div class="uploader-container">
         <van-uploader
           v-model="fileList"
