@@ -23,6 +23,7 @@ import GoldSentence from '../views/GoldSentence.vue'
 import GoodArticle from '../views/GoodArticle.vue'
 import AncientPoetry from '../views/AncientPoetry.vue'
 import DynamicPublish from '../views/DynamicPublish.vue'
+import DynamicDetail from '../views/DynamicDetail.vue'
 // 解决路由重复的问题
 // 获取原型对象上的push函数
 const originalPush = VueRouter.prototype.push
@@ -146,6 +147,11 @@ const routes = [
     path: '/dynamic-publish',
     component: DynamicPublish,
     name: 'DynamicPublish'
+  },
+  {
+    path: '/dynamic-detail/:id',
+    component: DynamicDetail,
+    name: 'DynamicDetail'
   }
 ]
 
