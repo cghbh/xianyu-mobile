@@ -1,12 +1,14 @@
 <template>
   <div class="add-channel">
-    <van-nav-bar title="频道管理" left-arrow @click-left="$router.go(-1)">
-      <template #left>
-        <div class="back-container">
-          <i class="iconfont icon-left"></i>
-        </div>
-      </template>
-    </van-nav-bar>
+    <van-sticky>
+      <van-nav-bar title="频道管理" left-arrow @click-left="$router.go(-1)">
+        <template #left>
+          <div class="back-container">
+            <i class="iconfont icon-left"></i>
+          </div>
+        </template>
+      </van-nav-bar>
+    </van-sticky>
     <div class="add-channel-container">
       <channel-item @click.native="select(item)" :BgColor="item.color" v-for="item in mockOptions" :key="item.title">
         <h1 slot="header">{{ item.title }}</h1>

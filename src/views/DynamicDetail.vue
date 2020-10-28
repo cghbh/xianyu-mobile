@@ -1,12 +1,15 @@
 <template>
   <div class="dynamic-detail">
-    <van-nav-bar title="动态" left-text="返回" left-arrow @click-left="$router.go(-1)">
-      <template #left>
-        <div class="back-container">
-          <i class="iconfont icon-left"></i>
-        </div>
-      </template>
-    </van-nav-bar>
+    <van-sticky>
+      <van-nav-bar title="动态" left-text="返回" left-arrow @click-left="$router.go(-1)">
+        <template #left>
+          <div class="back-container">
+            <i class="iconfont icon-left"></i>
+          </div>
+        </template>
+      </van-nav-bar>
+    </van-sticky>
+    
     <div class="dynamic-detail-user">
       <div class="dynamic-detail-user-container">
         <img src="../assets/images/logo.png">
@@ -33,6 +36,7 @@
         :key="item">
       </van-image>
     </div>
+    <comment-list></comment-list>
     <bottom-comment></bottom-comment>
   </div>
 </template>
@@ -40,6 +44,7 @@
 <script>
 import { ImagePreview } from 'vant'
 import BottomComment from '../components/BottomComment/index.vue'
+import CommentList from '../components/BottomComment/comment.vue'
 export default {
   name: 'DynamicDetail',
   data () {
@@ -56,7 +61,9 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$route.params.id, '$route')
+    window.addEventListener('scroll', () => {
+      console.log(2)
+    })
   },
   methods: {
     focus () {
@@ -64,7 +71,6 @@ export default {
       this.$toast('已添加关注')
     },
     showPreview (index) {
-      console.log(index)
       ImagePreview({
         images: this.imageArray,
         startPosition: index,
@@ -73,7 +79,8 @@ export default {
     }
   },
   components: {
-    BottomComment
+    BottomComment,
+    CommentList
   }
 }
 </script>
@@ -83,8 +90,7 @@ export default {
   background-color: #fff;
   height: 100%;
   box-sizing: border-box;
-  overflow: auto;
-  // margin-bottom: 50px;
+  overflow-y: auto;
   padding-bottom: 50px;
 
   /deep/ .van-image {

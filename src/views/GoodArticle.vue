@@ -1,12 +1,14 @@
 <template>
   <div class="good-article">
-    <van-nav-bar sticky title="好文" left-text="返回" left-arrow @click-left="$router.go(-1)">
-      <template #left>
-        <div class="back-container">
-          <i class="iconfont icon-left"></i>
-        </div>
-      </template>
-    </van-nav-bar>
+    <van-sticky>
+      <van-nav-bar sticky title="好文" left-text="返回" left-arrow @click-left="$router.go(-1)">
+        <template #left>
+          <div class="back-container">
+            <i class="iconfont icon-left"></i>
+          </div>
+        </template>
+      </van-nav-bar>
+    </van-sticky>
     <div class="good-article-content">
       <h1>{{ mock.title }}</h1>
       <h3>{{ mock.author }}</h3>

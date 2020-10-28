@@ -16,7 +16,7 @@
       </div>
     </div>
     <div id="edit" class="edit-container" v-if="showInput" ref="edit">
-      <div class="content-editable" v-focus placeholder="发表原创文字,沉淀灵感,留住思考" contenteditable="true" @input="divInput" :value="value" ></div>
+      <div class="content-editable" v-focus placeholder="发表原创文字,沉淀灵感,留住思考" contenteditable="true" @input="divInput" :value="inputValue" ></div>
       <div class="submit">发送</div>
     </div>
   </div>
@@ -27,7 +27,7 @@ export default {
   name: 'BottomComment',
   data () {
     return {
-      value: '',
+      inputValue: '',
       showInput: false,
       // 是否点赞
       isZan: false,
@@ -44,6 +44,7 @@ export default {
     }
   },
   mounted () {
+    // 事件监听明天要求实现卸载和函数封装的功能
     if (isAndroid()) {
       const innerHeight = window.innerHeight
       window.addEventListener('resize', () => {
@@ -57,14 +58,11 @@ export default {
       })
     } else if (isIOS()) {
       window.addEventListener('focusin', () => {
+        this.keyboardUp()
         // 键盘弹出事件处理
-        // alert('iphone 键盘弹出事件处理')
-        // this.$toast('弹起')
       })
       window.addEventListener('focusout', () => {
         // 键盘收起事件处理
-        // alert('iphone 键盘收起事件处理')
-        // this.$toast('下来')
         this.showInput = false
       })
     }

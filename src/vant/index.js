@@ -27,7 +27,9 @@ import {
   GridItem,
   Image,
   ImagePreview,
-  Switch
+  Switch,
+  Sticky,
+  Popup
 } from 'vant'
 
 // 注册为全局组件
@@ -57,3 +59,5 @@ Vue.use(NavBar)
   .use(Image)
   .use(ImagePreview)
   .use(Switch)
+  .use(Sticky)
+  .use(Popup)
