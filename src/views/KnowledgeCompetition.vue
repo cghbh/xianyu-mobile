@@ -145,7 +145,6 @@ export default {
         this.isCompleted = true
       } else {
         this.isNext = true
-        console.log(1)
       }
     },
     next () {

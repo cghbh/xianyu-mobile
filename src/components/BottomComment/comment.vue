@@ -222,7 +222,7 @@ export default {
   &-header {
     display: flex;
     justify-content: space-between;
-    padding: 20px 20px 0 20px;
+    padding: 20px;
     background-color: #fff;
 
     &-title {
@@ -253,6 +253,7 @@ export default {
     justify-content: space-between;
     align-items: flex-start;
     padding-bottom: 56px;
+    background-color: #fff;
     .comment-item {
       width: 100%;
       display: flex;
