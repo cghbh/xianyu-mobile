@@ -24,6 +24,8 @@ import GoodArticle from '../views/GoodArticle.vue'
 import AncientPoetry from '../views/AncientPoetry.vue'
 import DynamicPublish from '../views/DynamicPublish.vue'
 import DynamicDetail from '../views/DynamicDetail.vue'
+import Dictionary from '../views/Dictionary.vue'
+import MomentJoke from '../views/MomentJoke.vue'
 // 解决路由重复的问题
 // 获取原型对象上的push函数
 const originalPush = VueRouter.prototype.push
@@ -152,6 +154,16 @@ const routes = [
     path: '/dynamic-detail/:id',
     component: DynamicDetail,
     name: 'DynamicDetail'
+  },
+  {
+    path: '/dictionary',
+    component: Dictionary,
+    name: 'Dictionary'
+  },
+  {
+    path: '/joke',
+    component: MomentJoke,
+    name: 'joke'
   }
 ]
 

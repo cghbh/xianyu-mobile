@@ -26,7 +26,7 @@
             </div>
           </div>
           <div class="first-user-comment">{{ item1.content }}</div>
-          <div class="user-repeat" @click="showPopup = true">
+          <div class="user-repeat" @click="showPopupHandle(index1)">
             <div class="user-repeat-item" v-for="(item2, index2) in item1.sub.slice(0, 3)" :key="index2">
               <h1>{{ item2.user }}：</h1>
               <span>{{ item2.content }}</span>
@@ -42,21 +42,18 @@
         <van-sticky>
           <div class="comment-number">
             <i class="iconfont icon-guanbi" @click="closePopup"></i>
-            <span>暂无回复</span>
+            <span>{{ activeComment.sub.length > 0 ? `${activeComment.sub.length}条回复` : '暂无回复'}}</span>
           </div>
         </van-sticky>
-        <comment-subitem :borderbottom="false"></comment-subitem>
+        <comment-subitem :borderbottom="true" :comment="activeComment"></comment-subitem>
         <divide-area></divide-area>
-        <comment-subitem></comment-subitem>
-        <comment-subitem></comment-subitem>
-        <comment-subitem></comment-subitem>
-        <comment-subitem></comment-subitem>
-        <comment-subitem></comment-subitem>
-        <comment-subitem></comment-subitem>
-        <comment-subitem></comment-subitem>
-        <comment-subitem></comment-subitem>
-        <comment-subitem :borderbottom="false"></comment-subitem>
-        <bottom-comment></bottom-comment>
+        <comment-subitem
+          v-for="(item2, index2) in activeComment.sub"
+          :key="index2"
+          :comment="item2"
+          :marginbottom="index2 === activeComment.sub.length - 1 ? 44 : 0">
+        </comment-subitem>
+        <bottom-comment :needicon="false"></bottom-comment>
       </div>
     </van-popup>
   </div>
@@ -72,6 +69,7 @@ export default {
     return {
       isHot: true,
       showPopup: false,
+      activeIndex: null,
       mock: [
         {
           user: '程序员人猿泰山',
@@ -99,7 +97,7 @@ export default {
             },
             {
               user: '小杰瑞',
-              content: '离下班还有不到两个小时的时间，但是代码还有很多的东西没有完成，捉急哟。。。。。。',
+              content: '离下班还有不到两个小时的时间，但是代码还有很多的东西没有完成，捉急哟......',
               created: '2020-10-128 16:15:10',
               zan: 2
             }
@@ -118,13 +116,96 @@ export default {
               zan: 7
             }
           ]
+        },
+        {
+          user: '张大胆',
+          content: '你的最大的有点和缺点是什么，能够说一说吗？',
+          created: '2020-09-09',
+          zan: 100,
+          sub: [
+            {
+              user: '慕容复',
+              content: '一定还有更好的答案可以解决问题',
+              created: '2020-09-10',
+              zan: 7
+            },
+            {
+              user: '娃哈哈',
+              content: '一定还有更好的答案可以解决问题',
+              created: '2020-09-10',
+              zan: 9
+            },
+            {
+              user: '娃哈哈',
+              content: '一定还有更好的答案可以解决问题',
+              created: '2020-09-10',
+              zan: 9
+            },
+            {
+              user: '娃哈哈',
+              content: '一定还有更好的答案可以解决问题',
+              created: '2020-09-10',
+              zan: 9
+            },
+            {
+              user: '娃哈哈',
+              content: '一定还有更好的答案可以解决问题',
+              created: '2020-09-10',
+              zan: 9
+            },
+            {
+              user: '海瑞海刚峰',
+              content: '一定还有更好的答案可以解决问题',
+              created: '2020-09-11 11:29:10',
+              zan: 2
+            },
+            {
+              user: '小杰瑞',
+              content: '离下班还有不到两个小时的时间，但是代码还有很多的东西没有完成，捉急哟......',
+              created: '2020-10-128 16:15:10',
+              zan: 2
+            },
+            {
+              user: '小杰瑞',
+              content: '离下班还有不到两个小时的时间，但是代码还有很多的东西没有完成，捉急哟......',
+              created: '2020-10-128 16:15:10',
+              zan: 2
+            },
+            {
+              user: '小杰瑞',
+              content: '离下班还有不到两个小时的时间，但是代码还有很多的东西没有完成，捉急哟......',
+              created: '2020-10-128 16:15:10',
+              zan: 2
+            },
+            {
+              user: '小杰瑞',
+              content: '离下班还有不到两个小时的时间，但是代码还有很多的东西没有完成，捉急哟......',
+              created: '2020-10-128 16:15:10',
+              zan: 2
+            },
+            {
+              user: '小杰瑞',
+              content: '离下班还有不到两个小时的时间，但是代码还有很多的东西没有完成，捉急哟......',
+              created: '2020-10-128 16:15:10',
+              zan: 2
+            }
+          ]
         }
       ]
+    }
+  },
+  computed: {
+    activeComment () {
+      return this.mock[this.activeIndex ? this.activeIndex : 0]
     }
   },
   methods: {
     closePopup () {
       this.showPopup = false
+    },
+    showPopupHandle (value) {
+      this.showPopup = true
+      this.activeIndex = value
     }
   },
   components: {
@@ -141,7 +222,7 @@ export default {
   &-header {
     display: flex;
     justify-content: space-between;
-    padding: 10px 20px;
+    padding: 20px 20px 0 20px;
     background-color: #fff;
 
     &-title {
@@ -234,6 +315,7 @@ export default {
           margin-top: 8px;
           padding: 4px 12px;
           background-color: #F8F8FA;
+          border-radius: 4px;
 
           &-item {
             margin-bottom: 8px;
@@ -265,9 +347,6 @@ export default {
 }
 
 .comment-extra {
-  // margin-top: 50px;
-  height: 100%;
-  overflow: scroll;
   background-color: rgba(38, 38, 38, .05);
 }
 

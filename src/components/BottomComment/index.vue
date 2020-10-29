@@ -1,8 +1,8 @@
 <template>
   <div class="bottom-comment" id="bottom-content">
     <div class="operate-container" v-if="!showInput">
-      <input @click="showInputHandle" readonly placeholder="文明评论哟" type="text">
-      <div class="icon-container">
+      <input @click="showInputHandle" readonly placeholder="记得要文明评论哟" type="text" :class="{ 'needicon': needicon }">
+      <div class="icon-container" v-if="needicon">
         <div class="zan">
           <i class="iconfont icon-dianzan1" v-if="!isZan" @click="isZan = true"></i>
           <i class="iconfont icon-dianzan" :class="{ 'isZan': isZan }" v-else @click="isZan = false"></i>
@@ -25,6 +25,12 @@
 <script>
 export default {
   name: 'BottomComment',
+  props: {
+    needicon: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
       inputValue: '',
@@ -94,7 +100,7 @@ function isIOS () {
   bottom: 0;
   width: 100%;
   min-height: 50px;
-  background-color: #f4f4f4;
+  background-color: #f7f7f7;
 
   .operate-container {
     display: flex;
@@ -108,11 +114,14 @@ function isIOS () {
     input {
       height: 30px;
       flex: 1;
-      margin-right: 10px;
       border-radius: 4px;
       outline: none;
       border: none;
       padding-left: 10px;
+    }
+
+    input.needicon {
+      margin-right: 10px;
     }
 
     input::placeholder {

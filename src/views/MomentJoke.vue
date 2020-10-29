@@ -1,7 +1,7 @@
 <template>
-  <div class="xianyu-dictionary">
+  <div class="moment-joke">
     <van-sticky>
-      <van-nav-bar title="成语词典" sticky left-text="返回" left-arrow @click-left="$router.go(-1)">
+      <van-nav-bar title="开心一刻" sticky left-text="返回" left-arrow @click-left="$router.go(-1)">
         <template #left>
           <div class="back-container">
             <i class="iconfont icon-left"></i>
@@ -14,10 +14,7 @@
 </template>
 
 <script>
-export default {
-  name: 'Dictionary'
-}
 </script>
 
-<style scoped lang="scss">
+<style>
 </style>

@@ -26,24 +26,28 @@
       </van-swipe>
     </div>
     <div class="xianyu-discover-container">
+      <channel-item BgColor="#F3F3F3" @click.native="$router.push('/gold-sentence')">
+        <h1 class="item-header" slot="header">金句</h1>
+        <p slot="content">一语惊醒梦中人</p>
+      </channel-item>
       <channel-item BgColor="#F3F3F3" @click.native="$router.push('/good-article')">
-        <h1 slot="header">好文</h1>
+        <h1 class="item-header" slot="header">好文</h1>
         <p slot="content">一语惊醒梦中人</p>
       </channel-item>
       <channel-item BgColor="#FAF4F4" @click.native="$router.push('/ancient-poetry')">
-        <h1 slot="header">诗词</h1>
+        <h1 class="item-header" slot="header">诗词</h1>
         <p slot="content">小诗有味似连珠</p>
       </channel-item>
-      <channel-item BgColor="#F9F4F0">
-        <h1 slot="header">成语词典</h1>
+      <channel-item BgColor="#F9F4F0" @click.native="$router.push('/dictionary')">
+        <h1 class="item-header" slot="header">成语词典</h1>
         <p slot="content">一语惊醒梦中人</p>
       </channel-item>
       <channel-item BgColor="#F9F4F0" @click.native="$router.push('/knowledge-competition')">
-        <h1 slot="header">趣味答题</h1>
+        <h1 class="item-header" slot="header">趣味答题</h1>
         <p slot="content">一语惊醒梦中人</p>
       </channel-item>
-      <channel-item BgColor="#F3F3F3" @click.native="$router.push('/gold-sentence')">
-        <h1 slot="header">开心一刻</h1>
+      <channel-item BgColor="#F3F3F3" @click.native="$router.push('/joke')">
+        <h1 class="item-header" slot="header">开心一刻</h1>
         <p slot="content">一语惊醒梦中人</p>
       </channel-item>
       <div class="xianyu-discover-add-channel" @click="$router.push('/addchannel')">
@@ -60,7 +64,15 @@ export default {
   name: 'Discover',
   data () {
     return {
-      value: ''
+      value: '',
+      channelList: [
+        { title: '金句', desp: '一语惊醒梦中人', to: '/' },
+        { title: '好文', desp: '一语惊醒梦中人', to: '/' },
+        { title: '诗词', desp: '一语惊醒梦中人', to: '/' },
+        { title: '成语词典', desp: '一语惊醒梦中人', to: '/' },
+        { title: '趣味答题', desp: '一语惊醒梦中人', to: '/' },
+        { title: '开心一刻', desp: '一语惊醒梦中人', to: '/' }
+      ]
     }
   },
   components: {
@@ -80,7 +92,7 @@ export default {
   /deep/ .van-swipe {
     border-radius: 6px;
   }
-  
+
   /deep/ .van-field__control:disabled {
     -webkit-text-fill-color: #323233;
   }
@@ -95,7 +107,7 @@ export default {
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 0 20px;
-  
+
   .xianyu-discover-add-channel {
     border: 1px dashed #CECECE;
     display: flex;
@@ -121,5 +133,16 @@ export default {
       color: rgba(0, 0, 0, 1);
     }
   }
+}
+
+.item-header {
+  font-size: 15px;
+  margin-bottom: 10px;
+  font-weight: 700;
+  color: rgba(0, 0, 0, .75);
+}
+p {
+  font-size: 13px;
+  color: rgba(0, 0, 0, .85);
 }
 </style>

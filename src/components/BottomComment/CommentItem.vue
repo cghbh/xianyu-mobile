@@ -1,19 +1,19 @@
 <template>
-  <div class="comment-sub-item">
+  <div class="comment-sub-item" :style="{ 'margin-bottom': marginbottom + 'px' }">
     <img src="../../assets/images/courage.png">
     <div class="item-container">
       <div class="item-container-user">
         <div class="item-container-user-left">
-          <h1>程序猿泰山</h1>
-          <p>2020-09-09</p>
+          <h1>{{ comment.user }}</h1>
+          <p>{{ comment.created }}</p>
         </div>
         <div class="item-container-user-right">
-          <span>22</span>
+          <span>{{ comment.zan }}</span>
           <i class="iconfont icon-dianzan active" v-if="true"></i>
           <i class="iconfont icon-dianzan1" v-if="false"></i>
         </div>
       </div>
-      <div class="item-container-comment" :class="{ 'isend': borderbottom }">必须去啊</div>
+      <div class="item-container-comment" :class="{ 'borderbottom': borderbottom }">{{ comment.content }}</div>
     </div>
   </div>
 </template>
@@ -22,10 +22,18 @@
 export default {
   name: 'CommentSubItem',
   props: {
-    // 是否不加底边线
+    marginbottom: {
+      type: Number,
+      default: 0
+    },
+    comment: {
+      type: Object,
+      default: () => {},
+      required: true
+    },
     borderbottom: {
       type: Boolean,
-      default: true
+      default: false
     }
   }
 }
@@ -36,7 +44,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 10px 18px;
+  padding: 24px 18px 0 18px;
   background-color: #fff;
 
   img {
@@ -79,13 +87,15 @@ export default {
     }
 
     &-comment {
-      padding: 20px 0;
+      padding: 10px 0 15px 0;
       font-size: 16px;
       color: #333;
+      border-bottom: 1px solid #f4f4f4;
+      line-height: 24px;
     }
 
-    &-comment.isend {
-      border-bottom: 1px solid #eee;
+    &-comment.borderbottom {
+      border-bottom: none;
     }
   }
 }
