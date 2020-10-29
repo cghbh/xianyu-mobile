@@ -10,9 +10,9 @@
       </van-nav-bar>
     </van-sticky>
     <div class="add-channel-container">
-      <channel-item @click.native="select(item)" :BgColor="item.color" v-for="item in mockOptions" :key="item.title">
-        <h1 slot="header">{{ item.title }}</h1>
-        <p slot="content">{{ item.content }}</p>
+      <channel-item @click.native="select(item)" :BgColor="item.color" v-for="item in channelOptions" :key="item.title">
+        <h1 class="item-header" slot="header">{{ item.title }}</h1>
+        <p class="item-content" slot="content">{{ item.desp }}</p>
         <i slot="select" v-if="item.isSelect" class="iconfont icon-check-circle-fill"></i>
       </channel-item>
     </div>
@@ -25,43 +25,21 @@ export default {
   name: 'AddChannel',
   data () {
     return {
-      mockOptions: [
-        {
-          title: '金句',
-          content: '一语惊醒梦中人',
-          isSelect: true,
-          color: '#F3F3F3'
-        },
-        {
-          title: '好文',
-          content: '一语惊醒梦中人',
-          isSelect: true,
-          color: '#F3F3F3'
-        },
-        {
-          title: '诗词',
-          content: '一语惊醒梦中人',
-          isSelect: true,
-          color: '#FAF4F4'
-        },
-        {
-          title: '字典',
-          content: '一语惊醒梦中人',
-          isSelect: true,
-          color: '#F9F4F0'
-        },
-        {
-          title: '知识竞赛',
-          content: '一语惊醒梦中人',
-          isSelect: true,
-          color: '#F9F4F0'
-        }
-      ]
+      channelOptions: []
     }
+  },
+  mounted () {
+    const list = JSON.parse(localStorage.getItem('channel'))
+    if (!list) {
+      return this.$router.push('/discover')
+    }
+    this.channelOptions = list
   },
   methods: {
     select (item) {
       item.isSelect = !item.isSelect
+      // 当选择项改变之后存储到本地
+      localStorage.setItem('channel', JSON.stringify(this.channelOptions))
     }
   },
   components: {
@@ -75,7 +53,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  
+
   .iconfont {
     font-size: 21px;
     font-weight: 500;
@@ -100,5 +78,17 @@ export default {
   right: 10px;
   color: #858FA8;
   font-size: 22px;
+}
+
+.item-header {
+  font-size: 15px;
+  margin-bottom: 10px;
+  font-weight: 700;
+  color: rgba(0, 0, 0, .75);
+}
+
+.item-content {
+  font-size: 13px;
+  color: rgba(0, 0, 0, .85);
 }
 </style>

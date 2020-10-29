@@ -60,11 +60,6 @@ export default {
       ]
     }
   },
-  mounted () {
-    window.addEventListener('scroll', () => {
-      console.log(2)
-    })
-  },
   methods: {
     focus () {
       this.isFocus = true

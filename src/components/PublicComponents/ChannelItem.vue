@@ -7,7 +7,7 @@
       <slot name="select"></slot>
     </div>
   </div>
-  <router-link to="/" tag="div" :style="{'background-color': BgColor }" class="channel-item" v-else>
+  <router-link :to="to" tag="div" :style="{'background-color': BgColor }" class="channel-item" v-else>
     <slot name="header"></slot>
     <slot name="content"></slot>
     <div class="channel-item-slot">
@@ -26,7 +26,7 @@ export default {
     // 开启路由模式
     router: {
       type: Boolean,
-      default: true
+      default: false
     },
     // 路由跳转地址
     to: {

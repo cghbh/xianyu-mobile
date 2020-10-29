@@ -26,30 +26,14 @@
       </van-swipe>
     </div>
     <div class="xianyu-discover-container">
-      <channel-item BgColor="#F3F3F3" @click.native="$router.push('/gold-sentence')">
-        <h1 class="item-header" slot="header">金句</h1>
-        <p slot="content">一语惊醒梦中人</p>
-      </channel-item>
-      <channel-item BgColor="#F3F3F3" @click.native="$router.push('/good-article')">
-        <h1 class="item-header" slot="header">好文</h1>
-        <p slot="content">一语惊醒梦中人</p>
-      </channel-item>
-      <channel-item BgColor="#FAF4F4" @click.native="$router.push('/ancient-poetry')">
-        <h1 class="item-header" slot="header">诗词</h1>
-        <p slot="content">小诗有味似连珠</p>
-      </channel-item>
-      <channel-item BgColor="#F9F4F0" @click.native="$router.push('/dictionary')">
-        <h1 class="item-header" slot="header">成语词典</h1>
-        <p slot="content">一语惊醒梦中人</p>
-      </channel-item>
-      <channel-item BgColor="#F9F4F0" @click.native="$router.push('/knowledge-competition')">
-        <h1 class="item-header" slot="header">趣味答题</h1>
-        <p slot="content">一语惊醒梦中人</p>
-      </channel-item>
-      <channel-item BgColor="#F3F3F3" @click.native="$router.push('/joke')">
-        <h1 class="item-header" slot="header">开心一刻</h1>
-        <p slot="content">一语惊醒梦中人</p>
-      </channel-item>
+      <!-- for的优先级比if高，因此在这里使用template实现循环，里面使用if实现条件判断 -->
+      <template v-for="item in channelList">
+        <channel-item v-if="item.isSelect" :BgColor="item.color" router :to="item.to" :key="item.title">
+          <h1 class="item-header" slot="header">{{ item.title }}</h1>
+          <p class="item-content" slot="content">{{ item.desp }}</p>
+        </channel-item>
+      </template>
+
       <div class="xianyu-discover-add-channel" @click="$router.push('/addchannel')">
         <i class="icon-jia iconfont"></i>
         <span>添加频道</span>
@@ -60,20 +44,24 @@
 
 <script>
 import ChannelItem from '../components/PublicComponents/ChannelItem.vue'
+const list = [
+  { title: '金句', desp: '一语惊醒梦中人', to: '/gold-sentence', color: '#F3F3F3', isSelect: true },
+  { title: '好文', desp: '一语惊醒梦中人', to: '/good-article', color: '#F3F3F3', isSelect: true },
+  { title: '诗词', desp: '一语惊醒梦中人', to: '/ancient-poetry', color: '#FAF4F4', isSelect: true },
+  { title: '成语词典', desp: '一语惊醒梦中人', to: '/dictionary', color: '#F9F4F0', isSelect: true },
+  { title: '趣味答题', desp: '一语惊醒梦中人', to: '/knowledge-competition', color: '#F9F4F0', isSelect: true },
+  { title: '开心一刻', desp: '一语惊醒梦中人', to: '/joke', color: '#F3F3F3', isSelect: true }
+]
 export default {
   name: 'Discover',
   data () {
     return {
       value: '',
-      channelList: [
-        { title: '金句', desp: '一语惊醒梦中人', to: '/' },
-        { title: '好文', desp: '一语惊醒梦中人', to: '/' },
-        { title: '诗词', desp: '一语惊醒梦中人', to: '/' },
-        { title: '成语词典', desp: '一语惊醒梦中人', to: '/' },
-        { title: '趣味答题', desp: '一语惊醒梦中人', to: '/' },
-        { title: '开心一刻', desp: '一语惊醒梦中人', to: '/' }
-      ]
+      channelList: JSON.parse(localStorage.getItem('channel')) || list
     }
+  },
+  mounted () {
+    localStorage.setItem('channel', JSON.stringify(this.channelList))
   },
   components: {
     ChannelItem
@@ -141,7 +129,7 @@ export default {
   font-weight: 700;
   color: rgba(0, 0, 0, .75);
 }
-p {
+.item-content {
   font-size: 13px;
   color: rgba(0, 0, 0, .85);
 }

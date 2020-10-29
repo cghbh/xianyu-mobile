@@ -9,14 +9,13 @@
     </van-nav-bar>
     <!-- 答题区 -->
     <div class="question-container">
-      <div class="question-container-area">
+      <div class="question-container-area" v-if="!showResult">
         <div class="question-container-area-progress">
-          <!-- v-model="currentRate" -->
           <van-circle
-            :value="activeSubjectIndex / totalSubject * 100"
             :rate="100"
             :speed="100"
-            :text="`${activeSubjectIndex}/${totalSubject}`"
+            :value="activeIndex / totalQuestions * 100"
+            :text="`${activeIndex}/${totalQuestions}`"
             size="50px"
             layer-color="#CFDAE6"
             fill="#fff"
@@ -26,22 +25,16 @@
         </div>
         <div class="question-container-area-subject">
           <div class="question-container-area-subject-title">
-            <!-- 关于定向资产管理业务的内部控制，下列说法中正确的是（单选）： -->
-            {{ activeSubject.title }}
+            {{ activeQuestion.question }}
           </div>
-          <!-- :class="{ 'selecting': selectOption === value, 'disabled': disabled, 'error': rightAnswer && selectOption === value && selectOption !== rightAnswer, 'right': rightAnswer && selectOption === value && selectOption === rightAnswer }" -->
-          <!-- // 选择的是正确答案添加的css属性 -->
-          <!-- // 正确答案的判断:ABCD四个选项中,选中的是A,正确答案是A,item A selectOption A rightValue A -->
-          <!-- // this.selectOptions === this.rightValue选中的就是正确的答案，那么当前选中的添加right属性，其他的不用处理 -->
-          <!-- // this.selectOption !== this.rightValue 给正确的选项添加right属性，给已经选中的添加错误类属性 -->
           <div
             class="question-container-area-subject-option"
-            :class="{ 'right': selectOption === rightAnswer && value === rightAnswer || (selectOption !== value && rightAnswer === value), 'disabled': disabled, 'error': rightAnswer && selectOption !== rightAnswer && value === selectOption, 'selecting': selectOption === value && !disabled }"
-            @click="getOption(value)"
-            v-for="(item, value) in activeSubject.question"
+            :class="{ 'selecting': selectOptions.includes(value), 'disabled': disabled, 'error': false, 'right': rightAnswer && rightAnswer === value, 'error': rightAnswer && rightAnswer !== selectOptions.join('') && selectOptions.includes(value) }"
+            @click="selectOption(value)"
+            v-for="(item, value) in activeQuestion.options"
             :key="value">
-            <div class="content" :class="{ 'right': selectOption === rightAnswer && value === rightAnswer || (selectOption !== value && rightAnswer === value), 'disabled': disabled, 'error': rightAnswer && selectOption !== rightAnswer && value === selectOption }">
-              <span>{{ value }}.</span>
+            <div :class="{ 'error': false, 'right': rightAnswer && rightAnswer === value, 'error': rightAnswer && rightAnswer !== selectOptions.join('') && selectOptions.includes(value), 'content': true }">
+              <span>{{ value }}</span>
               <span>{{ item }}</span>
             </div>
             <div class="iconfont-container">
@@ -51,153 +44,127 @@
           </div>
         </div>
       </div>
+
+      <div class="result-display" v-if="showResult">
+        <img src="../assets/images/courage.png">
+        <h1>答对{{ rightNumber }}题，共{{ totalQuestions }}题</h1>
+        <p>超过<span>10%</span>的人</p>
+      </div>
+
       <!-- 确定按钮用来判断答案 -->
-      <div class="question-container-button" v-if="!isNext" :class="{ 'disabled': !selectOption }" @click="submit">确定</div>
+      <div class="question-container-button" v-if="!isNext && !isCompleted" :class="{ 'disabled': selectOptions.length === 0 }" @click="confirm">
+        确定
+      </div>
       <!-- 下一题按钮用来跳转到下一个题目 -->
       <div class="question-container-button" v-if="isNext" @click="next">下一题</div>
+      <div class="question-container-button" v-if="isCompleted" @click="complete">完成</div>
     </div>
   </div>
 </template>
 
 <script>
+import mockList from '../mock/practice.js'
 export default {
   name: 'KnowledgeCompetition',
   data () {
     return {
-      // 当前是第几个问题
-      activeSubjectIndex: 1,
-      // 当前选中的选项
-      selectOption: '',
-      // 点击确定之后禁止重新选中
-      disabled: false,
-      // 错误的数量
-      errorNumber: 0,
-      // 正确答案
-      rightAnswer: '',
-      buttonText: '确定',
-      // 用来标记当前点击的是下一题还是确定按钮，偶数-确定，奇数-下一题
+      // 当前是第几题
+      activeIndex: 1,
+      // 选择的选项
+      selectOptions: [],
       isNext: false,
-      mockSubject: [
-        {
-          title: '关于定向资产管理业务的内部控制，下列说法中正确的是：',
-          question: {
-            A: '证券公司定向资产管理业务可以从事场外交易、网下申购等特殊交易',
-            B: '证券公司发现定向资产管理业务出现重大问题，应及时向证交所报告',
-            C: '证券公司应当由专门的部门负责资产管理业务',
-            D: '证券公司应根据管理能力及风控水平，合理控制定向资产管理规模'
-          },
-          answer: 'A'
-        },
-        {
-          title: '下列各项中，属于对上市公司进行监管的类型的是：',
-          question: {
-            A: '信息披露的监管',
-            B: '公司治理监管',
-            C: '内幕交易行为的监管',
-            D: '并购重组的监管'
-          },
-          answer: 'C'
-        },
-        {
-          title: '证券的流动性不能通过以下哪种方式实现?',
-          question: {
-            A: '贴现',
-            B: '记账',
-            C: '交易',
-            D: '承兑'
-          },
-          answer: 'B'
-        },
-        {
-          title: '关于有价证券的定义和特点，下列描述错误的是?',
-          question: {
-            A: '有价证券本身具备价值',
-            B: '有价证券是虚拟资本的一种形式',
-            C: '有价证券可以在证券市场上买卖和流通，客观上具有了交易价格',
-            D: '有价证券价格总额并不等于所代表的真实资本的账面价格'
-          },
-          answer: 'B'
-        },
-        {
-          title: '关于有价证券的定义和特点，下列描述错误的是?',
-          question: {
-            A: '有价证券本身具备价值',
-            B: '有价证券是虚拟资本的一种形式',
-            C: '有价证券可以在证券市场上买卖和流通，客观上具有了交易价格',
-            D: '有价证券价格总额并不等于所代表的真实资本的账面价格'
-          },
-          answer: 'D'
-        },
-        {
-          title: '关于有价证券的定义和特点，下列描述错误的是?',
-          question: {
-            A: '有价证券本身具备价值',
-            B: '有价证券是虚拟资本的一种形式',
-            C: '有价证券可以在证券市场上买卖和流通，客观上具有了交易价格',
-            D: '有价证券价格总额并不等于所代表的真实资本的账面价格'
-          },
-          answer: 'C'
-        }
-      ]
+      // 选项是否还可以继续点击
+      disabled: false,
+      // 正确答案，点击之后获取比对
+      rightAnswer: '',
+      // 是否答完
+      isCompleted: false,
+      // 展示结果
+      showResult: false,
+      showResultTag: 0,
+      // 答对的题目数量
+      rightNumber: 0,
+      mockList: mockList.list
     }
   },
   computed: {
-    // 总共有几道题
-    totalSubject () {
-      return this.mockSubject.length
+    // 正在回答的题目
+    activeQuestion () {
+      return this.mockList[this.activeIndex - 1]
     },
-    // 当前题
-    activeSubject () {
-      return this.mockSubject[this.activeSubjectIndex - 1]
+    // 总的题目数量
+    totalQuestions () {
+      return this.mockList.length
     },
-    // buttonText () {
-    //   return this.tag % 2 === 0 ? '确定' : '下一题'
-    // },
-    // 选择的是正确答案添加的css属性
-    // 正确答案的判断:ABCD四个选项中,选中的是A,正确答案是A,item -->A selectOption-->A rightValue---> A
-    // this.selectOptions === this.rightValue选中的就是正确的答案，那么当前选中的添加right属性，其他的不用处理
-    // this.selectOption !== this.rightValue 给正确的选项添加right属性，给已经选中的添加错误类属性
-    rightClass () {
-      return 1
+    // 是否单选
+    isSingle () {
+      return this.activeQuestion.answer.length === 1
     },
-    // 选择的是错误的答案添加的css属性
-    errorClass () {
-      return 1
+    rightRate () {
+      return `${parseInt((this.rightNumber / this.totalQuestions * 100))}%`
     }
   },
   methods: {
-    getOption (value) {
-      this.selectOption = value
-    },
-    // 提交判断答案
-    submit () {
-      this.isNext = true
-      this.disabled = true
-      this.rightAnswer = this.activeSubject.answer
-      if (this.activeSubjectIndex === this.mockSubject.length) {
-        this.isNext = false
-      }
-    },
-    next () {
-      this.activeSubjectIndex++
-      this.isNext = false
-      this.rightAnswer = ''
-      this.selectOption = ''
-      this.disabled = false
-    },
     back () {
       this.$dialog.confirm({
-        width: '315px',
-        confirmButtonColor: '#409fea',
+        message: '确定要退出答题？\n退出后当前答题进度将不被保存',
         confirmButtonText: '继续答题',
+        confirmButtonColor: '#409fea',
         cancelButtonText: '确定',
-        allowHtml: true,
-        message: '<h1 style="color: #555; line-height: 24px;font-size:16px">确定要退出答题？\n退出后当前答题进度将不被保存</h1>'
+        cancelButtonColor: '#999'
       })
         .then(() => {})
         .catch(() => {
           this.$router.go(-1)
         })
+    },
+    selectOption (item) {
+      if (this.isSingle) {
+        // 如果没有当前没有选择就选择一个
+        if (this.selectOptions.length <= 0) {
+          this.selectOptions.push(item)
+          // 如果选择的已存在说明是取消的操作
+        } else if (this.selectOptions.includes(item)) {
+          const index = this.selectOptions.indexOf(item)
+          this.selectOptions.splice(index, 1)
+        } else if (this.selectOptions.length >= 1) {
+          // 如果选择的超过一个,删除前面的一个，push进去一个新的选项
+          this.selectOptions.pop()
+          this.selectOptions.push(item)
+        }
+      }
+    },
+    confirm () {
+      this.rightAnswer = this.activeQuestion.answer
+      this.disabled = true
+      if (this.rightAnswer === this.selectOptions.join('')) {
+        this.rightNumber++
+      }
+      if (this.activeIndex >= this.totalQuestions) {
+        this.isNext = false
+        this.isCompleted = true
+      } else {
+        this.isNext = true
+        console.log(1)
+      }
+    },
+    next () {
+      this.activeIndex++
+      this.disabled = false
+      this.rightAnswer = ''
+      this.selectOptions = []
+      this.isNext = false
+    },
+    complete () {
+      // this.isCompleted = true
+      this.showResult = true
+      this.showResultTag++
+      if (this.showResultTag % 2 === 0) {
+        setTimeout(() => {
+          this.$router.go(-1)
+        }, 800)
+        this.$toast('正在退出......')
+      }
     }
   }
 }
@@ -248,6 +215,7 @@ body /deep/ .van-dialog__message {
     border-radius: 8px;
     background-color: #fff;
     position: relative;
+    padding-bottom: 15px;
 
     &-progress {
       position: absolute;
@@ -266,7 +234,7 @@ body /deep/ .van-dialog__message {
     }
 
     &-subject {
-      padding: 45px 20px 31px 20px;
+      padding: 45px 20px 0px 20px;
 
       &-title {
         margin-bottom: 15px;
@@ -324,14 +292,14 @@ body /deep/ .van-dialog__message {
         }
       }
       &-option.error {
-        background: rgba(235,51,59,0.10);
+        background: rgba(235,51,59,0.10)!important;
         border-radius: 2px;
         .icon-close-circle-fill {
           display: block;
         }
       }
       &-option.right {
-        background: rgba(25,133,242,0.10);
+        background: rgba(25,133,242,0.10)!important;
         border-radius: 2px;
         .icon-check-circle-fill {
           display: block;
@@ -351,7 +319,6 @@ body /deep/ .van-dialog__message {
 
   &-button {
     background-image: linear-gradient(90deg, #FF4050 8%, #FF9EA6 100%);
-    // background-image: linear-gradient(90deg, #FFAFBD 8%, #ffc3a0 100%);
     box-shadow: 0 15px 30px 0 rgba(196,41,54,0.38);
     width: 250px;
     height: 50px;
@@ -370,5 +337,43 @@ body /deep/ .van-dialog__message {
 }
 .question-container /deep/ .van-circle__text {
   color: #409fea;
+}
+
+/* 结果展示区域CSS样式 */
+.result-display {
+  width: 320px;
+  height: 407px;
+  background-color: #fff;
+  box-shadow: 0 6px 24px 6px rgba(10,60,216,0.33);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+  }
+
+  h1 {
+    font-family: PingFangSC-Medium;
+    font-size: 25px;
+    color: #222;
+    letter-spacing: 0;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  p {
+    font-family: PingFangSC-Regular;
+    font-size: 22px;
+    color: #666;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 31px;
+    margin-top: 20px;
+  }
 }
 </style>
