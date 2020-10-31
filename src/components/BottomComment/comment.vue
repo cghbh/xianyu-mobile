@@ -25,7 +25,7 @@
               <i class="iconfont icon-dianzan" v-if="false"></i>
             </div>
           </div>
-          <div class="first-user-comment">{{ item1.content }}</div>
+          <div class="first-user-comment" @click="showPopupHandle(index1)">{{ item1.content }}</div>
           <div class="user-repeat" @click="showPopupHandle(index1)">
             <div class="user-repeat-item" v-for="(item2, index2) in item1.sub.slice(0, 3)" :key="index2">
               <h1>{{ item2.user }}：</h1>
@@ -277,7 +277,7 @@ export default {
           justify-content: space-between;
 
           &-comment {
-            font-size: 16px;
+            font-size: 15px;
             margin-top: 5px;
             line-height: 24px;
           }
@@ -298,7 +298,7 @@ export default {
           &-right {
             span {
               font-size: 14px;
-              color: #000;
+              color: #666;
               margin-right: 4px;
             }
 
@@ -323,21 +323,21 @@ export default {
             margin-top: 8px;
             line-height: 18px;
             h1 {
-              font-size: 14px;
+              font-size: 13px;
               font-weight: 600;
               color: rgba(0, 0, 0, 1);
               display: inline-block;
             }
 
             span {
-              font-size: 14px;
+              font-size: 13px;
               color: rgba(0, 0, 0, .6);
               word-wrap: break-word;
             }
           }
 
           .see-more {
-            font-size: 14px;
+            font-size: 13px;
             color: #409fea;
             margin-bottom: 10px;
           }

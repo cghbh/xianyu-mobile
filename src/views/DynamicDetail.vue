@@ -1,7 +1,7 @@
 <template>
   <div class="dynamic-detail">
     <van-sticky>
-      <van-nav-bar title="动态" left-text="返回" left-arrow @click-left="$router.go(-1)">
+      <van-nav-bar title="动态详情" left-text="返回" left-arrow @click-left="$router.go(-1)">
         <template #left>
           <div class="back-container">
             <i class="iconfont icon-left"></i>

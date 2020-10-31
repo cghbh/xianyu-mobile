@@ -70,7 +70,6 @@ export default {
         file.map(item => {
           upLoaderImg(item.file).then(res => {
             uploadImgArray.push(res)
-            console.log(uploadImgArray, 'uploadImgArray')
           })
         })
       }
@@ -129,11 +128,11 @@ function upLoaderImg (file) { // file为 你读取成功的回调文件信息
     font-size: 21px;
     font-weight: 500;
   }
-  
+
   /deep/ .van-nav-bar__right {
     padding-right: 21px;
   }
-  
+
   &-container {
     padding-bottom: 10PX;
   }
@@ -168,14 +167,14 @@ function upLoaderImg (file) { // file为 你读取成功的回调文件信息
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+
   &-lock {
     display: flex;
     align-items: center;
     .iconfont {
       margin-right: 8px;
     }
-    
+
     span {
       font-size: 16px;
     }
@@ -190,7 +189,7 @@ function upLoaderImg (file) { // file为 你读取成功的回调文件信息
   justify-content: flex-start;
   align-items: center;
   background-color: rgba(138, 138, 138, .1);
-  
+
   .iconfont {
     color: #f56c60;
     margin-right: 5px;

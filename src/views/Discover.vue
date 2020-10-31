@@ -45,7 +45,6 @@
 <script>
 import ChannelItem from '../components/PublicComponents/ChannelItem.vue'
 const list = [
-  { title: '金句', desp: '一语惊醒梦中人', to: '/gold-sentence', color: '#F3F3F3', isSelect: true },
   { title: '好文', desp: '一语惊醒梦中人', to: '/good-article', color: '#F3F3F3', isSelect: true },
   { title: '诗词', desp: '一语惊醒梦中人', to: '/ancient-poetry', color: '#FAF4F4', isSelect: true },
   { title: '成语词典', desp: '一语惊醒梦中人', to: '/dictionary', color: '#F9F4F0', isSelect: true },

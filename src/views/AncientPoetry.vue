@@ -9,10 +9,10 @@
         </template>
       </van-nav-bar>
     </van-sticky>
-    <div class="ancient-poetry-container" style="min-height: 500px;font-size: 15px; text-align: center;line-height: 28px;padding-top: 15px; color: #555;">
+    <div class="ancient-poetry-container" style="min-height: 500px;font-size: 14px; text-align: center;line-height: 28px;padding-top: 15px; color: #555;">
       <h1 style="font-size: 20px;font-weight: bold;">长恨歌</h1>
       <p style="font-size: 14px; color: #666;">白居易</p>
-      <!-- 汉皇重色思倾国，御宇多年求不得。<br>
+      汉皇重色思倾国，御宇多年求不得。<br>
       杨家有女初长成，养在深闺人未识。<br>
       天生丽质难自弃，一朝选在君王侧。<br>
       回眸一笑百媚生，六宫粉黛无颜色。<br>
@@ -127,16 +127,13 @@
       回头下望人寰处，不见长安见尘雾。<br>
       惟将旧物表深情，钿合金钗寄将去。<br>
       钗留一股合一扇，钗擘黄金合分钿。<br>
-      但教心似金钿坚，天上人间会相见。<br> -->
+      但教心似金钿坚，天上人间会相见。<br>
       临别殷勤重寄词，词中有誓两心知。<br>
       七月七日长生殿，夜半无人私语时。<br>
       <strong style="font-weight: bold;">在天愿作比翼鸟，在地愿为连理枝。</strong>
       天长地久有时尽，此恨绵绵无绝期。<br>
-      <span class="meaning">注</span>
-      <div class="refresh" @click="refreshHandle">
-        <i class="iconfont icon-refresh" :class="{ 'active': refreshActive }"></i>
-      </div>
     </div>
+    <refresh-icon></refresh-icon>
     <divide-area></divide-area>
     <bottom-comment></bottom-comment>
     <comment-item></comment-item>
@@ -193,34 +190,16 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   padding-bottom: 90px;
 
-  .meaning {
-    position: absolute;
-    width: 45px;
-    height: 45px;
-    background-color: #fff;
-    border-radius: 50%;
-    color: #409fea;
-    box-shadow: 0 0 20px 1px #ddd;
-    font-size: 18px;
-    font-family: Arial, Helvetica, sans-serif;
-    bottom: 100px;
-    right: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
   .refresh {
-     position: absolute;
+     position: fixed;
      width: 45px;
      height: 45px;
      background-color: #fff;
      border-radius: 50%;
-     bottom: 25px;
-     right: 20px;
+     bottom: 100px;
+     right: 12px;
      box-shadow: 0 0 20px 1px #ddd;
      display: flex;
      justify-content: center;
