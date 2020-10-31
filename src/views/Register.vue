@@ -1,5 +1,5 @@
 <template>
-  <div class="xianyu-register">咸鱼注册页面</div>
+  <div class="xianyu-register">闲语注册页面</div>
 </template>
 
 <script>

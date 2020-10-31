@@ -3,7 +3,8 @@
     <div class="user-back" @click="$router.go(-1)">
       <i class="iconfont icon-left"></i>
     </div>
-    <div class="xianyu-login-code">
+    <!-- 验证码登录 -->
+    <div class="xianyu-login-code" v-if="codeLogin">
       <h1 class="xianyu-login-word-title">欢迎登录闲语</h1>
       <p class="xianyu-login-tips">仰望星空，脚踏实地。</p>
       <van-row class="border-tel">
@@ -19,13 +20,41 @@
           <span>获取验证码</span>
         </van-col>
       </van-row>
-      <van-button class="login-code-button" type="primary" color="#409fea" round block>登录</van-button>
+      <van-button class="login-code-button" :disabled="tel === '' || code === ''" type="primary" color="#409fea" round block>登录</van-button>
       <div class="login-button-bottom">
-        <a>其他登录方式</a>
-        <a>用户注册</a>
+        <a @click="codeLogin = false">密码登录</a>
+        <a @click="$router.push('/register')">用户注册</a>
       </div>
     </div>
 
+    <!-- 密码登录，前提是该手机号已经注册了，否则提示未注册 -->
+    <div class="xianyu-login-password" v-else>
+      <h1 class="xianyu-login-password-title">欢迎登录闲语</h1>
+      <p class="xianyu-login-password-tips">仰望星空，脚踏实地。</p>
+      <van-row class="login-password">
+        <van-col>
+          <van-field :maxlength="11" autofocus v-model="tel" type="tel" label="手机号" placeholder="请输入手机号" />
+        </van-col>
+      </van-row>
+      <van-row class="login-password">
+        <van-col>
+          <van-field type="password" :maxlength="11" autofocus v-model="password" label="密码" placeholder="请输入密码" />
+        </van-col>
+      </van-row>
+      <van-row class="login-password">
+        <van-col span="16">
+          <van-field :maxlength="11" autofocus v-model="code" type="tel" label="验证码" placeholder="请输入验证码" />
+        </van-col>
+        <van-col span="8">
+          <span>验证码区域</span>
+        </van-col>
+      </van-row>
+      <van-button class="login-code-button" :disabled="tel === '' || code === ''" type="primary" color="#409fea" round block>登录</van-button>
+      <div class="login-button-bottom">
+        <a @click="codeLogin = true">短信登录</a>
+        <a @click="$router.push('/forget-password')">忘记密码？</a>
+      </div>
+    </div>
     <!-- 三方登录 -->
     <div class="auth-other">
       <div class="auth-other-tips">
@@ -46,7 +75,9 @@ export default {
   data () {
     return {
       tel: '',
-      code: ''
+      code: '',
+      password: '',
+      codeLogin: true
     }
   }
 }
@@ -56,7 +87,7 @@ export default {
 .xianyu-login {
   height: 100%;
   background-color: #fff;
-  padding: 20px 30px 50px 30px;
+  padding: 20px 35px 50px 35px;
   box-sizing: border-box;
   position: relative;
   display: flex;
@@ -66,7 +97,7 @@ export default {
   .user-back {
     position: absolute;
     top: 20px;
-    left: 30px;
+    left: 20px;
     width: 25px;
     height: 25px;
     display: flex;
@@ -81,13 +112,11 @@ export default {
   &-word-title {
     font-size: 22px;
     font-weight: 700;
-    padding-left: 16px;
     margin-top: 70px;
     margin-bottom: 21px;
   }
 
   &-tips {
-    padding-left: 16px;
     font-size: 15px;
     margin-bottom: 40px;
     color: rgba(0, 0, 0, .6);
@@ -107,7 +136,7 @@ export default {
     }
 
     /deep/ .van-cell {
-      padding: 20px 16px 10px 16px
+      padding: 20px 16px 10px 0px
     }
   }
 
@@ -125,7 +154,7 @@ export default {
     }
 
     /deep/ .van-cell {
-      padding: 20px 16px 10px 16px
+      padding: 20px 16px 10px 0px
     }
 
     /deep/ .van-col.van-col--8 {
@@ -148,6 +177,44 @@ export default {
     padding-left: 5px;
     font-size: 15px;
     color: #409fea;
+  }
+}
+
+.xianyu-login-password {
+  &-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-top: 70px;
+    margin-bottom: 21px;
+  }
+  &-tips {
+    font-size: 15px;
+    margin-bottom: 40px;
+    color: rgba(0, 0, 0, .6);
+  }
+
+  .login-password {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+
+    /deep/ .van-cell__title {
+      font-size: 16px;
+    }
+
+    /deep/ .van-field__label {
+      width: 60px;
+    }
+
+    /deep/ .van-cell {
+      padding: 20px 16px 10px 0px
+    }
+
+    /deep/ .van-col.van-col--8 {
+      text-align: right;
+      font-size: 15px;
+      margin-top: 5px;
+    }
   }
 }
 

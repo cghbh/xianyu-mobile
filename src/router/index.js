@@ -26,6 +26,8 @@ import DynamicPublish from '../views/DynamicPublish.vue'
 import DynamicDetail from '../views/DynamicDetail.vue'
 import Dictionary from '../views/Dictionary.vue'
 import MomentJoke from '../views/MomentJoke.vue'
+import ForgetPassword from '../views/ForgetPassword.vue'
+import Register from '../views/Register.vue'
 // 解决路由重复的问题
 // 获取原型对象上的push函数
 const originalPush = VueRouter.prototype.push
@@ -164,6 +166,16 @@ const routes = [
     path: '/joke',
     component: MomentJoke,
     name: 'joke'
+  },
+  {
+    path: '/forget-password',
+    component: ForgetPassword,
+    name: 'ForgetPassword'
+  },
+  {
+    path: '/register',
+    component: Register,
+    name: 'Register'
   }
 ]
 
