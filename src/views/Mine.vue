@@ -1,6 +1,6 @@
 <template>
   <div class="xianyu-mine">
-    <div class="xianyu-mine-unlogin" v-if="!isLogined">
+    <div class="xianyu-mine-unlogin" v-if="!isLogined" @click="$router.push('/login')">
       <img src="../assets/images/user-unlogin.svg">
       <div class="content">
         <h1>点击头像登录</h1>
@@ -119,7 +119,7 @@ export default {
   data () {
     return {
       // 是否登录过了
-      isLogined: true
+      isLogined: false
     }
   }
 }

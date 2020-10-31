@@ -29,7 +29,8 @@ import {
   ImagePreview,
   Switch,
   Sticky,
-  Popup
+  Popup,
+  Button
 } from 'vant'
 
 // 注册为全局组件
@@ -61,3 +62,4 @@ Vue.use(NavBar)
   .use(Switch)
   .use(Sticky)
   .use(Popup)
+  .use(Button)
