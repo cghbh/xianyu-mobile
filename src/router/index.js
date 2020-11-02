@@ -1,35 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Index from '../views/Index.vue'
-import HomePage from '../views/HomePage.vue'
-import Mine from '../views/Mine.vue'
-import Login from '../views/Login.vue'
-import Search from '../views/Search.vue'
-import Dynamic from '../views/Dynamic.vue'
-import Discover from '../views/Discover.vue'
-import MyCollection from '../views/MyCollection.vue'
-import Fellowing from '../views/Fellowing.vue'
-import AddChannel from '../views/AddChannel.vue'
-import KnowledgeCompetition from '../views/KnowledgeCompetition.vue'
-import Setting from '../views/Setting.vue'
-import ModifyInformation from '../views/ModifyInformation.vue'
-import MyPublish from '../views/MyPublish.vue'
-import MyLike from '../views/MyLike.vue'
-import MyBrowsingHistory from '../views/MyBrowsingHistory.vue'
-import MyFans from '../views/MyFans.vue'
-import MyMessage from '../views/MyMessage.vue'
-import GoldSentence from '../views/GoldSentence.vue'
-import GoodArticle from '../views/GoodArticle.vue'
-import AncientPoetry from '../views/AncientPoetry.vue'
-import DynamicPublish from '../views/DynamicPublish.vue'
-import DynamicDetail from '../views/DynamicDetail.vue'
-import Dictionary from '../views/Dictionary.vue'
-import MomentJoke from '../views/MomentJoke.vue'
-import ForgetPassword from '../views/ForgetPassword.vue'
-import Register from '../views/Register.vue'
-// 解决路由重复的问题
-// 获取原型对象上的push函数
+// 解决路由重复的问题,获取原型对象上的push函数
 const originalPush = VueRouter.prototype.push
 // 修改原型对象中的push方法
 VueRouter.prototype.push = function push (location) {
@@ -42,139 +14,139 @@ const routes = [
   {
     path: '/',
     redirect: '/homepage',
-    component: Index,
+    component: () => import('../views/Index.vue'),
     name: 'Index',
     children: [
       {
         path: '',
         name: 'homepage',
-        component: HomePage
+        component: () => import('../views/HomePage.vue')
       },
       {
         path: 'mine',
         name: 'Mine',
-        component: Mine
+        component: () => import('../views/Mine.vue')
       },
       {
         path: 'dynamic',
         name: 'Dynamic',
-        component: Dynamic
+        component: () => import('../views/Dynamic.vue')
       },
       {
         path: '/discover',
-        component: Discover,
+        component: () => import('../views/Discover.vue'),
         name: 'Discover'
       }
     ]
   },
   {
     path: '/login',
-    component: Login,
+    component: () => import('../views/Login.vue'),
     name: 'Login'
   },
   {
     path: '/search',
-    component: Search,
+    component: () => import('../views/Search.vue'),
     name: 'Search'
   },
   {
     path: '/mycollection',
-    component: MyCollection,
+    component: () => import('../views/MyCollection.vue'),
     name: 'MyCollection'
   },
   {
     path: '/fellowing',
-    component: Fellowing,
+    component: () => import('../views/Fellowing.vue'),
     name: 'Fellowing'
   },
   {
     path: '/addchannel',
-    component: AddChannel,
+    component: () => import('../views/AddChannel.vue'),
     name: 'AddChannel'
   },
   {
     path: '/knowledge-competition',
-    component: KnowledgeCompetition,
+    component: () => import('../views/KnowledgeCompetition.vue'),
     name: 'KnowledgeCompetition'
   },
   {
     path: '/setting',
-    component: Setting,
+    component: () => import('../views/Setting.vue'),
     name: 'Setting'
   },
   {
     path: '/modify-information',
-    component: ModifyInformation,
+    component: () => import('../views/ModifyInformation.vue'),
     name: 'ModifyInformation'
   },
   {
     path: '/my-publish',
-    component: MyPublish,
+    component: () => import('../views/MyPublish.vue'),
     name: 'MyPublish'
   },
   {
     path: '/mylike',
-    component: MyLike,
+    component: () => import('../views/MyLike.vue'),
     name: 'MyLike'
   },
   {
     path: '/browser-history',
-    component: MyBrowsingHistory,
+    component: () => import('../views/MyBrowsingHistory.vue'),
     name: 'MyBrowsingHistory'
   },
   {
     path: '/myfans',
-    component: MyFans,
+    component: () => import('../views/MyFans.vue'),
     name: 'MyFans'
   },
   {
     path: '/mymessage',
-    component: MyMessage,
+    component: () => import('../views/MyMessage.vue'),
     name: 'MyMessage'
   },
   {
     path: '/gold-sentence',
-    component: GoldSentence,
+    component: () => import('../views/GoldSentence.vue'),
     name: 'GoldSentence'
   },
   {
     path: '/good-article',
-    component: GoodArticle,
+    component: () => import('../views/GoodArticle.vue'),
     name: 'GoodArticle'
   },
   {
     path: '/ancient-poetry',
-    component: AncientPoetry,
+    component: () => import('../views/AncientPoetry.vue'),
     name: 'AncientPoetry'
   },
   {
     path: '/dynamic-publish',
-    component: DynamicPublish,
+    component: () => import('../views/DynamicPublish.vue'),
     name: 'DynamicPublish'
   },
   {
     path: '/dynamic-detail/:id',
-    component: DynamicDetail,
+    component: () => import('../views/DynamicDetail.vue'),
     name: 'DynamicDetail'
   },
   {
     path: '/dictionary',
-    component: Dictionary,
+    component: () => import('../views/Dictionary.vue'),
     name: 'Dictionary'
   },
   {
     path: '/joke',
-    component: MomentJoke,
+    component: () => import('../views/MomentJoke.vue'),
     name: 'joke'
   },
   {
     path: '/forget-password',
-    component: ForgetPassword,
+    component: () => import('../views/ForgetPassword.vue'),
     name: 'ForgetPassword'
   },
   {
     path: '/register',
-    component: Register,
+    component: () => import('../views/Register.vue'),
     name: 'Register'
   }
 ]

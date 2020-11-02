@@ -33,7 +33,7 @@
         </van-col>
       </van-row>
       <div class="forget-button-container">
-        <van-button @click="register" class="forget-code-button" :disabled="tel === '' || code === ''" type="primary" color="#409fea" round block>登录</van-button>
+        <van-button @click="register" class="forget-code-button" :disabled="tel === '' || code === ''" type="primary" color="#409fea" round block>确认重置</van-button>
       </div>
     </div>
   </div>

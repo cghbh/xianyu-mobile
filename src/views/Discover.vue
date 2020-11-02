@@ -10,7 +10,7 @@
       disabled
     />
     <div style="padding: 10px 20px 15px 20px;">
-      <van-swipe :autoplay="3000" indicator-color="#409fea">
+      <van-swipe :autoplay="3000" loop touchable indicator-color="#409fea">
         <van-swipe-item>
           <img src="../assets/images/1.jpg">
         </van-swipe-item>
