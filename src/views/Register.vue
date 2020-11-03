@@ -29,7 +29,7 @@
       </van-col>
     </van-row>
     <div class="register-button-container">
-      <van-button @click="register" class="register-code-button" :disabled="tel === '' || code === ''" type="primary" color="#409fea" round block>注册</van-button>
+      <van-button @click="register" class="register-code-button" :disabled="tel === '' || code === ''" type="primary" color="#409fea" round block>立即注册</van-button>
     </div>
   </div>
 </template>

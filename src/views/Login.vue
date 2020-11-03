@@ -43,10 +43,9 @@
       </van-row>
       <van-row class="login-password">
         <van-col span="16">
-          <van-field :maxlength="11" autofocus v-model="code" type="tel" label="验证码" placeholder="请输入验证码" />
+          <van-field :maxlength="11" autofocus v-model="userCaptcha" type="tel" label="验证码" placeholder="请输入验证码" />
         </van-col>
-        <van-col span="8">
-          <span>验证码区域</span>
+        <van-col span="8" v-html="captcha.data" @click="reloadCaptcha">
         </van-col>
       </van-row>
       <van-button class="login-code-button" :disabled="tel === '' || code === ''" type="primary" color="#409fea" round block>登录</van-button>
@@ -70,6 +69,7 @@
 </template>
 
 <script>
+import { getCaptcha } from '@/api/user.js'
 export default {
   name: 'Login',
   data () {
@@ -78,8 +78,27 @@ export default {
       code: '',
       password: '',
       codeLogin: true,
+      // 用户输入的图形验证码
+      userCaptcha: '',
       // 验证码是否已经发送，每60秒获取一次
-      codeSend: true
+      codeSend: true,
+      captcha: ''
+    }
+  },
+  mounted () {
+    this.getCaptcha()
+  },
+  methods: {
+    async getCaptcha () {
+      try {
+        const captcha = await getCaptcha()
+        this.captcha = captcha
+      } catch (error) {
+        console.log(error, '错误捕获')
+      }
+    },
+    reloadCaptcha () {
+      this.getCaptcha()
     }
   }
 }
