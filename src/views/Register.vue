@@ -11,6 +11,11 @@
       </van-col>
     </van-row>
     <van-row class="reg-row">
+      <van-col span="24">
+        <van-field :maxlength="11" autofocus v-model="nickname" label="昵称" placeholder="请输入昵称" />
+      </van-col>
+    </van-row>
+    <van-row class="reg-row">
       <van-col span="16">
         <van-field label="验证码" placeholder="请输入验证码" v-model="code"/>
       </van-col>
@@ -43,6 +48,7 @@ export default {
       code: '',
       password: '',
       againPassword: '',
+      nickname: '',
       timerId: null,
       codeSend: true
     }

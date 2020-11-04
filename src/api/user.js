@@ -1,7 +1,15 @@
 import axios from '@/utils/http.js'
 
 const getCaptcha = () => {
-  return axios.get('/users/captchas')
+  return axios.get('/users/captcha')
 }
 
-export { getCaptcha }
+const userLogin = (data) => {
+  return axios.post('/users/login', data)
+}
+
+const userRegister = (data) => {
+  return axios.post('/users/register', data)
+}
+
+export { getCaptcha, userRegister, userLogin }

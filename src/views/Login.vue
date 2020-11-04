@@ -9,7 +9,7 @@
       <p class="xianyu-login-tips">仰望星空，脚踏实地。</p>
       <van-row class="border-tel">
         <van-col span="24">
-          <van-field :maxlength="11" autofocus v-model="tel" type="tel" label="手机号" placeholder="请输入手机号" />
+          <van-field :maxlength="11" autofocus v-model="telephone1" type="tel" label="手机号" placeholder="请输入手机号" />
         </van-col>
       </van-row>
       <van-row class="border-code">
@@ -20,7 +20,7 @@
           <span class="get-code" :class="{ 'code-send': codeSend }" style="font-size: 12px;">{{ codeSend ? '59s再次发送': '获取验证码' }}</span>
         </van-col>
       </van-row>
-      <van-button class="login-code-button" :disabled="tel === '' || code === ''" type="primary" color="#409fea" round block>登录</van-button>
+      <van-button class="login-code-button" :disabled="telephone1 === '' || code === ''" type="primary" color="#409fea" round block>登录</van-button>
       <div class="login-button-bottom">
         <a @click="codeLogin = false">密码登录</a>
         <a @click="$router.push('/register')">用户注册</a>
@@ -33,7 +33,7 @@
       <p class="xianyu-login-password-tips">仰望星空，脚踏实地。</p>
       <van-row class="login-password">
         <van-col>
-          <van-field :maxlength="11" autofocus v-model="tel" type="tel" label="手机号" placeholder="请输入手机号" />
+          <van-field :maxlength="11" autofocus v-model="telephone2" type="tel" label="手机号" placeholder="请输入手机号" />
         </van-col>
       </van-row>
       <van-row class="login-password">
@@ -45,10 +45,10 @@
         <van-col span="16">
           <van-field :maxlength="11" autofocus v-model="userCaptcha" type="tel" label="验证码" placeholder="请输入验证码" />
         </van-col>
-        <van-col span="8" v-html="captcha.data" @click="reloadCaptcha">
+        <van-col span="8" v-html="captcha" @click="reloadCaptcha">
         </van-col>
       </van-row>
-      <van-button class="login-code-button" :disabled="tel === '' || code === ''" type="primary" color="#409fea" round block>登录</van-button>
+      <van-button class="login-code-button" :disabled="telephone2 === ''" type="primary" color="#409fea" round block @click="loginByPassword">登录</van-button>
       <div class="login-button-bottom">
         <a @click="codeLogin = true">短信登录</a>
         <a @click="$router.push('/forget-password')">忘记密码？</a>
@@ -69,14 +69,15 @@
 </template>
 
 <script>
-import { getCaptcha } from '@/api/user.js'
+import { getCaptcha, userLogin } from '@/api/user.js'
 export default {
   name: 'Login',
   data () {
     return {
-      tel: '',
+      telephone1: '',
+      telephone2: '17764082092',
       code: '',
-      password: '',
+      password: '123456',
       codeLogin: true,
       // 用户输入的图形验证码
       userCaptcha: '',
@@ -92,9 +93,18 @@ export default {
     async getCaptcha () {
       try {
         const captcha = await getCaptcha()
-        this.captcha = captcha
+        this.captcha = captcha.data.data
+        console.log(this.captcha)
       } catch (error) {
         console.log(error, '错误捕获')
+      }
+    },
+    async loginByPassword () {
+      try {
+        const result = await userLogin({ telephone: this.telephone2, password: this.password })
+        this.$toast(result.msg)
+      } catch (err) {
+        console.log(err, '错误捕获')
       }
     },
     reloadCaptcha () {
