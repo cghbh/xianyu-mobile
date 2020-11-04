@@ -48,7 +48,7 @@
         <van-col span="8" v-html="captcha" @click="reloadCaptcha">
         </van-col>
       </van-row>
-      <van-button class="login-code-button" :disabled="telephone2 === ''" type="primary" color="#409fea" round block @click="loginByPassword">登录</van-button>
+      <van-button class="login-code-button" :disabled="loginByPasswordDisabled" type="primary" color="#409fea" round block @click="loginByPassword">登录</van-button>
       <div class="login-button-bottom">
         <a @click="codeLogin = true">短信登录</a>
         <a @click="$router.push('/forget-password')">忘记密码？</a>
@@ -86,6 +86,12 @@ export default {
       captcha: ''
     }
   },
+  computed: {
+    // 使用密码登录按钮的点击状态控制,已登录的不允许再次点击
+    loginByPasswordDisabled () {
+      return this.telephone2 === '' || this.password === '' || this.$store.state.isLogin
+    }
+  },
   mounted () {
     this.getCaptcha()
   },
@@ -102,7 +108,12 @@ export default {
     async loginByPassword () {
       try {
         const result = await userLogin({ telephone: this.telephone2, password: this.password })
-        this.$toast(result.msg)
+        this.$store.commit('setUserInfo', result.data)
+        this.$store.commit('setIsLogin', true)
+        this.$toast(result.msg + '，正在飞速跳转中......')
+        setTimeout(() => {
+          this.$router.push('/mine')
+        }, 1200)
       } catch (err) {
         console.log(err, '错误捕获')
       }
@@ -117,6 +128,7 @@ export default {
 <style scoped  lang="scss">
 .xianyu-login {
   height: 100%;
+  overflow: auto;
   background-color: #fff;
   padding: 20px 35px 50px 35px;
   box-sizing: border-box;

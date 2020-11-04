@@ -30,7 +30,10 @@ import {
   Switch,
   Sticky,
   Popup,
-  Button
+  Button,
+  Form,
+  Cell,
+  CellGroup
 } from 'vant'
 
 // 注册为全局组件
@@ -63,3 +66,6 @@ Vue.use(NavBar)
   .use(Sticky)
   .use(Popup)
   .use(Button)
+  .use(Form)
+  .use(Cell)
+  .use(CellGroup)

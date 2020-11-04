@@ -7,7 +7,7 @@
     <p class="xianyu-register-tips">仰望星空，脚踏实地。</p>
     <van-row class="reg-row">
       <van-col span="24">
-        <van-field :maxlength="11" autofocus v-model="tel" type="tel" label="手机号" placeholder="请输入手机号" />
+        <van-field error-message="" :maxlength="11" autofocus v-model="telephone" type="tel" label="手机号" placeholder="请输入手机号" />
       </van-col>
     </van-row>
     <van-row class="reg-row">
@@ -30,21 +30,22 @@
     </van-row>
     <van-row class="reg-row">
       <van-col span="24">
-        <van-field type="password" autofocus v-model="againPassword" label="密码" placeholder="请确认密码" />
+        <van-field type="password" autofocus v-model="againPassword" label="确认密码" placeholder="请确认密码" />
       </van-col>
     </van-row>
     <div class="register-button-container">
-      <van-button @click="register" class="register-code-button" :disabled="tel === '' || code === ''" type="primary" color="#409fea" round block>立即注册</van-button>
+      <van-button @click="register" class="register-code-button" :disabled="telephone === '' || code === ''" type="primary" color="#409fea" round block>立即注册</van-button>
     </div>
   </div>
 </template>
 
 <script>
+import { userRegister } from '@/api/user.js'
 export default {
   name: 'Register',
   data () {
     return {
-      tel: '',
+      telephone: '',
       code: '',
       password: '',
       againPassword: '',
@@ -53,15 +54,24 @@ export default {
       codeSend: true
     }
   },
+  computed: {
+    // 两次输入密码不相同
+    errorPassword () {
+      return this
+    }
+  },
   methods: {
-    register () {
-      if (this.timerId) {
-        clearTimeout(this.timerId)
-        this.timerId = null
-      }
-      this.timerId = setTimeout(() => {
-        this.$toast('注册成功！\n正在跳转到登录页面......')
-      }, 400)
+    async register () {
+      const result = await userRegister({
+        telephone: this.telephone,
+        password: this.password,
+        nickname: this.nickname
+      })
+      this.$toast({
+        message: result.msg,
+        duration: 1000
+      })
+      console.log(result)
     },
     userBack () {
       if (this.tel || this.code || this.password || this.againPassword) {
@@ -129,7 +139,7 @@ export default {
     }
 
     /deep/ .van-field__label {
-      width: 60px;
+      width: 72px;
     }
 
     /deep/ .van-cell {

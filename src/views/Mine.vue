@@ -1,105 +1,81 @@
 <template>
   <div class="xianyu-mine">
-    <div class="xianyu-mine-unlogin" v-if="!isLogined" @click="$router.push('/login')">
+    <div class="xianyu-mine-unlogin" v-if="!isLogin" @click="$router.push('/login')">
       <img src="../assets/images/user-unlogin.svg">
       <div class="content">
         <h1>点击头像登录</h1>
         <p>登录收藏喜欢的内容</p>
       </div>
     </div>
-    <div class="xianyu-mine-login" v-if="isLogined">
+    <div class="xianyu-mine-login" v-else>
       <div class="xianyu-mine-login-user">
-        <img src="../assets/images/logo.png">
+        <img :src="userInfo.avatar_url">
         <div class="content">
-          <h1>打不死的小强</h1>
+          <h1>{{ userInfo.nickname }}</h1>
+          <h3>{{ userInfo.personal_sign }}</h3>
           <p>点击查看个人主页</p>
         </div>
       </div>
-      <div class="xianyu-mine-login-about" v-if="false">
-        <div class="number">
-          <h1>2</h1>
-          <span>关注</span>
-        </div>
-        <i class="iconfont icon-vertical_line"></i>
-        <div class="number">
-          <h1>0</h1>
-          <span>粉丝</span>
-        </div>
-        <i class="iconfont icon-vertical_line"></i>
-        <div class="number">
-          <h1>8</h1>
-          <span>喜欢</span>
-        </div>
-      </div>
     </div>
+
     <div class="xianyu-mine-base">
-      <div class="xianyu-mine-base-item" @click="$router.push('/my-publish')">
-        <div class="left">
-          <i class="iconfont left-i-tag icon-shuxiebianji"></i>
-          <span>我发表的</span>
-        </div>
-        <div class="right">
-          <i class="iconfont right-i-tag icon-right"></i>
-        </div>
-      </div>
-      <div class="xianyu-mine-base-item" @click="$router.push('/mylike')">
-        <div class="left">
-          <i class="iconfont left-i-tag icon-dianzan1"></i>
-          <span>我的点赞</span>
-        </div>
-        <div class="right">
-          <i class="iconfont right-i-tag icon-right"></i>
-        </div>
-      </div>
-      <div class="xianyu-mine-base-item" @click="$router.push('/mycollection')">
-        <div class="left">
-          <i class="iconfont left-i-tag icon-shoucang"></i>
-          <span>我的收藏</span>
-        </div>
-        <div class="right">
-          <i class="iconfont right-i-tag icon-right"></i>
-        </div>
-      </div>
-      <div class="xianyu-mine-base-item" @click="$router.push('/browser-history')">
-        <div class="left">
-          <i class="iconfont left-i-tag icon-lishijilu"></i>
-          <span>浏览历史</span>
-        </div>
-        <div class="right">
-          <i class="iconfont right-i-tag icon-right"></i>
-        </div>
-      </div>
+      <van-cell-group @click="$router.push('/my-publish')">
+        <van-cell title="我发表的" border class="iconfont icon-shuxiebianji">
+          <template #right-icon>
+            <i class="iconfont right-i-tag icon-right"></i>
+          </template>
+        </van-cell>
+      </van-cell-group>
+
+      <van-cell-group @click="$router.push('/mylike')">
+        <van-cell title="我的点赞" border class="iconfont icon-dianzan1">
+          <template #right-icon>
+            <i class="iconfont right-i-tag icon-right"></i>
+          </template>
+        </van-cell>
+      </van-cell-group>
+
+      <van-cell-group @click="$router.push('/mycollection')">
+        <van-cell title="我的收藏" border class="iconfont icon-shoucang">
+          <template #right-icon>
+            <i class="iconfont right-i-tag icon-right"></i>
+          </template>
+        </van-cell>
+      </van-cell-group>
     </div>
+
     <div class="xianyu-mine-extend">
-      <div class="xianyu-mine-extend-item" @click="$router.push('/mymessage')">
-        <div class="left">
-          <i class="iconfont left-i-tag icon-xiaoxi1"></i>
-          <span>我的消息</span>
-        </div>
-        <div class="right">
-          <i class="iconfont right-i-tag icon-right"></i>
-        </div>
-      </div>
-      <div class="xianyu-mine-extend-item" @click="$router.push('/fellowing')">
-        <div class="left">
-          <i class="iconfont left-i-tag icon-guanzhu" style="font-weight: bold;"></i>
-          <span>我的关注</span>
-        </div>
-        <div class="right">
-          <i class="iconfont right-i-tag icon-right"></i>
-        </div>
-      </div>
-      <div class="xianyu-mine-extend-item" @click="$router.push('/myfans')">
-        <div class="left">
-          <i class="iconfont left-i-tag icon-wode-wodefensi" style="font-weight: 500;"></i>
-          <span>我的粉丝</span>
-        </div>
-        <div class="right">
-          <i class="iconfont right-i-tag icon-right"></i>
-        </div>
-      </div>
+      <van-cell-group @click="$router.push('/mymessage')">
+        <van-cell title="我的消息" border class="iconfont icon-xiaoxi1">
+          <template #right-icon>
+            <i class="iconfont right-i-tag icon-right"></i>
+          </template>
+        </van-cell>
+      </van-cell-group>
+      <van-cell-group @click="$router.push('/fellowing')">
+        <van-cell title="我的关注" border class="iconfont icon-guanzhu">
+          <template #right-icon>
+            <i class="iconfont right-i-tag icon-right"></i>
+          </template>
+        </van-cell>
+      </van-cell-group>
+      <van-cell-group @click="$router.push('/myfans')">
+        <van-cell title="我的粉丝" border class="iconfont icon-wode-wodefensi">
+          <template #right-icon>
+            <i class="iconfont right-i-tag icon-right"></i>
+          </template>
+        </van-cell>
+      </van-cell-group>
     </div>
-    <div class="xianyu-mine-setting" v-if="isLogined">
+
+    <div class="xianyu-mine-setting" v-if="isLogin" @click="$router.push('/mycollection')">
+      <van-cell-group>
+        <van-cell title="我的收藏" border class="iconfont icon-shoucang">
+          <template #right-icon>
+            <i class="iconfont right-i-tag icon-right"></i>
+          </template>
+        </van-cell>
+      </van-cell-group>
       <div class="xianyu-mine-setting-item" @click="$router.push('/setting')">
         <div class="left">
           <i class="iconfont left-i-tag icon-shezhi1"></i>
@@ -121,11 +97,24 @@ export default {
       // 是否登录过了
       isLogined: false
     }
+  },
+  computed: {
+    isLogin () {
+      return this.$store.state.isLogin
+    },
+    userInfo () {
+      return this.$store.state.userInfo
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
+.xianyu-mine {
+  /deep/ .van-cell {
+    padding: 16px 16px;
+  }
+}
 .xianyu-mine {
   height: auto;
   margin-bottom: 60px;
@@ -193,6 +182,12 @@ export default {
         h1 {
           font-size: 17px;
           font-weight: 700;
+          margin-bottom: 10px;
+          color: rgba(0, 0, 0, .75);
+        }
+
+        h3 {
+          font-size: 14px;
           margin-bottom: 10px;
           color: rgba(0, 0, 0, .75);
         }
