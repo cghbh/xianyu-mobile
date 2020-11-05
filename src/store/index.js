@@ -5,18 +5,20 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isLogin: false,
-    userInfo: {}
+    token: JSON.parse(localStorage.getItem('token')),
+    userInfo: JSON.parse(localStorage.getItem('userInfo'))
   },
   mutations: {
     // 设置用户的基本信息
     setUserInfo (state, value) {
       state.userInfo = value
+      localStorage.setItem('userInfo', JSON.stringify(value))
     },
 
-    // 修改用户的登录状态
-    setIsLogin (state, value) {
-      state.isLogin = value
+    // 设置token
+    setToken (state, value) {
+      state.token = value
+      localStorage.setItem('token', JSON.stringify(value))
     }
   },
   actions: {

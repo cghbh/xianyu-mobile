@@ -100,7 +100,7 @@ export default {
   },
   computed: {
     isLogin () {
-      return this.$store.state.isLogin
+      return this.$store.state.token !== null && this.$store.state.userInfo !== null
     },
     userInfo () {
       return this.$store.state.userInfo

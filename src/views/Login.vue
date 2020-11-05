@@ -100,7 +100,6 @@ export default {
       try {
         const captcha = await getCaptcha()
         this.captcha = captcha.data.data
-        console.log(this.captcha)
       } catch (error) {
         console.log(error, '错误捕获')
       }
@@ -109,13 +108,16 @@ export default {
       try {
         const result = await userLogin({ telephone: this.telephone2, password: this.password })
         this.$store.commit('setUserInfo', result.data)
-        this.$store.commit('setIsLogin', true)
-        this.$toast(result.msg + '，正在飞速跳转中......')
+        this.$store.commit('setToken', result.token)
+        this.$toast({
+          message: result.msg + '，正在飞速跳转中......',
+          duration: 1000
+        })
         setTimeout(() => {
           this.$router.push('/mine')
         }, 1200)
       } catch (err) {
-        console.log(err, '错误捕获')
+        this.$toast('' + err)
       }
     },
     reloadCaptcha () {
