@@ -8,11 +8,10 @@
       </div>
     </div>
     <div class="xianyu-mine-login" v-else>
-      <div class="xianyu-mine-login-user">
+      <div class="xianyu-mine-login-user" @click="$router.push('/user-detail')">
         <img :src="userInfo.avatar_url">
         <div class="content">
           <h1>{{ userInfo.nickname }}</h1>
-          <h3>{{ userInfo.personal_sign }}</h3>
           <p>点击查看个人主页</p>
         </div>
       </div>
@@ -182,13 +181,7 @@ export default {
         h1 {
           font-size: 17px;
           font-weight: 700;
-          margin-bottom: 10px;
-          color: rgba(0, 0, 0, .75);
-        }
-
-        h3 {
-          font-size: 14px;
-          margin-bottom: 10px;
+          margin-bottom: 14px;
           color: rgba(0, 0, 0, .75);
         }
 

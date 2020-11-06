@@ -1,7 +1,7 @@
 import axios from '@/utils/http.js'
 
 const getCaptcha = () => {
-  return axios.get('/users/captcha')
+  return axios.get('/captcha')
 }
 
 const userLogin = (data) => {
