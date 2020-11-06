@@ -107,15 +107,23 @@ export default {
     async loginByPassword () {
       try {
         const result = await userLogin({ telephone: this.telephone2, password: this.password })
-        this.$store.commit('setUserInfo', result.data)
-        this.$store.commit('setToken', result.token)
-        this.$toast({
-          message: result.msg + '，正在飞速跳转中......',
-          duration: 1000
-        })
-        setTimeout(() => {
-          this.$router.push('/mine')
-        }, 1200)
+        console.log(result, 'result')
+        if (result.code === 200) {
+          this.$store.commit('setUserInfo', result.data)
+          this.$store.commit('setToken', result.token)
+          this.$toast({
+            message: result.msg + '，正在飞速跳转中......',
+            duration: 1000
+          })
+          setTimeout(() => {
+            this.$router.push('/mine')
+          }, 1200)
+        } else {
+          this.$toast({
+            message: result.msg,
+            duration: 2000
+          })
+        }
       } catch (err) {
         this.$toast('' + err)
       }
