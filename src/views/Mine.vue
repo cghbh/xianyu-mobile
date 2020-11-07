@@ -9,7 +9,7 @@
     </div>
     <div class="xianyu-mine-login" v-else>
       <div class="xianyu-mine-login-user" @click="$router.push('/user-detail')">
-        <img :src="userInfo.avatar_url">
+        <img :src="userInfo.avatar_url ? userInfo.avatar_url : 'img/logo.619055bf.png'" alt="">
         <div class="content">
           <h1>{{ userInfo.nickname }}</h1>
           <p>点击查看个人主页</p>

@@ -109,7 +109,7 @@ export default {
         const result = await userLogin({ telephone: this.telephone2, password: this.password })
         console.log(result, 'result')
         if (result.code === 200) {
-          this.$store.commit('setUserInfo', result.data)
+          this.$store.commit('setUserInfo', result.user)
           this.$store.commit('setToken', result.token)
           this.$toast({
             message: result.msg + '，正在飞速跳转中......',

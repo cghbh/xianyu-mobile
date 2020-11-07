@@ -17,15 +17,17 @@
           finished-text="别刷了,真的没有啦......"
           @load="onLoad"
         >
-          <div class="xianyu-fellowing-container-item" v-for="item in list" :key="item">
+          <div class="xianyu-fellowing-container-item" v-for="item in list" :key="item._id">
             <div class="xianyu-fellowing-item-left">
               <img src="../assets/images/logo.png">
               <div class="xianyu-fellowing-item-left-user">
-                <h1>林外有山</h1>
-                <span>前端开发，优秀CSS开发者代码测试，内容必定移除，溢出隐藏处理</span>
+                <h1>{{ item.nickname }}</h1>
+                <span>{{ item.personal_sign }}</span>
               </div>
             </div>
-            <div class="xianyu-fellowing-item-right" :class="{ 'active': isFellowed }" @click="cancelFellow">{{ isFellowed ? '已关注': '关注'}}</div>
+            <!-- <div class="xianyu-fellowing-item-right"  @click="cancelFellow">{{ isFellowed ? '已关注': '关注'}}</div> -->
+            <div class="xianyu-fellowing-item-right" @click="cancelFollow(item._id)" v-if="item.follow">取消关注</div>
+            <div class="xianyu-fellowing-item-right active" :class="{ 'active': !item.follow }" @click="userFollowHandle(item._id)" v-else>关注</div>
           </div>
         </van-list>
       </div>
@@ -35,6 +37,7 @@
 </template>
 
 <script>
+import { userFollowing, userCancelFollow, userFollow } from '@/api/user.js'
 export default {
   name: 'MyCollection',
   data () {
@@ -42,10 +45,16 @@ export default {
       active: '',
       isFellowed: false,
       hasFellowData: true,
-      list: [1, 2, 3, 4, 5, 6, 7, 8],
+      list: [],
       loading: false,
-      finished: false,
+      finished: true,
       isLoading: false
+    }
+  },
+  mounted () {
+    console.log(this.$store.state.userInfo._id, 'id')
+    if (this.$store.state.userInfo._id) {
+      this.getFollowingList(this.$store.state.userInfo._id)
     }
   },
   methods: {
@@ -66,25 +75,66 @@ export default {
       }
     },
     onLoad () {
-      setTimeout(() => {
-        for (let i = 0; i < 8; i++) {
-          this.list.push(this.list.length + 1)
-        }
-      
-        // 加载状态结束
-        this.loading = false
-      
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
+      // setTimeout(() => {
+      //   for (let i = 0; i < 8; i++) {
+      //     this.list.push(this.list.length + 1)
+      //   }
+
+      //   // 加载状态结束
+      //   this.loading = false
+
+      //   // 数据全部加载完成
+      //   if (this.list.length >= 40) {
+      //     this.finished = true
+      //   }
+      // }, 1000)
     },
     onRefresh () {
       setTimeout(() => {
         this.$toast('刷新成功')
         this.isLoading = false
       }, 1000)
+    },
+    // 获取用户的关注
+    async getFollowingList (id) {
+      const data = await userFollowing(id)
+      if (data.code === 200) {
+        this.list = data.data
+        this.list.map(item => {
+          this.$set(item, 'follow', true)
+        })
+        // this.$set(this.list, 'follow', true)
+        console.log(this.list, 'list')
+      }
+    },
+    // 取消关注
+    async cancelFollow (id) {
+      const data = await userCancelFollow(id)
+      if (data.code === 200) {
+        const index = this.list.findIndex(item => item._id === id)
+        if (index > -1) {
+          this.list[index].follow = false
+        }
+        this.$toast({
+          message: '取消关注成功！',
+          duration: 1500
+        })
+      }
+      console.log(data)
+      // console.log(userCancelFollow)
+    },
+    async userFollowHandle (id) {
+      const data = await userFollow(id)
+      if (data.code === 200) {
+        const index = this.list.findIndex(item => item._id === id)
+        if (index > -1) {
+          this.list[index].follow = true
+        }
+        this.$toast({
+          message: '关注成功！',
+          duration: 1500
+        })
+      }
     }
   }
 }
@@ -95,7 +145,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  
+
   .iconfont {
     font-size: 21px;
     font-weight: 500;
@@ -122,10 +172,10 @@ export default {
       border: none;
     }
   }
-  
+
   &-item {
     &-left {
-      width: 291px;
+      width: 270px;
       display: flex;
       align-items: center;
       img {
@@ -153,7 +203,7 @@ export default {
       }
     }
     &-right {
-      width: 60px;
+      width: 80px;
       height: 28px;
       border-radius: 5px;
       display: flex;
@@ -165,7 +215,7 @@ export default {
       box-sizing: border-box;
       color: #666;
     }
-    
+
     &-right.active {
       background-color: #fff;
       color: #409fea;

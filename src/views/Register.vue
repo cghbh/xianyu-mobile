@@ -46,9 +46,9 @@ export default {
   data () {
     return {
       telephone: '',
-      code: '',
-      password: '',
-      againPassword: '',
+      code: '1234',
+      password: '123456',
+      againPassword: '123456',
       nickname: '',
       timerId: null,
       codeSend: true
@@ -62,16 +62,26 @@ export default {
   },
   methods: {
     async register () {
-      const result = await userRegister({
-        telephone: this.telephone,
-        password: this.password,
-        nickname: this.nickname
-      })
-      this.$toast({
-        message: result.msg,
-        duration: 1000
-      })
-      console.log(result)
+      try {
+        const result = await userRegister({
+          telephone: this.telephone,
+          password: this.password,
+          nickname: this.nickname
+        })
+        if (result && result.code === 200) {
+          this.$toast({
+            message: result.msg,
+            duration: 1000
+          })
+        }
+        console.log(result)
+      } catch (err) {
+        console.log(err, 'err')
+        this.$toast({
+          message: err.data.msg,
+          duration: 1000
+        })
+      }
     },
     userBack () {
       if (this.tel || this.code || this.password || this.againPassword) {

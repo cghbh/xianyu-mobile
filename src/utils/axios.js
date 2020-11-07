@@ -82,8 +82,8 @@ class HttpRequest {
       // 及时存在token也有可能过期,因此在每次的请求头中添加token
       // 后台根据token返回结果
       // 然后根据响应回来的结果进行一些处理
-      const token = 'bearulwdnu2hu2v'
-      token && (config.headers.Authorization = token)
+      const token = JSON.parse(localStorage.getItem('token'))
+      token && (config.headers.Authorization = `Bearer ${token}`)
       return config
     }, error => {
       Promise.reject(error)
