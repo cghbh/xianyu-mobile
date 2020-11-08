@@ -13,7 +13,7 @@ const userRegister = (data) => {
 }
 
 // 获取指定用户的关注
-const userFollowing = (id) => {
+const userFollows = (id) => {
   return axios.get(`users/${id}/following`)
 }
 
@@ -27,4 +27,9 @@ const userFollow = (id) => {
   return axios.request({ method: 'PUT', url: `/users/following/${id}` })
 }
 
-export { getCaptcha, userRegister, userLogin, userFollowing, userCancelFollow, userFollow }
+// 我的粉丝列表
+const getMyFans = (id) => {
+  return axios.get(`/users/${id}/follower`)
+}
+
+export { getCaptcha, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans }

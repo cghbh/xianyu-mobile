@@ -75,7 +75,7 @@
           </template>
         </van-cell>
       </van-cell-group>
-      <div class="xianyu-mine-setting-item" @click="$router.push('/setting')">
+     <!-- <div class="xianyu-mine-setting-item" @click="$router.push('/setting')">
         <div class="left">
           <i class="iconfont left-i-tag icon-shezhi1"></i>
           <span>设置</span>
@@ -83,7 +83,7 @@
         <div class="right">
           <i class="iconfont right-i-tag icon-right"></i>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -112,6 +112,20 @@ export default {
 .xianyu-mine {
   /deep/ .van-cell {
     padding: 16px 16px;
+  }
+
+  /deep/ .van-cell__title {
+    padding-left: 10px;
+    font-size: 15px;
+  }
+
+  .iconfont {
+    font-size: 21px;
+  }
+
+  .iconfont.right-i-tag {
+    color: rgba(0, 0, 0, 8);
+    font-size: 18px;
   }
 }
 .xianyu-mine {
@@ -198,40 +212,6 @@ export default {
   &-setting {
     background-color: #fff;
     margin-top: 10px;
-
-    &-item:last-of-type {
-      border: none;
-    }
-
-    &-item {
-      display: flex;
-      padding: 16px 15px;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(38, 38, 38, .05);
-
-      .left {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        user-select: none;
-      }
-
-      .left-i-tag {
-        font-size: 22px;
-        color: rgba(0, 0, 0, .4);
-        margin-right: 8px;
-      }
-
-      span {
-        font-size: 15px;
-      }
-
-      .right-i-tag {
-        color: rgba(0, 0, 0, 8);
-        font-size: 18px;
-      }
-    }
   }
 }
 </style>

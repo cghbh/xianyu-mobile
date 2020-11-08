@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { userFollowing, userCancelFollow, userFollow } from '@/api/user.js'
+import { userFollows, userCancelFollow, userFollow } from '@/api/user.js'
 export default {
   name: 'MyCollection',
   data () {
@@ -52,7 +52,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$store.state.userInfo._id, 'id')
     if (this.$store.state.userInfo._id) {
       this.getFollowingList(this.$store.state.userInfo._id)
     }
@@ -60,7 +59,6 @@ export default {
   methods: {
     cancelFellow () {
       this.isFellowed = !this.isFellowed
-      console.log(this.isFellowed)
       if (!this.isFellowed) {
         this.$dialog.confirm({
           title: '确定要取消关注XXX吗？',
@@ -97,14 +95,12 @@ export default {
     },
     // 获取用户的关注
     async getFollowingList (id) {
-      const data = await userFollowing(id)
+      const data = await userFollows(id)
       if (data.code === 200) {
         this.list = data.data
         this.list.map(item => {
           this.$set(item, 'follow', true)
         })
-        // this.$set(this.list, 'follow', true)
-        console.log(this.list, 'list')
       }
     },
     // 取消关注
@@ -120,8 +116,6 @@ export default {
           duration: 1500
         })
       }
-      console.log(data)
-      // console.log(userCancelFollow)
     },
     async userFollowHandle (id) {
       const data = await userFollow(id)
@@ -210,10 +204,10 @@ export default {
       justify-content: center;
       align-items: center;
       font-size: 13px;
-      background-color: rgba(0, 0, 0, .1);
+      background-color: #409fea;
+      color: #fff;
       padding: 4px;
       box-sizing: border-box;
-      color: #666;
     }
 
     &-right.active {

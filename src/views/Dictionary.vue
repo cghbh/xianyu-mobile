@@ -71,7 +71,7 @@ $fontColor: #000;
 
   /deep/ .van-nav-bar,
   /deep/ .van-sticky{
-    z-index: 999999;
+    z-index: 2001;
     background-color: #fff;
   }
 }
@@ -111,7 +111,7 @@ $fontColor: #000;
         width: 2px;
         transform: scaleX(.5);
         background-color: $color;
-        z-index: 9999;
+        z-index: 2000;
       }
 
       .left-line {
@@ -167,7 +167,7 @@ $fontColor: #000;
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 10001;
+        z-index: 2000;
         font-size: 28px;
         font-weight: 600;
         color: $fontColor;
