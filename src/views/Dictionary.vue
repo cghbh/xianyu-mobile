@@ -27,21 +27,32 @@
       <div class="meaning-container">{{ mock.meaning }}</div>
       <div class="source">{{ mock.source }}</div>
     </div>
-    <divide-area></divide-area>
-    <comment-item></comment-item>
-    <bottom-comment></bottom-comment>
-    <refresh-icon></refresh-icon>
+    <div class="zan-collect">
+      <div class="zan-collect-container" :class="{ 'active': isZan }" @click="isZan = !isZan">
+
+        <i class="iconfont icon-dianzan" v-if="isZan"></i>
+        <i class="iconfont icon-dianzan1" v-else></i>
+        <span>999</span>
+      </div>
+      <div class="zan-collect-container" :class="{ 'active': isCollect }" @click="isCollect = !isCollect">
+
+        <i class="iconfont icon-shoucang1" v-if="isCollect"></i>
+        <i class="iconfont icon-shoucang" v-else></i>
+        <span>收藏</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import BottomComment from '../components/BottomComment/index.vue'
-import CommentItem from '../components/BottomComment/comment.vue'
-import DivideArea from '../components/PublicComponents/DivideArea.vue'
 export default {
   name: 'Dictionary',
   data () {
     return {
+      // 是否点赞
+      isZan: false,
+      // 是否收藏
+      isCollect: false,
       mock: {
         dic: [
           { pinyin: 'jiǒng', hanzi: '迥' },
@@ -53,11 +64,6 @@ export default {
         source: '宋·张戒《岁寒堂诗话》卷上：“文章古今迥然不同，钟嵘《诗品》以古诗第一，子建（曹植）次之，此论诚然。”'
       }
     }
-  },
-  components: {
-    BottomComment,
-    CommentItem,
-    DivideArea
   }
 }
 </script>
@@ -68,6 +74,7 @@ $color: #aaa;
 $fontColor: #000;
 .xianyu-dictionary {
   background-color: #fff;
+  height: 100%;
 
   /deep/ .van-nav-bar,
   /deep/ .van-sticky{
@@ -188,6 +195,37 @@ $fontColor: #000;
   }
   .source {
     margin-top: 20px;
+  }
+}
+
+.zan-collect {
+  display: flex;
+  justify-content: center;
+  height: 60px;
+  align-items: center;
+  margin-top: 20px;
+  &-container:first-of-type {
+    margin-right: 30px;
+  }
+  &-container {
+    padding: 0px 20px;
+    height: 35px;
+    border: .5px solid rgba(0, 0, 0, .4);
+    border-radius: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(0, 0, 0, .8);
+
+    span {
+      margin-left: 6px;
+    }
+  }
+
+  &-container.active {
+    .iconfont {
+      color: #409fea;
+    }
   }
 }
 </style>

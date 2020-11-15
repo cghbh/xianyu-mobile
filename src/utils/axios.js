@@ -1,6 +1,6 @@
 import axios from 'axios'
 // 导入路由，未登录的时候跳转
-import router from '../router/index.js'
+// import router from '../router/index.js'
 // import config from '@/config'
 // 导入Store判断用户是否登录
 // 导入提示框Toast
@@ -20,14 +20,14 @@ const tip = msg => {
 /* 跳转登录页
   携带当前的路由,方便在登录之后返回当前的页面
 */
-const toLogin = () => {
-  router.replace({
-    path: '/login',
-    query: {
-      redirect: router.currentRoute.fullPath
-    }
-  })
-}
+// const toLogin = () => {
+//   router.replace({
+//     path: '/login',
+//     query: {
+//       redirect: router.currentRoute.fullPath
+//     }
+//   })
+// }
 
 /* 请求错误后的统一处理
 @param { Number } status请求失败的状态码 */
@@ -35,7 +35,7 @@ const errorHandle = (status, other) => {
   switch (status) {
     case 401:
       tip('401没有权限')
-      toLogin()
+      // toLogin()
       break
 
     case 403:
@@ -43,9 +43,9 @@ const errorHandle = (status, other) => {
       localStorage.removeItem('token')
       // 在store里面将token置空
       // store.commit('loginSuccess', null)
-      setTimeout(() => {
-        toLogin()
-      }, 1000)
+      // setTimeout(() => {
+      //   toLogin()
+      // }, 1000)
       break
 
     case 404:

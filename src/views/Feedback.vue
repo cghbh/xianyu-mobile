@@ -1,12 +1,12 @@
 <template>
-  <div class="xianyu-mylike">
-    <back-top title="我的点赞"></back-top>
+  <div class="xianyu-feedback">
+    <back-top title="意见反馈"></back-top>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'MyLike'
+  name: 'Feedback'
 }
 </script>
 

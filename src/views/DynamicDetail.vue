@@ -1,41 +1,33 @@
 <template>
   <div class="dynamic-detail">
-    <van-sticky>
-      <van-nav-bar title="动态详情" left-text="返回" left-arrow @click-left="$router.go(-1)">
-        <template #left>
-          <div class="back-container">
-            <i class="iconfont icon-left"></i>
-          </div>
-        </template>
-      </van-nav-bar>
-    </van-sticky>
-    
+    <back-top title="动态详情"></back-top>
     <div class="dynamic-detail-user">
       <div class="dynamic-detail-user-container">
-        <img src="../assets/images/logo.png">
+        <van-image width="50" height="50" fit="cover" round :src="dynamic.publisher.avatar_url"/>
         <div class="dynamic-detail-user-name">
-          <h1>好好先生</h1>
-          <h3>一分钟前发布</h3>
+          <h1>{{ dynamic.publisher && dynamic.publisher.nickname }}</h1>
+          <h3>{{ dynamic && dynamic.createdAt | timeformat }}</h3>
         </div>
       </div>
-      <div @click="focus" class="dynamic-detail-user-focus" v-if="!isFocus">
+      <div @click="focus" class="dynamic-detail-user-focus" v-if="!fansId.includes($store.state.userInfo._id)">
         <i class="iconfont icon-jia"></i>
         <span>关注</span>
       </div>
     </div>
     <div class="dynamic-detail-content">
-      <p>事业常成于坚忍，毁于急躁。我在沙漠中曾亲眼看见，匆忙的旅人落在从容的后边；疾驰的骏马落在后头，缓步的骆驼继续向前。</p>
+      <p>{{ dynamic.content }}</p>
       <van-image
         @click="showPreview(index)"
         width="100"
         height="100"
         fit="cover"
         lazy-load
-        v-for="(item, index) in imageArray"
+        v-for="(item, index) in dynamic.avatar_url"
         :src="item"
         :key="item">
       </van-image>
     </div>
+    <divide-area :height="8"></divide-area>
     <comment-list></comment-list>
     <bottom-comment></bottom-comment>
   </div>
@@ -45,29 +37,49 @@
 import { ImagePreview } from 'vant'
 import BottomComment from '../components/BottomComment/index.vue'
 import CommentList from '../components/BottomComment/comment.vue'
+import DivideArea from '../components/PublicComponents/DivideArea.vue'
+import { getDynamicDetail } from '@/api/dynamic.js'
+import { userFollow, getMyFans } from '@/api/user.js'
 export default {
   name: 'DynamicDetail',
   data () {
-    // 是否已经关注了
     return {
-      isFocus: false,
-      imageArray: [
-        'http://192.168.43.223:3000/uploads/upload_59f9ac1292ce27b47b988412d1830469.jpg',
-        'http://192.168.43.223:3000/uploads/upload_53fc3c51879bc80a035153fc67eb14cf.jpg',
-        'http://192.168.43.223:3000/uploads/upload_b2a59756fe5e4a4ce4c1508ce6972ba2.jpg',
-        'http://192.168.43.223:3000/uploads/upload_e3e92f1c6aa27087b2843cf9a337054f.jpg',
-        'http://192.168.43.223:3000/uploads/upload_3959eebb4704944914e4bd8967ba22fd.jpg'
-      ]
+      dynamic: {},
+      // 当前动态作者的所有粉丝id
+      fansId: []
+    }
+  },
+  async mounted () {
+    const { id } = this.$route.params
+    const result = await getDynamicDetail(id)
+    if (result.code === 200) {
+      this.dynamic = result.data
+      const result1 = await getMyFans(this.dynamic.publisher._id)
+      if (result1.code === 200) {
+        const tempArray = []
+        result1.data.forEach(item => tempArray.push(item._id))
+        this.fansId = tempArray
+      }
+    } else {
+      this.$toast({ message: '数据获取失败', duration: 800 })
     }
   },
   methods: {
-    focus () {
-      this.isFocus = true
-      this.$toast('已添加关注')
+    async focus () {
+      const result = await userFollow(this.dynamic.publisher._id)
+      if (result.code === 200) {
+        const result1 = await getMyFans(this.dynamic.publisher._id)
+        if (result1.code === 200) {
+          const tempArray = []
+          result1.data.forEach(item => tempArray.push(item._id))
+          this.fansId = tempArray
+        }
+        this.$toast('已添加关注')
+      }
     },
     showPreview (index) {
       ImagePreview({
-        images: this.imageArray,
+        images: this.dynamic.avatar_url,
         startPosition: index,
         closeable: true
       })
@@ -75,7 +87,8 @@ export default {
   },
   components: {
     BottomComment,
-    CommentList
+    CommentList,
+    DivideArea
   }
 }
 </script>
@@ -134,10 +147,10 @@ export default {
     }
   }
   &-content {
-    padding: 0 10px;
+    padding: 0 10px 12px 10px;
     p {
-      font-size: 16px;
-      line-height: 28px;
+      font-size: 15PX;
+      line-height: 25px;
       margin-bottom: 10px;
       color: rgba(0, 0, 0, .9);
     }

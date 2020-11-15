@@ -2,14 +2,14 @@
   <div class="dynamic-publish">
     <van-nav-bar title="标题" left-text="返回" left-arrow>
       <template #right>
-        <i name="right" class="iconfont icon-fabu"></i>
+        <i name="right" class="iconfont icon-fabu" @click="publish"></i>
       </template>
       <template #left>
         <i name="left" class="iconfont icon-left" @click="back"></i>
       </template>
     </van-nav-bar>
     <div class="dynamic-publish-container">
-      <div class="content-editable" placeholder="发表原创文字,沉淀灵感,留住思考" contenteditable="true" @input="divInput" :value="value" ></div>
+      <div class="content-editable" placeholder="发表原创文字,沉淀灵感,留住思考" contenteditable="true" @input="divInput" :value="inputValue" ></div>
       <div class="uploader-container">
         <van-uploader
           v-model="fileList"
@@ -31,51 +31,82 @@
       </div>
       <div class="error-warning">
         <i class="iconfont icon-jinggao"></i>
-        <span>请勿发布违规及营销推广内容，违者删帖封号。</span>
+        <span>请勿发布违法违规及营销推广内容，违者删帖封号。</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'// 引入axios
-import { Toast } from 'vant'// 引入Toast
+import { uploadDynamicImage, dynamicPublish } from '@/api/dynamic.js'
 export default {
   name: 'DynamicPublish',
   data () {
     return {
-      value: '',
+      inputValue: '',
       placeholder: '请输入你想输入的内容',
       fileList: [],
-      isPrivate: true
+      isPrivate: false,
+      uploadImg: []
+    }
+  },
+  watch: {
+    uploadImg (newVal) {
+      console.log(newVal)
     }
   },
   methods: {
     divInput (e) {
-      console.log(e.target.innerText)
+      this.inputValue = e.target.innerText
     },
     afterRead (file) {
-      console.log(typeof file, file)
-      let uploadImg
-      const uploadImgArray = []
+      file.status = 'uploading'
+      file.message = '上传中...'
       // 单文件上传
       if (Object.prototype.toString.call(file) === '[object Object]') {
-        // uploadImg = await upLoaderImg(file.file)
-        upLoaderImg(file.file).then(res => {
-          uploadImg = res
-          console.log(uploadImg)
+        uploadDynamicImage(file.file).then(res => {
+          this.uploadImg.push(res)
+          file.status = 'done'
+          file.message = ''
+        }).catch(err => {
+          console.log(err)
+          file.status = 'failed'
+          file.message = '上传失败'
         })
       } else if (Object.prototype.toString.call(file) === '[object Array]') {
         // 多文件上传
         file.map(item => {
-          upLoaderImg(item.file).then(res => {
-            uploadImgArray.push(res)
+          uploadDynamicImage(item.file).then(res => {
+            file.status = 'done'
+            file.message = ''
+            this.uploadImg.push(res)
+          }).catch(err => {
+            file.status = 'failed'
+            file.message = '上传失败'
+            console.log(err, '多文件上传错误捕获')
           })
         })
       }
     },
     beforeRead (file) {
       return true
+    },
+    async publish () {
+      if (!this.inputValue) {
+        return this.$toast({ message: '发表的动态内容不能为空！' })
+      }
+      const data = await dynamicPublish({ content: this.inputValue, avatar_url: this.uploadImg, is_private: this.isPrivate })
+      if (data.code === 200) {
+        this.$toast({ message: data.msg, duration: 800 })
+        this.inputValue = ''
+        this.uploadImg = []
+        this.isPrivate = false
+        setTimeout(() => {
+          this.$router.push('/')
+        }, 950)
+      } else {
+        this.$toast({ message: data.msg, duration: 800 })
+      }
     },
     back () {
       this.$dialog.confirm({
@@ -92,30 +123,6 @@ export default {
         })
     }
   }
-}
-
-function upLoaderImg (file) { // file为 你读取成功的回调文件信息
-  // new 一个FormData格式的参数
-  const params = new FormData()
-  params.append('file', file)
-  const config = {
-    headers: { // 添加请求头
-      'Content-Type': 'multipart/form-data'
-    }
-  }
-  return new Promise((resolve, reject) => {
-    // 把 uploadUrl 换成自己的 上传路径
-    axios.post('http://192.168.43.223:3000/uploads', params, config).then(res => {
-      if (res.status === 200) { // 如果为真 resolve出去
-        resolve(res.data)
-      } else {
-        reject(res.data)
-      }
-    }).catch(err => {
-      Toast.fail('系统异常')
-      reject(err)
-    })
-  })
 }
 </script>
 
@@ -198,6 +205,7 @@ function upLoaderImg (file) { // file为 你读取成功的回调文件信息
   span {
     color: #f56c60;
     padding-top: 2px;
+    font-size: 13px;
   }
 }
 </style>

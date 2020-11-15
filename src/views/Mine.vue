@@ -9,7 +9,8 @@
     </div>
     <div class="xianyu-mine-login" v-else>
       <div class="xianyu-mine-login-user" @click="$router.push('/user-detail')">
-        <img :src="userInfo.avatar_url ? userInfo.avatar_url : 'img/logo.619055bf.png'" alt="">
+        <!-- <img :src="userInfo.avatar_url ? userInfo.avatar_url : 'img/logo.619055bf.png'" alt=""> -->
+        <van-image width="70" height="70" fit="cover" round src="http://xianyu-uploads.oss-cn-beijing.aliyuncs.com/upload_aa3171f1021eec318efdf3179f89d7af.jpg"/>
         <div class="content">
           <h1>{{ userInfo.nickname }}</h1>
           <p>点击查看个人主页</p>
@@ -44,13 +45,6 @@
     </div>
 
     <div class="xianyu-mine-extend">
-      <van-cell-group @click="$router.push('/mymessage')">
-        <van-cell title="我的消息" border class="iconfont icon-xiaoxi1">
-          <template #right-icon>
-            <i class="iconfont right-i-tag icon-right"></i>
-          </template>
-        </van-cell>
-      </van-cell-group>
       <van-cell-group @click="$router.push('/fellowing')">
         <van-cell title="我的关注" border class="iconfont icon-guanzhu">
           <template #right-icon>
@@ -65,25 +59,33 @@
           </template>
         </van-cell>
       </van-cell-group>
-    </div>
-
-    <div class="xianyu-mine-setting" v-if="isLogin" @click="$router.push('/mycollection')">
-      <van-cell-group>
+      <van-cell-group @click="$router.push('/mycollection')">
         <van-cell title="我的收藏" border class="iconfont icon-shoucang">
           <template #right-icon>
             <i class="iconfont right-i-tag icon-right"></i>
           </template>
         </van-cell>
       </van-cell-group>
-     <!-- <div class="xianyu-mine-setting-item" @click="$router.push('/setting')">
-        <div class="left">
-          <i class="iconfont left-i-tag icon-shezhi1"></i>
-          <span>设置</span>
-        </div>
-        <div class="right">
-          <i class="iconfont right-i-tag icon-right"></i>
-        </div>
-      </div> -->
+    </div>
+
+    <div class="xianyu-mine-setting" v-if="isLogin" >
+      <van-cell-group @click="$router.push('/setting')">
+        <van-cell title="设置" border class="iconfont icon-shoucang">
+          <template #right-icon>
+            <i class="iconfont right-i-tag icon-right"></i>
+          </template>
+        </van-cell>
+      </van-cell-group>
+    </div>
+
+    <div class="xianyu-mine-feedback">
+      <van-cell-group @click="$router.push('/feedback')">
+        <van-cell title="意见反馈" border class="iconfont icon-shoucang">
+          <template #right-icon>
+            <i class="iconfont right-i-tag icon-right"></i>
+          </template>
+        </van-cell>
+      </van-cell-group>
     </div>
   </div>
 </template>

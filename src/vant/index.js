@@ -33,7 +33,8 @@ import {
   Button,
   Form,
   Cell,
-  CellGroup
+  CellGroup,
+  Image as VanImage
 } from 'vant'
 
 // 注册为全局组件
@@ -69,3 +70,4 @@ Vue.use(NavBar)
   .use(Form)
   .use(Cell)
   .use(CellGroup)
+  .use(VanImage)

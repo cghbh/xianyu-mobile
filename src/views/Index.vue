@@ -1,6 +1,9 @@
 <template>
   <div class="xianyu-index">
-    <router-view></router-view>
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"/>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"/>
     <van-tabbar route v-model="active" active-color="#409fea" inactive-color="#000">
       <van-tabbar-item v-for="item in bottomIcon" :key=item.to :to="item.to">
         <span>{{ item.title }}</span>
@@ -32,10 +35,10 @@ export default {
           title: '探索'
         },
         {
-          to: '/dynamic',
-          active: 'icon-dongtai01',
-          inactive: 'icon-dongtaiquan',
-          title: '动态'
+          to: '/mymessage',
+          active: 'icon-xiaoxi1',
+          inactive: 'icon-xiaoxi1',
+          title: '消息'
         },
         {
           to: '/mine',
@@ -53,7 +56,7 @@ export default {
  .xianyu-index {
    height: 100%;
    position: relative;
-   
+
    /deep/ .van-tabbar-item__icon .iconfont {
      font-size: 20px;
    }

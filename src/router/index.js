@@ -20,7 +20,10 @@ const routes = [
       {
         path: '',
         name: 'homepage',
-        component: () => import('../views/HomePage.vue')
+        component: () => import('../views/HomePage.vue'),
+        meta: {
+          keepAlive: true
+        }
       },
       {
         path: 'mine',
@@ -28,9 +31,9 @@ const routes = [
         component: () => import('../views/Mine.vue')
       },
       {
-        path: 'dynamic',
-        name: 'Dynamic',
-        component: () => import('../views/Dynamic.vue')
+        path: '/mymessage',
+        component: () => import('../views/MyMessage.vue'),
+        name: 'MyMessage'
       },
       {
         path: '/discover',
@@ -100,11 +103,6 @@ const routes = [
     name: 'MyFans'
   },
   {
-    path: '/mymessage',
-    component: () => import('../views/MyMessage.vue'),
-    name: 'MyMessage'
-  },
-  {
     path: '/gold-sentence',
     component: () => import('../views/GoldSentence.vue'),
     name: 'GoldSentence'
@@ -153,6 +151,11 @@ const routes = [
     path: '/user-detail',
     component: () => import('../views/UserDetail.vue'),
     name: 'UserDetail'
+  },
+  {
+    path: '/feedback',
+    component: () => import('../views/Feedback.vue'),
+    name: 'Feedback'
   }
 ]
 

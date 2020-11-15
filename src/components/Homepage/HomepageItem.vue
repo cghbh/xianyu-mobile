@@ -1,21 +1,21 @@
 <template>
   <div class="homepage-item" :class="{ 'first': !isFirst }">
     <div class="homepage-item-user">
-      <img src="../../assets/images/logo.png">
+      <van-image width="50" height="50" fit="cover" round :src="itemValue.publisher.avatar_url"/>
       <div class="homepage-item-user-name">
-        <h1>好好先生</h1>
-        <h3>一分钟前发布</h3>
+        <h1>{{ itemValue.publisher.nickname }}</h1>
+        <h3>{{ itemValue.createdAt | timeformat }}</h3>
       </div>
     </div>
     <div class="homepage-item-area">
-      <p @click="$router.push('/dynamic-detail/1')">事业常成于坚忍，毁于急躁。我在沙漠中曾亲眼看见，匆忙的旅人落在从容的后边；疾驰的骏马落在后头，缓步的骆驼继续向前。</p>
+      <p @click="$router.push(`/dynamic-detail/${itemValue._id}`)">{{ itemValue.content }}</p>
       <van-image
-        @click="showPreview(index)"
+        @click="showPreview(index, itemValue.avatar_url)"
         width="100"
         height="100"
         fit="cover"
         lazy-load
-        v-for="(item, index) in imageArray"
+        v-for="(item, index) in itemValue.avatar_url"
         :src="item"
         :key="item">
       </van-image>
@@ -26,16 +26,16 @@
       <div class="zan-icon">
         <i v-if="false" class="iconfont icon-dianzan"></i>
         <i class="iconfont icon-dianzan1"></i>
-        <span>100</span>
+        <span>{{ itemValue.zan_number }}</span>
       </div>
-      <div class="comment-icon" @click="$router.push('/dynamic-detail/1')">
+      <div class="comment-icon" @click="$router.push(`/dynamic-detail/${itemValue._id}`)">
         <i class="iconfont icon-pinglun"></i>
-        <span>100</span>
+        <span>{{ itemValue.comment_number }}</span>
       </div>
       <div class="collect-icon">
         <i v-if="false" class="iconfont icon-shoucang1"></i>
         <i class="iconfont icon-shoucang"></i>
-        <span>1000</span>
+        <span>{{ itemValue.collect_number }}</span>
       </div>
     </div>
   </div>
@@ -55,22 +55,10 @@ export default {
       default: () => {}
     }
   },
-  data () {
-    return {
-      imageArray: [
-        'http://192.168.43.223:3000/uploads/upload_59f9ac1292ce27b47b988412d1830469.jpg',
-        'http://192.168.43.223:3000/uploads/upload_53fc3c51879bc80a035153fc67eb14cf.jpg',
-        'http://192.168.43.223:3000/uploads/upload_b2a59756fe5e4a4ce4c1508ce6972ba2.jpg',
-        'http://192.168.43.223:3000/uploads/upload_e3e92f1c6aa27087b2843cf9a337054f.jpg',
-        'http://192.168.43.223:3000/uploads/upload_3959eebb4704944914e4bd8967ba22fd.jpg'
-      ]
-    }
-  },
   methods: {
-    showPreview (index) {
-      console.log(index)
+    showPreview (index, urls) {
       ImagePreview({
-        images: this.imageArray,
+        images: urls,
         startPosition: index,
         closeable: true
       })
@@ -97,6 +85,7 @@ export default {
     }
 
     &-name {
+      margin-left: 5px;
       h1 {
         margin-bottom: 8px;
         font-size: 16px;
@@ -111,8 +100,8 @@ export default {
 
   &-area {
     p {
-      font-size: 15px;
-      line-height: 24px;
+      font-size: 15PX;
+      line-height: 25px;
       margin-bottom: 10px;
       color: rgba(0, 0, 0, .9);
     }

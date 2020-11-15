@@ -133,36 +133,33 @@
       <strong style="font-weight: bold;">在天愿作比翼鸟，在地愿为连理枝。</strong>
       天长地久有时尽，此恨绵绵无绝期。<br>
     </div>
-    <refresh-icon></refresh-icon>
-    <divide-area></divide-area>
-    <bottom-comment></bottom-comment>
-    <comment-item></comment-item>
+    <div class="zan-collect">
+      <div class="zan-collect-container" :class="{ 'active': isZan }" @click="isZan = !isZan">
+    
+        <i class="iconfont icon-dianzan" v-if="isZan"></i>
+        <i class="iconfont icon-dianzan1" v-else></i>
+        <span>999</span>
+      </div>
+      <div class="zan-collect-container" :class="{ 'active': isCollect }" @click="isCollect = !isCollect">
+    
+        <i class="iconfont icon-shoucang1" v-if="isCollect"></i>
+        <i class="iconfont icon-shoucang" v-else></i>
+        <span>收藏</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import BottomComment from '../components/BottomComment/index.vue'
-import CommentItem from '../components/BottomComment/comment.vue'
-import DivideArea from '../components/PublicComponents/DivideArea.vue'
 export default {
   name: 'AncientPoetry',
   data () {
     return {
-      refreshActive: false
+      // 是否点赞
+      isZan: false,
+      // 是否收藏
+      isCollect: false
     }
-  },
-  methods: {
-    refreshHandle () {
-      this.refreshActive = true
-      setTimeout(() => {
-        this.refreshActive = false
-      }, 2000)
-    }
-  },
-  components: {
-    BottomComment,
-    CommentItem,
-    DivideArea
   }
 }
 </script>
@@ -183,6 +180,7 @@ export default {
   background-color: #fff;
   height: 100%;
   overflow: auto;
+  padding-bottom: 30px;
 }
 
 .ancient-poetry-container {
@@ -190,33 +188,35 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-bottom: 90px;
+}
 
-  .refresh {
-     position: fixed;
-     width: 45px;
-     height: 45px;
-     background-color: #fff;
-     border-radius: 50%;
-     bottom: 100px;
-     right: 12px;
-     box-shadow: 0 0 20px 1px #ddd;
-     display: flex;
-     justify-content: center;
-     align-items: center;
+.zan-collect {
+  display: flex;
+  justify-content: center;
+  height: 60px;
+  align-items: center;
+  margin-top: 20px;
+  &-container:first-of-type {
+    margin-right: 30px;
+  }
+  &-container {
+    padding: 0px 20px;
+    height: 35px;
+    border: .5px solid rgba(0, 0, 0, .4);
+    border-radius: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(0, 0, 0, .8);
 
-     .iconfont {
-        font-size: 24px;
-        color: #409fea;
-     }
+    span {
+      margin-left: 6px;
+    }
+  }
 
-     .iconfont.active {
-        animation: turn 1s linear infinite;
-     }
-
-    @keyframes turn {
-      from {transform: rotate(0deg);}
-      to {transform: rotate(360deg);}
+  &-container.active {
+    .iconfont {
+      color: #409fea;
     }
   }
 }

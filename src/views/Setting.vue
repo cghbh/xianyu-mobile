@@ -1,12 +1,6 @@
 <template>
   <div class="xianyu-setting">
-    <van-nav-bar title="设置" left-text="返回" left-arrow @click-left="$router.go(-1)">
-      <template #left>
-        <div class="back-container">
-          <i class="iconfont icon-left"></i>
-        </div>
-      </template>
-    </van-nav-bar>
+    <back-top title="设置"></back-top>
     <div>
       <div>修改资料</div>
       <div>隐私政策</div>
