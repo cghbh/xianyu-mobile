@@ -35,4 +35,24 @@ const getMyFans = (id) => {
   return axios.get(`/users/${id}/follower`)
 }
 
-export { getCaptcha, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans }
+// 用户点赞
+const likeDynamics = (id) => {
+  return axios.get(`/users/likeDynamics/${id}`)
+}
+
+// 用户取消点赞
+const unlikeDynamics = (id) => {
+  return axios.request({ method: 'DELETE', url: `/users/unlikeDynamics/${id}` })
+}
+
+// 指定动态下面的所有点赞者
+const listLikePerson = (id) => {
+  return axios.get(`/dynamics/${id}/likePersons`)
+}
+
+// 获取已登录用户点赞过的动态
+const userLikeDynamics = (id) => {
+  return axios.get(`users/${id}/likeDynamcis`)
+}
+
+export { getCaptcha, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics }

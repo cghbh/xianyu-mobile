@@ -3,15 +3,11 @@
     <back-top title="动态详情"></back-top>
     <div class="dynamic-detail-user">
       <div class="dynamic-detail-user-container">
-        <van-image width="50" height="50" fit="cover" round :src="dynamic.publisher.avatar_url"/>
+        <van-image width="50" height="50" fit="cover" round :src="dynamic.publisher && dynamic.publisher.avatar_url"/>
         <div class="dynamic-detail-user-name">
           <h1>{{ dynamic.publisher && dynamic.publisher.nickname }}</h1>
           <h3>{{ dynamic && dynamic.createdAt | timeformat }}</h3>
         </div>
-      </div>
-      <div @click="focus" class="dynamic-detail-user-focus" v-if="!fansId.includes($store.state.userInfo._id)">
-        <i class="iconfont icon-jia"></i>
-        <span>关注</span>
       </div>
     </div>
     <div class="dynamic-detail-content">
@@ -49,23 +45,42 @@ export default {
       fansId: []
     }
   },
+  computed: {
+    userInfo () {
+      return this.$store.state.userInfo
+    },
+    login_user_id () {
+      return this.userInfo && this.userInfo._id
+    },
+    user_login_token () {
+      return this.$store.state.token
+    }
+  },
   async mounted () {
-    const { id } = this.$route.params
-    const result = await getDynamicDetail(id)
+    const result = await getDynamicDetail(this.$route.params.id)
     if (result.code === 200) {
       this.dynamic = result.data
-      const result1 = await getMyFans(this.dynamic.publisher._id)
-      if (result1.code === 200) {
-        const tempArray = []
-        result1.data.forEach(item => tempArray.push(item._id))
-        this.fansId = tempArray
-      }
     } else {
       this.$toast({ message: '数据获取失败', duration: 800 })
     }
   },
   methods: {
     async focus () {
+      // 先判断用户是否登录
+      if (!this.user_login_token) {
+        return this.$dialog({
+          message: '<p style="font-size: 16px;line-height: 25px">此操作需要登录，\n是否跳转到登录页面？</p>',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          confirmButtonColor: '#409fea',
+          cancelButtonText: '取消',
+          cancelButtonColor: '#666'
+        }).then(() => {
+          this.$router.push({ name: 'Login' })
+        })
+          .catch(() => {})
+      }
       const result = await userFollow(this.dynamic.publisher._id)
       if (result.code === 200) {
         const result1 = await getMyFans(this.dynamic.publisher._id)
@@ -114,17 +129,6 @@ export default {
     .dynamic-detail-user-container {
       display: flex;
       align-items: center;
-    }
-
-    &-focus {
-      color: #409fea;
-      .iconfont {
-        font-size: 14px;
-        margin-right: 3px;
-      }
-      span {
-        font-size: 16px;
-      }
     }
 
     img {

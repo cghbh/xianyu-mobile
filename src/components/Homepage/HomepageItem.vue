@@ -24,8 +24,9 @@
       <!-- 一像素边框的实现 -->
       <div class="one-px"></div>
       <div class="zan-icon">
-        <i v-if="false" class="iconfont icon-dianzan"></i>
-        <i class="iconfont icon-dianzan1"></i>
+        <!-- {{loginUserLikeDynamics.includes(itemValue._id) || isLike}}--{{isLike}} -->
+        <i @click="unlike" v-if="loginUserLikeDynamics.includes(itemValue._id)" class="iconfont icon-dianzan"></i>
+        <i v-else @click="like" class="iconfont icon-dianzan1"></i>
         <span>{{ itemValue.zan_number }}</span>
       </div>
       <div class="comment-icon" @click="$router.push(`/dynamic-detail/${itemValue._id}`)">
@@ -53,6 +54,20 @@ export default {
     itemValue: {
       type: Object,
       default: () => {}
+    },
+    loginUserLikeDynamics: {
+      type: Array,
+      default: () => []
+    }
+  },
+  data () {
+    return {
+      isLike: false
+    }
+  },
+  computed: {
+    user_login_id () {
+      return this.$store.state.userInfo._id
     }
   },
   methods: {
@@ -62,6 +77,15 @@ export default {
         startPosition: index,
         closeable: true
       })
+    },
+    like () {
+      // 传递动态id
+      this.$emit('itemlike', this.itemValue._id)
+      this.isLike = true
+    },
+    unlike () {
+      this.$emit('itemunlike', this.itemValue._id)
+      this.isLike = false
     }
   }
 }
