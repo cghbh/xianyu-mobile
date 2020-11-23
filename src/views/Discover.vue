@@ -11,10 +11,10 @@
     />
     <div style="padding: 10px 20px 15px 20px;">
       <van-swipe :autoplay="3000" loop touchable indicator-color="#409fea">
-        <van-swipe-item>
-          <img src="../assets/images/1.jpg">
+        <van-swipe-item v-for="item in swiperList" :key="item._id">
+          <img :src="item.swiper_url">
         </van-swipe-item>
-        <van-swipe-item>
+       <!-- <van-swipe-item>
           <img src="../assets/images/2.jpg">
         </van-swipe-item>
         <van-swipe-item>
@@ -22,7 +22,7 @@
         </van-swipe-item>
         <van-swipe-item>
           <img src="../assets/images/4.jpg">
-        </van-swipe-item>
+        </van-swipe-item> -->
       </van-swipe>
     </div>
     <div class="xianyu-discover-container">
@@ -44,6 +44,8 @@
 
 <script>
 import ChannelItem from '../components/PublicComponents/ChannelItem.vue'
+import { getSwiper } from '@/api/swiper.js'
+
 const list = [
   { title: '好文', desp: '一语惊醒梦中人', to: '/good-article', color: '#F3F3F3', isSelect: true },
   { title: '诗词', desp: '一语惊醒梦中人', to: '/ancient-poetry', color: '#FAF4F4', isSelect: true },
@@ -56,11 +58,21 @@ export default {
   data () {
     return {
       value: '',
-      channelList: JSON.parse(localStorage.getItem('channel')) || list
+      channelList: JSON.parse(localStorage.getItem('channel')) || list,
+      swiperList: []
     }
   },
   mounted () {
     localStorage.setItem('channel', JSON.stringify(this.channelList))
+    this.getSwiperHandle()
+  },
+  methods: {
+    async getSwiperHandle () {
+      const result = await getSwiper()
+      if (result.errno === 0) {
+        this.swiperList = result.data.slice(0, 5)
+      }
+    }
   },
   components: {
     ChannelItem

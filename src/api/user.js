@@ -10,6 +10,16 @@ const userLogin = (data) => {
   return axios.post('/users/login', data)
 }
 
+// 获取注册短信验证码
+const getTelephoneCodeReg = (data) => {
+  return axios.post('/regcode', data)
+}
+
+// 验证码校验
+const checkTelephoneCode = (data) => {
+  return axios.post('/verifyCode', data)
+}
+
 // 用户注册
 const userRegister = (data) => {
   return axios.post('/users/register', data)
@@ -55,4 +65,4 @@ const userLikeDynamics = (id) => {
   return axios.get(`users/${id}/likeDynamcis`)
 }
 
-export { getCaptcha, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics }
+export { getCaptcha, getTelephoneCodeReg, checkTelephoneCode, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics }

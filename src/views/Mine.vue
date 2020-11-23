@@ -112,6 +112,9 @@ export default {
 
 <style scoped lang="scss">
 .xianyu-mine {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
   /deep/ .van-cell {
     padding: 16px 16px;
   }
@@ -131,8 +134,6 @@ export default {
   }
 }
 .xianyu-mine {
-  height: auto;
-  margin-bottom: 60px;
   &-unlogin {
     background-color: #fff;
     display: flex;

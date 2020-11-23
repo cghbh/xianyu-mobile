@@ -10,6 +10,7 @@
             :key="item._id"
             :isFirst="index === 0"
             :itemValue="item"
+            :loading="isLoading"
             :loginUserLikeDynamics="loginUserLikeDynamics"></homepage-item>
         </div>
       </van-tab>
@@ -26,6 +27,7 @@
     </van-tabs>
     <i @click="$router.push('/dynamic-publish')" class="iconfont add-word icon-tianxie"></i>
   </div>
+
 </template>
 
 <script>
@@ -39,7 +41,8 @@ export default {
       active: 0,
       recommendDynamics: [],
       // 已登录用户所有点赞过的id
-      loginUserLikeDynamics: []
+      loginUserLikeDynamics: [],
+      isLoading: true
     }
   },
   computed: {
@@ -49,6 +52,9 @@ export default {
     user_login_token () {
       return this.$store.state.token
     }
+  },
+  beforeCreate () {
+    this.isLoading = false
   },
   mounted () {
     this.getRecommendDyamic()
@@ -115,7 +121,7 @@ export default {
         })
           .catch(() => {})
       }
-      
+
       // 判断当前的动态id用户是否点过赞
       const result = await unlikeDynamics(dynamicId)
       if (result.code === 200) {
@@ -139,6 +145,11 @@ export default {
   margin-bottom: 52px;
   /deep/ .van-sticky {
     background-color: #fff;
+  }
+
+  /deep/ .van-skeleton__row, .van-skeleton__title {
+    background-color: #f2f3f5;
+    height: 20px;
   }
 
   /deep/ .van-tabs__wrap {

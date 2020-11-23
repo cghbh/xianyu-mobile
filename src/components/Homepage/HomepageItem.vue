@@ -1,44 +1,50 @@
 <template>
   <div class="homepage-item" :class="{ 'first': !isFirst }">
-    <div class="homepage-item-user">
-      <van-image width="50" height="50" fit="cover" round :src="itemValue.publisher.avatar_url"/>
-      <div class="homepage-item-user-name">
-        <h1>{{ itemValue.publisher.nickname }}</h1>
-        <h3>{{ itemValue.createdAt | timeformat }}</h3>
+    <!-- <van-skeleton :row="1" avatar row-width="100%" :loading="loading"> -->
+      <div class="homepage-item-user">
+        <van-image width="50" height="50" fit="cover" round :src="itemValue.publisher.avatar_url"/>
+        <div class="homepage-item-user-name">
+          <h1>{{ itemValue.publisher.nickname }}</h1>
+          <h3>{{ itemValue.createdAt | timeformat }}</h3>
+        </div>
       </div>
-    </div>
-    <div class="homepage-item-area">
-      <p @click="$router.push(`/dynamic-detail/${itemValue._id}`)">{{ itemValue.content }}</p>
-      <van-image
-        @click="showPreview(index, itemValue.avatar_url)"
-        width="100"
-        height="100"
-        fit="cover"
-        lazy-load
-        v-for="(item, index) in itemValue.avatar_url"
-        :src="item"
-        :key="item">
-      </van-image>
-    </div>
-    <div class="homepage-item-operation">
-      <!-- 一像素边框的实现 -->
-      <div class="one-px"></div>
-      <div class="zan-icon">
-        <!-- {{loginUserLikeDynamics.includes(itemValue._id) || isLike}}--{{isLike}} -->
-        <i @click="unlike" v-if="loginUserLikeDynamics.includes(itemValue._id)" class="iconfont icon-dianzan"></i>
-        <i v-else @click="like" class="iconfont icon-dianzan1"></i>
-        <span>{{ itemValue.zan_number }}</span>
+    <!-- </van-skeleton> -->
+    <!-- <van-skeleton :row="4" row-width="100%" :loading="loading"> -->
+      <div class="homepage-item-area">
+        <p @click="$router.push(`/dynamic-detail/${itemValue._id}`)">{{ itemValue.content }}</p>
+        <van-image
+          @click="showPreview(index, itemValue.avatar_url)"
+          width="100"
+          height="100"
+          fit="cover"
+          lazy-load
+          v-for="(item, index) in itemValue.avatar_url"
+          :src="item"
+          :key="item">
+        </van-image>
       </div>
-      <div class="comment-icon" @click="$router.push(`/dynamic-detail/${itemValue._id}`)">
-        <i class="iconfont icon-pinglun"></i>
-        <span>{{ itemValue.comment_number }}</span>
+    <!-- </van-skeleton> -->
+    <!-- <van-skeleton class="skeleton-bottom" :row="1" row-width="100%" :loading="loading"> -->
+      <div class="homepage-item-operation">
+        <!-- 一像素边框的实现 -->
+        <div class="one-px"></div>
+        <div class="zan-icon">
+          <!-- {{loginUserLikeDynamics.includes(itemValue._id) || isLike}}--{{isLike}} -->
+          <i @click="unlike" v-if="loginUserLikeDynamics.includes(itemValue._id)" class="iconfont icon-dianzan"></i>
+          <i v-else @click="like" class="iconfont icon-dianzan1"></i>
+          <span>{{ itemValue.zan_number }}</span>
+        </div>
+        <div class="comment-icon" @click="$router.push(`/dynamic-detail/${itemValue._id}`)">
+          <i class="iconfont icon-pinglun"></i>
+          <span>{{ itemValue.comment_number }}</span>
+        </div>
+        <div class="collect-icon">
+          <i v-if="false" class="iconfont icon-shoucang1"></i>
+          <i class="iconfont icon-shoucang"></i>
+          <span>{{ itemValue.collect_number }}</span>
+        </div>
       </div>
-      <div class="collect-icon">
-        <i v-if="false" class="iconfont icon-shoucang1"></i>
-        <i class="iconfont icon-shoucang"></i>
-        <span>{{ itemValue.collect_number }}</span>
-      </div>
-    </div>
+    <!-- </van-skeleton> -->
   </div>
 </template>
 
@@ -58,6 +64,9 @@ export default {
     loginUserLikeDynamics: {
       type: Array,
       default: () => []
+    },
+    loading: {
+      type: Boolean
     }
   },
   data () {
@@ -96,6 +105,22 @@ export default {
   padding: 10px 15px;
   padding-bottom: 0;
   background-color: #fff;
+
+  /deep/ .van-skeleton {
+    padding: 0;
+  }
+
+  /deep/ .van-skeleton__row {
+    width: 100%!important;
+  }
+
+  /deep/ .van-skeleton__avatar {
+    margin-bottom: 8px;
+  }
+
+  .skeleton-bottom {
+    padding-bottom: 10px;
+  }
   &-user {
     display: flex;
     align-items: center;

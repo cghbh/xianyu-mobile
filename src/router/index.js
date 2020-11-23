@@ -18,7 +18,7 @@ const routes = [
     name: 'Index',
     children: [
       {
-        path: '',
+        path: 'dynamic',
         name: 'homepage',
         component: () => import('../views/HomePage.vue'),
         meta: {
@@ -36,7 +36,7 @@ const routes = [
         name: 'MyMessage'
       },
       {
-        path: '/discover',
+        path: '',
         component: () => import('../views/Discover.vue'),
         name: 'Discover'
       }

@@ -29,10 +29,10 @@ export default {
           title: '首页'
         },
         {
-          to: '/discover',
+          to: '/dynamic',
           active: 'icon-compass-fill',
           inactive: 'icon-compass',
-          title: '探索'
+          title: '动态'
         },
         {
           to: '/mymessage',

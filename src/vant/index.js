@@ -34,6 +34,7 @@ import {
   Form,
   Cell,
   CellGroup,
+  Skeleton,
   Image as VanImage
 } from 'vant'
 
@@ -71,3 +72,4 @@ Vue.use(NavBar)
   .use(Cell)
   .use(CellGroup)
   .use(VanImage)
+  .use(Skeleton)

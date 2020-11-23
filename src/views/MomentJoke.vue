@@ -47,13 +47,14 @@ export default {
 .moment-joke {
   background-color: #fff;
   height: 100%;
+  overflow: auto;
 }
 .moment-joke-content {
   height: 520px;
   display: flex;
   align-items: center;
-  font-size: 16px;
-  line-height: 32px;
+  font-size: 17px;
+  line-height: 34px;
   padding: 0 20px;
   text-indent: 1.3em;
 }
