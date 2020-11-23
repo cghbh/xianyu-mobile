@@ -15,6 +15,16 @@ const getTelephoneCodeReg = (data) => {
   return axios.post('/regcode', data)
 }
 
+// 获取登陆短信验证码
+const getTelephoneCodeLogin = (data) => {
+  return axios.post('/logincode', data)
+}
+
+// 短信验证码登录
+const loginByTelCode = (data) => {
+  return axios.post('/users/login_by_code', data)
+}
+
 // 验证码校验
 const checkTelephoneCode = (data) => {
   return axios.post('/verifyCode', data)
@@ -65,4 +75,4 @@ const userLikeDynamics = (id) => {
   return axios.get(`users/${id}/likeDynamcis`)
 }
 
-export { getCaptcha, getTelephoneCodeReg, checkTelephoneCode, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics }
+export { getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, checkTelephoneCode, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics }

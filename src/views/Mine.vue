@@ -194,6 +194,7 @@ export default {
 
       .content {
         user-select: none;
+        margin-left: 15px;
 
         h1 {
           font-size: 17px;
