@@ -87,11 +87,11 @@ export default {
   name: 'Register',
   data () {
     return {
-      telephone: '17764082092',
+      telephone: '',
       code: '',
-      password: '123456',
-      againPassword: '123456',
-      nickname: '娃哈哈',
+      password: '',
+      againPassword: '',
+      nickname: '',
       timerId: null,
       codeSend: false,
       countTime: 90
@@ -143,6 +143,8 @@ export default {
               this.codeSend = false
             }
           }, 1000)
+        } else {
+          this.$toast({ message: result.message, duration: 1500 })
         }
       } catch (err) {
         console.log(err, 'err')

@@ -107,6 +107,7 @@
 
 <script>
 import { getCaptcha, userLogin, getTelephoneCodeLogin, loginByTelCode } from '@/api/user.js'
+const reg = /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[3-8]{1})|(18[0-9]{1})|(19[0-9]{1})|(14[5-7]{1}))+\d{8})$/
 export default {
   name: 'Login',
   data () {
@@ -136,13 +137,11 @@ export default {
 
     // 检查验证码登录的手机号是否正确
     checkTelephone1 () {
-      const reg = /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[3-8]{1})|(18[0-9]{1})|(19[0-9]{1})|(14[5-7]{1}))+\d{8})$/
       return reg.test(this.telephone1)
     },
 
     // 校验密码登录的手机号是否正确
     checkTelephone2 () {
-      const reg = /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[3-8]{1})|(18[0-9]{1})|(19[0-9]{1})|(14[5-7]{1}))+\d{8})$/
       return reg.test(this.telephone2)
     },
 
@@ -177,22 +176,29 @@ export default {
         console.log(error, '错误捕获')
       }
     },
-    
+
     // 获取登陆验证码
     async getTelephoneCodeLoginHandle () {
-      this.codeSend = true
-      this.countTime = 90
-      this.timerId = setInterval(() => {
-        this.countTime--
-        if (this.countTime === 0) {
-          clearInterval(this.timerId)
-          this.timerId = null
-          this.codeSend = false
-        }
-      }, 1000)
+      if (!this.checkTelephone1) {
+        return this.$toast('手机号码不正确')
+      }
       try {
-        // const codeResult = await getTelephoneCodeLogin({ telephone: this.telephone1 })
-        await getTelephoneCodeLogin({ telephone: this.telephone1 })
+        const codeResult = await getTelephoneCodeLogin({ telephone: this.telephone1 })
+        if (codeResult.errno === 0) {
+          this.codeSend = true
+          this.countTime = 90
+          this.$toast('验证码发送成功')
+          this.timerId = setInterval(() => {
+            this.countTime--
+            if (this.countTime === 0) {
+              clearInterval(this.timerId)
+              this.timerId = null
+              this.codeSend = false
+            }
+          }, 1000)
+        } else {
+          this.$toast(codeResult.message)
+        }
       } catch (err) {
         console.log(err, 'err')
       }
@@ -204,10 +210,10 @@ export default {
       if (codeResult.errno === 0) {
         this.$store.commit('setUserInfo', codeResult.user)
         this.$store.commit('setToken', codeResult.token)
-        this.$toast({ message: codeResult.message + '正在飞速跳转中', duration: 1000 })
+        this.$toast({ message: codeResult.message + '正在飞速跳转中', duration: 800 })
         setTimeout(() => {
           this.$router.push('/')
-        }, 1200)
+        }, 960)
       } else {
         this.$toast({ message: codeResult.message, duration: 1000 })
       }
@@ -224,11 +230,11 @@ export default {
           this.$store.commit('setToken', result.token)
           this.$toast({
             message: result.message + '，正在飞速跳转中......',
-            duration: 1000
+            duration: 800
           })
           setTimeout(() => {
             this.$router.push('/mine')
-          }, 1200)
+          }, 960)
         } else {
           this.$toast({
             message: result.message,
@@ -239,7 +245,7 @@ export default {
         this.$toast('' + err)
       }
     },
-    
+
     reloadCaptcha () {
       this.getCaptcha()
     }

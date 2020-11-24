@@ -20,9 +20,19 @@ const getTelephoneCodeLogin = (data) => {
   return axios.post('/logincode', data)
 }
 
+// 找回密码验证码
+const getTelephoneCodeFindPassword = (data) => {
+  return axios.post('/findcode', data)
+}
+
 // 短信验证码登录
 const loginByTelCode = (data) => {
   return axios.post('/users/login_by_code', data)
+}
+
+// 重置密码
+const resetPassword = (data) => {
+  return axios.post('/users/reset_password', data)
 }
 
 // 验证码校验
@@ -75,4 +85,4 @@ const userLikeDynamics = (id) => {
   return axios.get(`users/${id}/likeDynamcis`)
 }
 
-export { getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, checkTelephoneCode, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics }
+export { getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics }
