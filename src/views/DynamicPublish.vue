@@ -18,6 +18,7 @@
           :max-count="9"
           preview-size="105px"
           multiple
+          @delete="deleteImg"
         />
       </div>
       <div class="private">
@@ -39,6 +40,7 @@
 
 <script>
 import { uploadDynamicImage, dynamicPublish } from '@/api/dynamic.js'
+import _ from 'lodash'
 export default {
   name: 'DynamicPublish',
   data () {
@@ -47,12 +49,7 @@ export default {
       placeholder: '请输入你想输入的内容',
       fileList: [],
       isPrivate: false,
-      uploadImg: []
-    }
-  },
-  watch: {
-    uploadImg (newVal) {
-      console.log(newVal)
+      uploadImg: null
     }
   },
   methods: {
@@ -62,31 +59,27 @@ export default {
     afterRead (file) {
       file.status = 'uploading'
       file.message = '上传中...'
-      // 单文件上传
-      if (Object.prototype.toString.call(file) === '[object Object]') {
-        uploadDynamicImage(file.file).then(res => {
-          this.uploadImg.push(res)
+      const map = new Map()
+      this.fileList.map(item => {
+        uploadDynamicImage(item.file).then(res => {
           file.status = 'done'
           file.message = ''
+          const filename = item.file.name
+          map.set(filename, res)
+          this.uploadImg = map
         }).catch(err => {
-          console.log(err)
           file.status = 'failed'
           file.message = '上传失败'
+          console.log(err, '文件上传错误捕获')
         })
-      } else if (Object.prototype.toString.call(file) === '[object Array]') {
-        // 多文件上传
-        file.map(item => {
-          uploadDynamicImage(item.file).then(res => {
-            file.status = 'done'
-            file.message = ''
-            this.uploadImg.push(res)
-          }).catch(err => {
-            file.status = 'failed'
-            file.message = '上传失败'
-            console.log(err, '多文件上传错误捕获')
-          })
-        })
-      }
+      })
+    },
+    deleteImg (file) {
+      // 原始值的深拷贝
+      const map = _.cloneDeep(this.uploadImg)
+      // 删除图片
+      map.delete(file.file.name)
+      this.uploadImg = map
     },
     beforeRead (file) {
       return true
@@ -95,14 +88,18 @@ export default {
       if (!this.inputValue) {
         return this.$toast({ message: '发表的动态内容不能为空！' })
       }
-      const data = await dynamicPublish({ content: this.inputValue, avatar_url: this.uploadImg, is_private: this.isPrivate })
+      const imgArray = []
+      if (this.uploadImg) {
+        this.uploadImg.forEach(item => { imgArray.push(item) })
+      }
+      const data = await dynamicPublish({ content: this.inputValue, avatar_url: imgArray, is_private: this.isPrivate })
       if (data.code === 200) {
         this.$toast({ message: data.msg, duration: 800 })
         this.inputValue = ''
-        this.uploadImg = []
+        this.uploadImg = null
         this.isPrivate = false
         setTimeout(() => {
-          this.$router.push('/')
+          this.$router.push('/dynamic')
         }, 950)
       } else {
         this.$toast({ message: data.msg, duration: 800 })
