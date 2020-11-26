@@ -33,10 +33,10 @@
         readonly
         disabled
       />
-      <div style="padding: 10px 20px 15px 20px;">
-        <van-swipe :autoplay="3000" loop touchable indicator-color="#409fea">
+      <div style="padding: 10px 20px 15px 20px;height: 180px;">
+        <van-swipe :lazy-render="true" :autoplay="3000" loop touchable indicator-color="#409fea">
           <van-swipe-item v-for="item in swiperList" :key="item._id">
-            <img :src="item.swiper_url">
+            <img v-lazy="item.swiper_url" />
           </van-swipe-item>
         </van-swipe>
       </div>

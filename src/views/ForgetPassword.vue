@@ -157,7 +157,7 @@ export default {
           this.$toast(codeResult.message)
         }
       } else {
-        this.$toast('请输入正确的手机号')
+        this.$toast('手机号不正确，无法获取验证码')
       }
     }
   }

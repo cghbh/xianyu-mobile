@@ -180,7 +180,7 @@ export default {
     // 获取登陆验证码
     async getTelephoneCodeLoginHandle () {
       if (!this.checkTelephone1) {
-        return this.$toast('手机号码不正确')
+        return this.$toast('手机号不正确，无法获取验证码')
       }
       try {
         const codeResult = await getTelephoneCodeLogin({ telephone: this.telephone1 })
