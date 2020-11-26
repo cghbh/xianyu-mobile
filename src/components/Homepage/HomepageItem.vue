@@ -22,13 +22,10 @@
           :key="item">
         </van-image>
       </div>
-    <!-- </van-skeleton> -->
-    <!-- <van-skeleton class="skeleton-bottom" :row="1" row-width="100%" :loading="loading"> -->
       <div class="homepage-item-operation">
         <!-- 一像素边框的实现 -->
         <div class="one-px"></div>
         <div class="zan-icon">
-          <!-- {{loginUserLikeDynamics.includes(itemValue._id) || isLike}}--{{isLike}} -->
           <i @click="unlike" v-if="loginUserLikeDynamics.includes(itemValue._id)" class="iconfont icon-dianzan"></i>
           <i v-else @click="like" class="iconfont icon-dianzan1"></i>
           <span>{{ itemValue.zan_number }}</span>
@@ -43,7 +40,6 @@
           <span>{{ itemValue.collect_number }}</span>
         </div>
       </div>
-    <!-- </van-skeleton> -->
   </div>
 </template>
 
@@ -72,9 +68,6 @@ export default {
     return {
       isLike: false
     }
-  },
-  created () {
-    console.log(this.itemValue, 'itemValue')
   },
   computed: {
     user_login_id () {
@@ -107,6 +100,7 @@ export default {
   padding: 10px 15px;
   padding-bottom: 0;
   background-color: #fff;
+  border-bottom: 1px solid #f1f1f1;
 
   /deep/ .van-skeleton {
     padding: 0;
@@ -143,15 +137,15 @@ export default {
         color: rgba(0, 0, 0, .8);
       }
       h3 {
-        font-size: 13px;
-        color: rgba(0, 0, 0, .6);
+        font-size: 12px;
+        color: rgba(0, 0, 0, .4);
       }
     }
   }
 
   &-area {
     p {
-      font-size: 15PX;
+      font-size: 14PX;
       line-height: 25px;
       margin-bottom: 10px;
       color: rgba(0, 0, 0, .9);
@@ -191,7 +185,7 @@ export default {
       height: 1px;
       left: -5px;
       right: -5px;
-      background-color: rgba(138, 138, 138, .2);
+      // background-color: rgba(138, 138, 138, .1);
       top: 0;
       -webkit-transform: scaleY(.5);
       transform:scaleY(.5);

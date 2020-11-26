@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: JSON.parse(localStorage.getItem('token')),
+    token: JSON.parse(localStorage.getItem('user_login_token')),
     userInfo: JSON.parse(localStorage.getItem('userInfo'))
   },
   mutations: {
@@ -18,7 +18,7 @@ export default new Vuex.Store({
     // 设置token
     setToken (state, value) {
       state.token = value
-      localStorage.setItem('token', JSON.stringify(value))
+      localStorage.setItem('user_login_token', JSON.stringify(value))
     }
   },
   actions: {

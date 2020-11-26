@@ -24,7 +24,7 @@ Vue.config.productionTip = false
 
 // 全局的filter过滤器
 Vue.filter('timeformat', (value) => {
-  const newTime = moment(value).format('YYYY-MM-DD hh:mm')
+  const newTime = moment(value).format('YYYY-MM-DD HH:mm')
   return newTime
 })
 

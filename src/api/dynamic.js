@@ -34,7 +34,7 @@ const dynamicPublish = (data) => {
 /**
  * 获取推荐或者最新的动态
  */
-const recommendDynamic = (sort) => {
+const getDynamics = (sort) => {
   return axios.get(`/dynamics?sort=${sort}`)
 }
 
@@ -42,4 +42,4 @@ const getDynamicDetail = (id) => {
   return axios.get(`/dynamics/${id}`)
 }
 
-export { uploadDynamicImage, dynamicPublish, recommendDynamic, getDynamicDetail }
+export { uploadDynamicImage, dynamicPublish, getDynamics, getDynamicDetail }

@@ -1,9 +1,8 @@
 <template>
   <div class="xianyu-index">
     <keep-alive>
-      <router-view v-if="$route.meta.keepAlive"/>
+      <router-view/>
     </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive"/>
     <van-tabbar route v-model="active" active-color="#409fea" inactive-color="#000">
       <van-tabbar-item v-for="item in bottomIcon" :key=item.to :to="item.to">
         <span>{{ item.title }}</span>
@@ -54,7 +53,7 @@ export default {
 
 <style scoped lang="scss">
  .xianyu-index {
-   // height: 100%;
+   height: 100%;
    position: relative;
 
    /deep/ .van-tabbar-item__icon .iconfont {

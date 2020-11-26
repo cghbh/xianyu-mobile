@@ -94,13 +94,13 @@ export default {
       }
       const data = await dynamicPublish({ content: this.inputValue, avatar_url: imgArray, is_private: this.isPrivate })
       if (data.errno === 0) {
-        this.$toast({ message: data.message, duration: 800 })
+        this.$toast({ message: data.message, duration: 600 })
         this.inputValue = ''
         this.uploadImg = null
         this.isPrivate = false
         setTimeout(() => {
           this.$router.push('/dynamic')
-        }, 950)
+        }, 750)
       } else {
         this.$toast({ message: data.message, duration: 800 })
       }

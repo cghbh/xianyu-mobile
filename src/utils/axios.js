@@ -34,7 +34,7 @@ const tip = msg => {
 const errorHandle = (status, other) => {
   switch (status) {
     case 401:
-      tip('401没有权限')
+      tip('未登录')
       // toLogin()
       break
 

@@ -38,7 +38,10 @@ const routes = [
       {
         path: '',
         component: () => import('../views/Discover.vue'),
-        name: 'Discover'
+        name: 'Discover',
+        meta: {
+          keepAlive: true
+        }
       }
     ]
   },

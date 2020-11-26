@@ -5,6 +5,7 @@
         <van-pull-refresh
           v-model="isRecommendLoading"
           @refresh="onRecommendRefresh"
+          v-if="recommendDynamics.length > 0"
           loosing-text="别老拽着,快放开我"
           loading-text="正在刷新中"
           success-text="刷新成功">
@@ -20,27 +21,50 @@
               :loginUserLikeDynamics="loginUserLikeDynamics"></homepage-item>
           </div>
         </van-pull-refresh>
+        <van-empty v-cloak v-show="!showNoRecommend" description="什么内容都没有" />
       </van-tab>
 
       <van-tab title="最新">
-        <div class="homepage-newest">
-          <homepage-item
-            @itemlike="itemLikeHandle"
-            @itemunlike="itemUnlikeHandle"
-            v-for="(item, index) in recommendDynamics"
-            :key="item._id"
-            :isFirst="index === 0"
-            :itemValue="item"
-            :loading="isLoading"
-            :loginUserLikeDynamics="loginUserLikeDynamics"></homepage-item>
-        </div>
+        <van-pull-refresh
+          v-model="isLatestLoading"
+          v-if="latestDynamics.length > 0"
+          @refresh="onLatestRefresh"
+          loosing-text="别老拽着,快放开我"
+          loading-text="正在刷新中"
+          success-text="刷新成功">
+          <div class="homepage-newest">
+            <homepage-item
+              @itemlike="itemLikeHandle"
+              @itemunlike="itemUnlikeHandle"
+              v-for="(item, index) in latestDynamics"
+              :key="item._id"
+              :isFirst="index === 0"
+              :itemValue="item"
+              :loading="isLoading"
+              :loginUserLikeDynamics="loginUserLikeDynamics"></homepage-item>
+          </div>
+        </van-pull-refresh>
+        <van-empty v-if="!showNoLatest" description="什么内容都没有" />
       </van-tab>
 
-      <!-- <van-tab title="关注">
-        <div class="homepage-fellow">
-          <homepage-item v-for="(item, index) in 2" :key="index" :isFirst="index === 0"></homepage-item>
+      <van-tab title="关注">
+        <van-pull-refresh
+          v-model="isLatestLoading"
+          @refresh="onLatestRefresh"
+          loosing-text="别老拽着,快放开我"
+          loading-text="正在刷新中"
+          success-text="刷新成功">
+          <div class="homepage-fellow">
+            <!-- <homepage-item v-for="(item, index) in 2" :key="index" :isFirst="index === 0"></homepage-item> -->
+          </div>
+        </van-pull-refresh>
+        <van-empty v-if="!showNoFollow" description="什么内容都没有" />
+        <!-- 未登录 -->
+        <div class="dynamic-follow-unlogin">
+          <p class="dynamic-follow-unlogin-tips">需要登录，或登录已过期需要重新登录</p>
+          <a class="dynamic-follow-unlogin-link">去登录</a>
         </div>
-      </van-tab> -->
+      </van-tab>
 
     </van-tabs>
     <i @click="$router.push('/dynamic-publish')" class="iconfont add-word icon-tianxie"></i>
@@ -50,27 +74,51 @@
 
 <script>
 import HomepageItem from '../components/Homepage/HomepageItem.vue'
-import { recommendDynamic } from '@/api/dynamic.js'
+import { getDynamics } from '@/api/dynamic.js'
 import { likeDynamics, userLikeDynamics, unlikeDynamics } from '@/api/user.js'
 export default {
   name: 'Home',
   data () {
     return {
       active: 0,
+      dynamics: [],
+      // 没有动态数据的补充
+      showNoRecommend: true,
+      // 推荐的动态
       recommendDynamics: [],
+      // 没有最新数据
+      showNoLatest: true,
+      // 最新的动态
+      latestDynamics: [],
+      // 关注的人没有动态
+      showNoFollow: true,
+      // 关注者的动态
+      followDynamics: [],
       // 已登录用户所有点赞过的id
       loginUserLikeDynamics: [],
       // 推荐内容的刷新状态
       isRecommendLoading: true,
-      isLoading: true
+      isLoading: true,
+      // 最新内容的刷新状态
+      isLatestLoading: true
     }
   },
   watch: {
     active: {
-      handler (newVal) {
-        // 只有推荐内容和最新的内容采用共同的接口
+      async handler (newVal) {
         if (newVal === 0 || newVal === 1) {
-          this.getDynamicsRecomAndLatest(newVal)
+          const result = await getDynamics(newVal)
+          if (result.errno === 0) {
+            if (newVal === 0) {
+              this.recommendDynamics = result.data
+              this.recommendDynamics.length === 0 ? this.showNoRecommend = false : this.showNoRecommend = true
+            } else if (newVal === 1) {
+              this.latestDynamics = result.data
+              this.latestDynamics.length === 0 ? this.showNoLatest = false : this.showNoLatest = true
+            }
+          } else {
+            this.$toast({ message: '数据获取失败 ', duration: 800 })
+          }
         }
       },
       immediate: true
@@ -91,14 +139,6 @@ export default {
     this.getUserLikeDynamics()
   },
   methods: {
-    async getDynamicsRecomAndLatest (sort) {
-      const result = await recommendDynamic(sort)
-      if (result.errno === 0) {
-        this.recommendDynamics = result.data
-      } else {
-        this.$toast({ message: '数据获取失败 ', duration: 800 })
-      }
-    },
     // 获取已登录用户喜欢的动态列表
     async getUserLikeDynamics () {
       if (this.userInfo && this.userInfo._id) {
@@ -108,8 +148,8 @@ export default {
         }
       }
     },
-    // 子组件点赞操作
-    async itemLikeHandle (dynamicId) {
+
+    checkUserLogin () {
       // 先判断用户是否登录
       if (!this.user_login_token) {
         return this.$dialog({
@@ -125,50 +165,51 @@ export default {
         })
           .catch(() => {})
       }
+    },
+    // 子组件点赞操作
+    async itemLikeHandle (dynamicId) {
+      this.checkUserLogin()
       // 点赞操作
       const result = await likeDynamics(dynamicId)
 
-      if (result.code === 200) {
+      if (result.code === 0) {
         this.getUserLikeDynamics()
-        const index = this.recommendDynamics.findIndex(item => item._id === dynamicId)
-        this.$set(this.recommendDynamics[index], 'zan_number', result.data.zan_number)
+        const index = this.dynamics.findIndex(item => item._id === dynamicId)
+        this.$set(this.dynamics[index], 'zan_number', result.data.zan_number)
       }
     },
+
     // 取消点赞
     async itemUnlikeHandle (dynamicId) {
-      // 先判断用户是否登录
-      if (!this.user_login_token) {
-        return this.$dialog({
-          message: '<p style="font-size: 16px;line-height: 25px">此操作需要登录，\n是否跳转到登录页面？</p>',
-          showConfirmButton: true,
-          showCancelButton: true,
-          confirmButtonText: '确定',
-          confirmButtonColor: '#409fea',
-          cancelButtonText: '取消',
-          cancelButtonColor: '#666'
-        }).then(() => {
-          this.$router.push({ name: 'Login' })
-        })
-          .catch(() => {})
-      }
-
+      this.checkUserLogin()
       // 判断当前的动态id用户是否点过赞
       const result = await unlikeDynamics(dynamicId)
-      if (result.code === 200) {
+      if (result.code === 0) {
         this.getUserLikeDynamics()
-        const index = this.recommendDynamics.findIndex(item => item._id === dynamicId)
+        const index = this.dynamics.findIndex(item => item._id === dynamicId)
         const idIndex = this.loginUserLikeDynamics.indexOf(dynamicId)
         if (idIndex > -1) { this.loginUserLikeDynamics.splice(index, 1) }
-        this.$set(this.recommendDynamics[index], 'zan_number', result.data.zan_number)
+        this.$set(this.dynamics[index], 'zan_number', result.data.zan_number)
       }
     },
 
     // 推荐内容的刷新事件，重新请求推荐内容
     async onRecommendRefresh () {
-      const result = await recommendDynamic()
+      const result = await getDynamics(0)
       if (result.errno === 0) {
-        this.recommendDynamics = result.data
+        this.dynamics = result.data
         this.isRecommendLoading = false
+      } else {
+        this.$toast({ message: '数据获取失败 ', duration: 800 })
+      }
+    },
+
+    // 最新动态的刷新事件
+    async onLatestRefresh () {
+      const result = await getDynamics(1)
+      if (result.errno === 0) {
+        this.dynamics = result.data
+        this.isLatestLoading = false
       } else {
         this.$toast({ message: '数据获取失败 ', duration: 800 })
       }
@@ -200,6 +241,17 @@ export default {
   /deep/ .van-tab {
     font-size: 16px;
   }
+
+  /deep/ .van-empty {
+    padding-top: 120px;
+    .van-empty__image {
+      width: 240px;
+      height: 240px;
+    }
+    img {
+      width: 240px;
+    }
+  }
 }
 
 .add-word {
@@ -211,5 +263,27 @@ export default {
   background-color: #409fea;
   border-radius: 50%;
   padding: 10px;
+}
+
+.dynamic-follow-unlogin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  // height: 100%;
+  // height: calc(100vh - 98px);
+  &-tips {
+    font-size: 16px;
+    margin-top: 240px;
+  }
+
+  &-link {
+    font-size: 14px;
+    margin-top: 30px;
+    padding: 10px 20px;
+    background-color: #409fea;
+    color: #fff;
+    border-radius: 6px;
+  }
 }
 </style>

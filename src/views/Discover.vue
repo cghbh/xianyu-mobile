@@ -1,44 +1,60 @@
 <template>
   <div class="xianyu-discover">
-    <van-search
-      @click="$router.push('/search')"
-      input-align="center"
-      shape="round"
-      v-model="value"
-      placeholder="搜索好文/诗词/成语"
-      readonly
-      disabled
-    />
-    <div style="padding: 10px 20px 15px 20px;">
-      <van-swipe :autoplay="3000" loop touchable indicator-color="#409fea">
-        <van-swipe-item v-for="item in swiperList" :key="item._id">
-          <img :src="item.swiper_url">
-        </van-swipe-item>
-       <!-- <van-swipe-item>
-          <img src="../assets/images/2.jpg">
-        </van-swipe-item>
-        <van-swipe-item>
-          <img src="../assets/images/3.jpg">
-        </van-swipe-item>
-        <van-swipe-item>
-          <img src="../assets/images/4.jpg">
-        </van-swipe-item> -->
-      </van-swipe>
-    </div>
-    <div class="xianyu-discover-container">
-      <!-- for的优先级比if高，因此在这里使用template实现循环，里面使用if实现条件判断 -->
-      <template v-for="item in channelList">
-        <channel-item v-if="item.isSelect" :BgColor="item.color" router :to="item.to" :key="item.title">
-          <h1 class="item-header" slot="header">{{ item.title }}</h1>
-          <p class="item-content" slot="content">{{ item.desp }}</p>
-        </channel-item>
+    <van-pull-refresh
+      v-model="isLoading"
+      @refresh="onRefresh"
+      :head-height="80"
+      loosing-text="别老拽着,快放开我"
+      loading-text="正在刷新中"
+      success-text="刷新成功">
+      <template #pulling="props">
+        <img
+          class="doge"
+          src="http://xianyu-uploads.oss-cn-beijing.aliyuncs.com/upload_8658bd2e679e2d37ee7b4439e8cedb09.png"
+          :style="{ transform: `scale(${props.distance / 80})` }"
+        />
       </template>
 
-      <div class="xianyu-discover-add-channel" @click="$router.push('/addchannel')">
-        <i class="icon-jia iconfont"></i>
-        <span>添加频道</span>
+      <!-- 释放提示 -->
+      <template #loosing>
+        <img class="doge" src="http://xianyu-uploads.oss-cn-beijing.aliyuncs.com/upload_3135dadff34e63d64b2d5462a6f182bb.png" />
+      </template>
+
+        <!-- 加载提示 -->
+      <template #loading>
+        <img class="doge" src="http://xianyu-uploads.oss-cn-beijing.aliyuncs.com/upload_67e470c24e64f4c928eff32c151d601d.jpg" />
+      </template>
+      <van-search
+        @click="$router.push('/search')"
+        input-align="center"
+        shape="round"
+        v-model="value"
+        placeholder="搜索好文/诗词/成语"
+        readonly
+        disabled
+      />
+      <div style="padding: 10px 20px 15px 20px;">
+        <van-swipe :autoplay="3000" loop touchable indicator-color="#409fea">
+          <van-swipe-item v-for="item in swiperList" :key="item._id">
+            <img :src="item.swiper_url">
+          </van-swipe-item>
+        </van-swipe>
       </div>
-    </div>
+      <div class="xianyu-discover-container">
+        <!-- for的优先级比if高，因此在这里使用template实现循环，里面使用if实现条件判断 -->
+        <template v-for="item in channelList">
+          <channel-item v-if="item.isSelect" :BgColor="item.color" router :to="item.to" :key="item.title">
+            <h1 class="item-header" slot="header">{{ item.title }}</h1>
+            <p class="item-content" slot="content">{{ item.desp }}</p>
+          </channel-item>
+        </template>
+
+        <div class="xianyu-discover-add-channel" @click="$router.push('/addchannel')">
+          <i class="icon-jia iconfont"></i>
+          <span>添加频道</span>
+        </div>
+      </div>
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -58,6 +74,7 @@ export default {
   data () {
     return {
       value: '',
+      isLoading: true,
       channelList: JSON.parse(localStorage.getItem('channel')) || list,
       swiperList: []
     }
@@ -72,6 +89,15 @@ export default {
       if (result.errno === 0) {
         this.swiperList = result.data.slice(0, 5)
       }
+    },
+    async onRefresh () {
+      const result = await getSwiper()
+      if (result.errno === 0) {
+        this.swiperList = result.data.slice(0, 5)
+      }
+      setTimeout(() => {
+        this.isLoading = false
+      }, 500)
     }
   },
   components: {
@@ -81,6 +107,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.doge {
+  width: 140px!important;
+  height: 72px;
+  margin-top: 8px;
+  border-radius: 4px;
+}
 .xianyu-discover {
   background-color: #fff;
   img {
