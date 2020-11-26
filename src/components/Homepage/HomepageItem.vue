@@ -1,6 +1,5 @@
 <template>
   <div class="homepage-item" :class="{ 'first': !isFirst }">
-    <!-- <van-skeleton :row="1" avatar row-width="100%" :loading="loading"> -->
       <div class="homepage-item-user">
         <van-image width="50" height="50" fit="cover" round :src="itemValue.publisher.avatar_url"/>
         <div class="homepage-item-user-name">
@@ -73,6 +72,9 @@ export default {
     return {
       isLike: false
     }
+  },
+  created () {
+    console.log(this.itemValue, 'itemValue')
   },
   computed: {
     user_login_id () {

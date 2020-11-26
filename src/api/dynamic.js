@@ -1,16 +1,5 @@
 import axios from '@/utils/http.js'
-import qs from 'qs'
 import { Toast } from 'vant'
-
-
-/**
- * 获取动态列表
- * @param {Object} options 获取动态列表的参数
- */
-const getDynamicList = (options) => {
-  return axios.get('/dynamics/list?', qs.stringify(options))
-}
-
 
 /**
  * 上传个人动态的图片
@@ -22,7 +11,7 @@ const uploadDynamicImage = (file) => {
   params.append('file', file)
   return new Promise((resolve, reject) => {
     axios.post('/dynamics/upload', params, { headers: { 'Content-Type': 'multipart/form-data' } }).then(res => {
-      if (res.code === 200) {
+      if (res.errno === 0) {
         resolve(res.data)
       } else {
         reject(res.data)
@@ -43,14 +32,14 @@ const dynamicPublish = (data) => {
 }
 
 /**
- * 推荐的动态
+ * 获取推荐或者最新的动态
  */
-const recommendDynamic = () => {
-  return axios.get('/dynamics')
+const recommendDynamic = (sort) => {
+  return axios.get(`/dynamics?sort=${sort}`)
 }
 
 const getDynamicDetail = (id) => {
   return axios.get(`/dynamics/${id}`)
 }
 
-export { getDynamicList, uploadDynamicImage, dynamicPublish, recommendDynamic, getDynamicDetail }
+export { uploadDynamicImage, dynamicPublish, recommendDynamic, getDynamicDetail }

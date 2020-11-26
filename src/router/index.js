@@ -19,8 +19,8 @@ const routes = [
     children: [
       {
         path: 'dynamic',
-        name: 'homepage',
-        component: () => import('../views/HomePage.vue'),
+        name: 'dynamic',
+        component: () => import('../views/Dynamic.vue'),
         meta: {
           keepAlive: true
         }

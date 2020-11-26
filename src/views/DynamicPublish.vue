@@ -93,8 +93,8 @@ export default {
         this.uploadImg.forEach(item => { imgArray.push(item) })
       }
       const data = await dynamicPublish({ content: this.inputValue, avatar_url: imgArray, is_private: this.isPrivate })
-      if (data.code === 200) {
-        this.$toast({ message: data.msg, duration: 800 })
+      if (data.errno === 0) {
+        this.$toast({ message: data.message, duration: 800 })
         this.inputValue = ''
         this.uploadImg = null
         this.isPrivate = false
@@ -102,7 +102,7 @@ export default {
           this.$router.push('/dynamic')
         }, 950)
       } else {
-        this.$toast({ message: data.msg, duration: 800 })
+        this.$toast({ message: data.message, duration: 800 })
       }
     },
     back () {

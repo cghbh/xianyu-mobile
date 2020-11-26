@@ -54,7 +54,7 @@ export default {
 
 <style scoped lang="scss">
  .xianyu-index {
-   height: 100%;
+   // height: 100%;
    position: relative;
 
    /deep/ .van-tabbar-item__icon .iconfont {

@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VConsole from 'vconsole'
+import moment from 'moment'
 
 import RefreshIcon from './components/PublicComponents/RefreshIcon.js'
 // 顶部返回栏
@@ -23,22 +24,8 @@ Vue.config.productionTip = false
 
 // 全局的filter过滤器
 Vue.filter('timeformat', (value) => {
-  const timeDiff = (Date.now() - new Date(value)) / 1000
-
-  // 区分为5分钟，1小时，12小时，1天，2天
-  let timeString = ''
-  if (!Number.isNaN(timeDiff)) {
-    if (timeDiff <= 60) {
-      timeString = `${Math.floor(timeDiff)}秒钟前`
-    } else if (timeDiff >= 60 && timeDiff < 60 * 60) {
-      timeString = `${Math.floor(timeDiff / 60)}分钟前`
-    } else if (timeDiff >= 60 * 60 && timeDiff < 24 * 60 * 60) {
-      timeString = `${Math.floor(timeDiff / (60 * 60))}小时前`
-    } else {
-      timeString = `${Math.floor(timeDiff / (60 * 60 * 24))}天前`
-    }
-  }
-  return timeString
+  const newTime = moment(value).format('YYYY-MM-DD hh:mm')
+  return newTime
 })
 
 new Vue({
