@@ -4,6 +4,7 @@
 
 <script>
 export default {
+  name: 'DivideArea',
   props: {
     height: {
       type: Number,
@@ -16,6 +17,6 @@ export default {
 <style scoped lang="scss">
 .divide-area {
   width: 100%;
-  background-color: rgba(38, 38, 38, .05);
+  background-color: rgba(38, 38, 38, 0.01);
 }
 </style>

@@ -8,6 +8,7 @@ import moment from 'moment'
 import RefreshIcon from './components/PublicComponents/RefreshIcon.js'
 // 顶部返回栏
 import BackTop from './components/BackTop/index.js'
+import DivideArea from './components/PublicComponents/DivideArea.js'
 
 import './assets/style/reset.css'
 import './vant/index.js'
@@ -19,6 +20,7 @@ var vc = new VConsole() // eslint-disable-line no-unused-vars
 
 Vue.use(RefreshIcon)
 Vue.use(BackTop)
+Vue.use(DivideArea)
 
 Vue.config.productionTip = false
 

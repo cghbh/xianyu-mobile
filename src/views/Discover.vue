@@ -36,7 +36,7 @@
       <div style="padding: 10px 20px 15px 20px;height: 180px;">
         <van-swipe :lazy-render="true" :autoplay="3000" loop touchable indicator-color="#409fea">
           <van-swipe-item v-for="item in swiperList" :key="item._id">
-            <img v-lazy="item.swiper_url" />
+            <img :src="item.swiper_url">
           </van-swipe-item>
         </van-swipe>
       </div>
@@ -63,11 +63,11 @@ import ChannelItem from '../components/PublicComponents/ChannelItem.vue'
 import { getSwiper } from '@/api/swiper.js'
 
 const list = [
-  { title: '好文', desp: '一语惊醒梦中人', to: '/good-article', color: '#F3F3F3', isSelect: true },
-  { title: '诗词', desp: '一语惊醒梦中人', to: '/ancient-poetry', color: '#FAF4F4', isSelect: true },
-  { title: '成语词典', desp: '一语惊醒梦中人', to: '/dictionary', color: '#F9F4F0', isSelect: true },
-  { title: '趣味答题', desp: '一语惊醒梦中人', to: '/knowledge-competition', color: '#F9F4F0', isSelect: true },
-  { title: '开心一刻', desp: '一语惊醒梦中人', to: '/joke', color: '#F3F3F3', isSelect: true }
+  { title: '好文', desp: '凌云健笔意纵横', to: '/good-article', color: '#F3F3F3', isSelect: true },
+  { title: '诗词', desp: '小楼一夜听春雨', to: '/ancient-poetry', color: '#FAF4F4', isSelect: true },
+  { title: '成语词典', desp: '清词丽句必为邻', to: '/dictionary', color: '#F9F4F0', isSelect: true },
+  { title: '趣味答题', desp: '似曾相识燕归来', to: '/knowledge-competition', color: '#F9F4F0', isSelect: true },
+  { title: '开心一刻', desp: '仰天大笑出门去', to: '/joke', color: '#F3F3F3', isSelect: true }
 ]
 export default {
   name: 'Discover',
@@ -80,9 +80,17 @@ export default {
     }
   },
   mounted () {
+    localStorage.removeItem('channel')
     localStorage.setItem('channel', JSON.stringify(this.channelList))
     this.getSwiperHandle()
   },
+
+  // 组件载入之后重新获取数据
+  activated () {
+    const channel = JSON.parse(localStorage.getItem('channel')) || list
+    this.channelList = channel
+  },
+  
   methods: {
     async getSwiperHandle () {
       const result = await getSwiper()
@@ -122,6 +130,10 @@ export default {
 .xianyu-discover {
   /deep/ .van-swipe {
     border-radius: 6px;
+  }
+
+  /deep/ .van-search {
+    padding: 15px 12px 6px 12px;
   }
 
   /deep/ .van-field__control:disabled {

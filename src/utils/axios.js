@@ -1,7 +1,8 @@
 import axios from 'axios'
 // 导入路由，未登录的时候跳转
-// import router from '../router/index.js'
+import router from '../router/index.js'
 // import config from '@/config'
+import store from '@/store/'
 // 导入Store判断用户是否登录
 // 导入提示框Toast
 import { Toast } from 'vant'
@@ -20,14 +21,14 @@ const tip = msg => {
 /* 跳转登录页
   携带当前的路由,方便在登录之后返回当前的页面
 */
-// const toLogin = () => {
-//   router.replace({
-//     path: '/login',
-//     query: {
-//       redirect: router.currentRoute.fullPath
-//     }
-//   })
-// }
+const toLogin = () => {
+  router.replace({
+    path: '/login',
+    query: {
+      redirect: router.currentRoute.fullPath
+    }
+  })
+}
 
 /* 请求错误后的统一处理
 @param { Number } status请求失败的状态码 */
@@ -35,17 +36,12 @@ const errorHandle = (status, other) => {
   switch (status) {
     case 401:
       tip('未登录')
-      // toLogin()
+      localStorage.removeItem('xianyu_user_login_token')
+      toLogin()
       break
 
     case 403:
-      tip('登录过期，请重新登录')
-      localStorage.removeItem('token')
-      // 在store里面将token置空
-      // store.commit('loginSuccess', null)
-      // setTimeout(() => {
-      //   toLogin()
-      // }, 1000)
+      tip('没有操作权限')
       break
 
     case 404:
@@ -82,7 +78,7 @@ class HttpRequest {
       // 及时存在token也有可能过期,因此在每次的请求头中添加token
       // 后台根据token返回结果
       // 然后根据响应回来的结果进行一些处理
-      const token = JSON.parse(localStorage.getItem('token'))
+      const token = store.state.token.token
       token && (config.headers.Authorization = `Bearer ${token}`)
       return config
     }, error => {

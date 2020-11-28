@@ -207,13 +207,15 @@ export default {
     // 验证码登录
     async loginByTelephoneCode () {
       const codeResult = await loginByTelCode({ telephone: this.telephone1, code: this.code })
+      console.log(codeResult, 'codeResult')
       if (codeResult.errno === 0) {
-        this.$store.commit('setUserInfo', codeResult.user)
         this.$store.commit('setToken', codeResult.token)
-        this.$toast({ message: codeResult.message + '正在飞速跳转中', duration: 800 })
+        this.$toast({ message: codeResult.message + '，正在飞速跳转中', duration: 600 })
         setTimeout(() => {
-          this.$router.push('/')
-        }, 960)
+          this.$router.push(this.$route.query.redirect || '/')
+          this.telephone1 = ''
+          this.code = ''
+        }, 700)
       } else {
         this.$toast({ message: codeResult.message, duration: 1000 })
       }
@@ -226,15 +228,17 @@ export default {
       try {
         const result = await userLogin({ telephone: this.telephone2, password: this.password })
         if (result.errno === 0) {
-          this.$store.commit('setUserInfo', result.user)
           this.$store.commit('setToken', result.token)
           this.$toast({
             message: result.message + '，正在飞速跳转中......',
-            duration: 800
+            duration: 600
           })
           setTimeout(() => {
-            this.$router.push('/mine')
-          }, 960)
+            this.$router.push(this.$route.query.redirect || '/')
+            this.userCaptcha = ''
+            this.telephone2 = ''
+            this.password = ''
+          }, 700)
         } else {
           this.$toast({
             message: result.message,

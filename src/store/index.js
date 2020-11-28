@@ -1,24 +1,20 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { getItem, setItem } from '@/utils/storage'
 
 Vue.use(Vuex)
 
+const USER_TOKEN_KEY = 'xianyu_user_login_token'
+
 export default new Vuex.Store({
   state: {
-    token: JSON.parse(localStorage.getItem('user_login_token')),
-    userInfo: JSON.parse(localStorage.getItem('userInfo'))
+    token: getItem(USER_TOKEN_KEY) || {}
   },
   mutations: {
-    // 设置用户的基本信息
-    setUserInfo (state, value) {
-      state.userInfo = value
-      localStorage.setItem('userInfo', JSON.stringify(value))
-    },
-
     // 设置token
     setToken (state, value) {
-      state.token = value
-      localStorage.setItem('user_login_token', JSON.stringify(value))
+      state.token = { token: value }
+      setItem(USER_TOKEN_KEY, state.token)
     }
   },
   actions: {

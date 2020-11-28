@@ -35,6 +35,9 @@ import {
   Cell,
   CellGroup,
   Skeleton,
+  Radio,
+  RadioGroup,
+  Area,
   Image as VanImage
 } from 'vant'
 
@@ -73,3 +76,6 @@ Vue.use(NavBar)
   .use(CellGroup)
   .use(VanImage)
   .use(Skeleton)
+  .use(RadioGroup)
+  .use(Radio)
+  .use(Area)

@@ -10,6 +10,11 @@ const userLogin = (data) => {
   return axios.post('/users/login', data)
 }
 
+// 根据已登录的用户token获取用户的信息
+const loadUserInfo = () => {
+  return axios.post('/users')
+}
+
 // 获取注册短信验证码
 const getTelephoneCodeReg = (data) => {
   return axios.post('/regcode', data)
@@ -85,4 +90,4 @@ const userLikeDynamics = (id) => {
   return axios.get(`users/${id}/likeDynamcis`)
 }
 
-export { getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics }
+export { getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics }

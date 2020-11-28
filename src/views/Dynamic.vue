@@ -77,7 +77,7 @@ import HomepageItem from '../components/Homepage/HomepageItem.vue'
 import { getDynamics } from '@/api/dynamic.js'
 import { likeDynamics, userLikeDynamics, unlikeDynamics } from '@/api/user.js'
 export default {
-  name: 'Home',
+  name: 'Dynamic',
   data () {
     return {
       active: 0,

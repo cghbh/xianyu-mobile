@@ -1,16 +1,16 @@
 <template>
   <div class="xianyu-mine">
-    <div class="xianyu-mine-unlogin" v-if="!isLogin" @click="$router.push('/login')">
+    <div class="xianyu-mine-unlogin" v-if="!isLogin" @click="$router.push({ name: 'Login', query: { redirect: '/mine' } })">
       <img src="../assets/images/user-unlogin.svg">
       <div class="content">
         <h1>点击头像登录</h1>
         <p>登录收藏喜欢的内容</p>
       </div>
     </div>
+
     <div class="xianyu-mine-login" v-else>
       <div class="xianyu-mine-login-user" @click="$router.push('/user-detail')">
-        <!-- <img :src="userInfo.avatar_url ? userInfo.avatar_url : 'img/logo.619055bf.png'" alt=""> -->
-        <van-image width="70" height="70" fit="cover" round src="http://xianyu-uploads.oss-cn-beijing.aliyuncs.com/upload_aa3171f1021eec318efdf3179f89d7af.jpg"/>
+        <van-image width="70" height="70" fit="cover" round :src="userInfo.avatar_url"/>
         <div class="content">
           <h1>{{ userInfo.nickname }}</h1>
           <p>点击查看个人主页</p>
@@ -18,6 +18,7 @@
       </div>
     </div>
 
+    <divide-area></divide-area>
     <div class="xianyu-mine-base">
       <van-cell-group @click="$router.push('/my-publish')">
         <van-cell title="我发表的" border class="iconfont icon-shuxiebianji">
@@ -44,6 +45,8 @@
       </van-cell-group>
     </div>
 
+    <divide-area></divide-area>
+
     <div class="xianyu-mine-extend">
       <van-cell-group @click="$router.push('/fellowing')">
         <van-cell title="我的关注" border class="iconfont icon-guanzhu">
@@ -59,14 +62,16 @@
           </template>
         </van-cell>
       </van-cell-group>
-      <van-cell-group @click="$router.push('/mycollection')">
-        <van-cell title="我的收藏" border class="iconfont icon-shoucang">
+      <van-cell-group @click="$router.push('/userinfo-edit')">
+       <van-cell title="我的资料" border class="iconfont icon-shoucang">
           <template #right-icon>
             <i class="iconfont right-i-tag icon-right"></i>
           </template>
         </van-cell>
       </van-cell-group>
     </div>
+
+    <divide-area></divide-area>
 
     <div class="xianyu-mine-setting" v-if="isLogin" >
       <van-cell-group @click="$router.push('/setting')">
@@ -76,6 +81,14 @@
           </template>
         </van-cell>
       </van-cell-group>
+      <van-cell-group @click="$router.push('/setting')">
+        <van-cell title="设置" border class="iconfont icon-shoucang">
+          <template #right-icon>
+            <i class="iconfont right-i-tag icon-right"></i>
+          </template>
+        </van-cell>
+      </van-cell-group>
+
     </div>
 
     <div class="xianyu-mine-feedback">
@@ -91,20 +104,35 @@
 </template>
 
 <script>
+import { loadUserInfo } from '@/api/user.js'
 export default {
   name: 'Mine',
   data () {
     return {
-      // 是否登录过了
-      isLogined: false
+      userInfo: {},
+      isLogin: false
+    }
+  },
+  mounted () {
+    if (this.token) {
+      this.isLogin = true
+      this.loadUserInfo()
     }
   },
   computed: {
-    isLogin () {
-      return this.$store.state.token !== null && this.$store.state.userInfo !== null
-    },
-    userInfo () {
-      return this.$store.state.userInfo
+    token () {
+      return this.$store.state.token.token
+    }
+  },
+  methods: {
+    // 通过登录的token请求用户的信息
+    async loadUserInfo () {
+      const result = await loadUserInfo()
+      if (result.errno === 0) {
+        this.userInfo = result.data
+      } else {
+        this.$toast('请求用户信息失败')
+      }
     }
   }
 }
@@ -115,6 +143,7 @@ export default {
   position: relative;
   height: 100%;
   overflow: hidden;
+   background-color: rgba(38, 38, 38, .05);
   /deep/ .van-cell {
     padding: 16px 16px;
   }
@@ -215,7 +244,6 @@ export default {
   &-extend,
   &-setting {
     background-color: #fff;
-    margin-top: 10px;
   }
 }
 </style>
