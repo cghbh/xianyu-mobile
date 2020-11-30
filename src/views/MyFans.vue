@@ -1,14 +1,6 @@
 <template>
   <div class="xianyu-fans">
-    <van-sticky>
-      <van-nav-bar title="我的粉丝" left-text="返回" left-arrow @click-left="$router.go(-1)">
-        <template #left>
-          <div class="back-container">
-            <i class="iconfont icon-left"></i>
-          </div>
-        </template>
-      </van-nav-bar>
-    </van-sticky>
+    <back-top title="我的粉丝"></back-top>
     <div class="xianyu-fans-container">
       <div class="xianyu-fans-container-item" v-for="item in fansList" :key="item._id">
         <div class="xianyu-fans-container-item-left">

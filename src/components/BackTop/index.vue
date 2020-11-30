@@ -3,7 +3,7 @@
     <van-nav-bar :title="title" sticky :left-arrow="back" @click-left="$router.go(-1)">
       <template #left v-if="back">
         <div class="back-container">
-          <i :class="[ 'iconfont', iconType === 1 ? 'icon-left': 'icon-guanbi']"></i>
+          <i :class="[ 'iconfont iconfont-back-top-xianyu', iconType === 1 ? 'icon-left': 'icon-guanbi']"></i>
         </div>
       </template>
     </van-nav-bar>
@@ -34,4 +34,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.van-nav-bar {
+  background-color: #409fea!important;
+  color: #fff;
+
+  /deep/ .van-nav-bar__title {
+    color: #fff;
+  }
+}
+.iconfont-back-top-xianyu {
+  font-size: 20px;
+}
 </style>

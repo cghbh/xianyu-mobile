@@ -9,7 +9,7 @@
     </div>
 
     <div class="xianyu-mine-login" v-else>
-      <div class="xianyu-mine-login-user" @click="$router.push('/user-detail')">
+      <div class="xianyu-mine-login-user" @click="$router.push('/my-detail')">
         <van-image width="70" height="70" fit="cover" round :src="userInfo.avatar_url"/>
         <div class="content">
           <h1>{{ userInfo.nickname }}</h1>
@@ -72,24 +72,6 @@
     </div>
 
     <divide-area></divide-area>
-
-    <div class="xianyu-mine-setting" v-if="isLogin" >
-      <van-cell-group @click="$router.push('/setting')">
-        <van-cell title="设置" border class="iconfont icon-shoucang">
-          <template #right-icon>
-            <i class="iconfont right-i-tag icon-right"></i>
-          </template>
-        </van-cell>
-      </van-cell-group>
-      <van-cell-group @click="$router.push('/setting')">
-        <van-cell title="设置" border class="iconfont icon-shoucang">
-          <template #right-icon>
-            <i class="iconfont right-i-tag icon-right"></i>
-          </template>
-        </van-cell>
-      </van-cell-group>
-
-    </div>
 
     <div class="xianyu-mine-feedback">
       <van-cell-group @click="$router.push('/feedback')">

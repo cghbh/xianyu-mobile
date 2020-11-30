@@ -5,13 +5,13 @@
       <van-tab title="好文">
         <div style="height: 300px;background-color: pink;">内容</div>
       </van-tab>
-      <van-tab title="新闻">
-        <div style="height: 300px;background-color: pink;">内容</div>
-      </van-tab>
       <van-tab title="诗词">
         <div style="height: 300px;background-color: pink;">内容</div>
       </van-tab>
       <van-tab title="词典">
+        <div style="height: 300px;background-color: pink;">内容</div>
+      </van-tab>
+      <van-tab title="开心一刻">
         <div style="height: 300px;background-color: pink;">内容</div>
       </van-tab>
     </van-tabs>
@@ -34,7 +34,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  
+
   .iconfont {
     font-size: 21px;
     font-weight: 500;

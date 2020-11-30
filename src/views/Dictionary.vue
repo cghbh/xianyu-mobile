@@ -1,14 +1,6 @@
 <template>
   <div class="xianyu-dictionary">
-    <van-sticky>
-      <van-nav-bar title="成语词典" sticky left-text="返回" left-arrow @click-left="$router.go(-1)">
-        <template #left>
-          <div class="back-container">
-            <i class="iconfont icon-left"></i>
-          </div>
-        </template>
-      </van-nav-bar>
-    </van-sticky>
+    <back-top title="成语词典"></back-top>
     <div class="xianyu-dictionary-container">
       <div class="dictionary-item" v-for="(item, index) in mock.dic" :key="index">
         <div class="pinyin">{{ item.pinyin }}</div>

@@ -82,12 +82,6 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/setting',
-    component: () => import('../views/Setting.vue'),
-    name: 'Setting',
-    meta: { requiresAuth: true }
-  },
-  {
     path: '/modify-information',
     component: () => import('../views/ModifyInformation.vue'),
     name: 'ModifyInformation',
@@ -160,8 +154,8 @@ const routes = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/user-detail',
-    component: () => import('../views/UserDetail.vue'),
+    path: '/my-detail',
+    component: () => import('../views/MyDetail.vue'),
     name: 'UserDetail',
     meta: { requiresAuth: true }
   },

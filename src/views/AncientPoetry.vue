@@ -1,14 +1,6 @@
 <template>
   <div class="ancient-poetry">
-    <van-sticky>
-      <van-nav-bar title="诗词" sticky left-arrow @click-left="$router.go(-1)">
-        <template #left>
-          <div class="back-container">
-            <i class="iconfont icon-left"></i>
-          </div>
-        </template>
-      </van-nav-bar>
-    </van-sticky>
+    <back-top title="诗词"></back-top>
     <div class="ancient-poetry-container" style="min-height: 400px;font-size: 14px; text-align: center;line-height: 32px;padding-top: 15px; color: #555;">
       <h1 style="font-size: 20px;font-weight: bold;">蝶恋花·出塞</h1>
       <p style="font-size: 16px; color: #666;">纳兰性德</p>

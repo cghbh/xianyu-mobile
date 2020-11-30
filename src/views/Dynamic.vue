@@ -58,11 +58,27 @@
             <!-- <homepage-item v-for="(item, index) in 2" :key="index" :isFirst="index === 0"></homepage-item> -->
           </div>
         </van-pull-refresh>
-        <van-empty v-if="!showNoFollow" description="什么内容都没有" />
+        
         <!-- 未登录 -->
-        <div class="dynamic-follow-unlogin">
+        <div class="dynamic-follow-unlogin" v-if="!user_login_token">
           <p class="dynamic-follow-unlogin-tips">需要登录，或登录已过期需要重新登录</p>
-          <a class="dynamic-follow-unlogin-link">去登录</a>
+          <a class="dynamic-follow-unlogin-link" @click="$router.replace({ path: '/login', query: { redirect: '/dynamic' } })">去登录</a>
+        </div>
+        
+        <!-- 我的关注空状态 -->
+        <van-empty v-if="showNoFollow && user_login_token" description="什么内容都没有" />
+        
+        <!-- 正常内容显示 -->
+        <div class="xianyu-my-follow-container">
+          <homepage-item
+            @itemlike="itemLikeHandle"
+            @itemunlike="itemUnlikeHandle"
+            v-for="(item, index) in latestDynamics"
+            :key="item._id"
+            :isFirst="index === 0"
+            :itemValue="item"
+            :loading="isLoading"
+            :loginUserLikeDynamics="loginUserLikeDynamics"></homepage-item>
         </div>
       </van-tab>
 
@@ -91,7 +107,7 @@ export default {
       // 最新的动态
       latestDynamics: [],
       // 关注的人没有动态
-      showNoFollow: true,
+      showNoFollow: false,
       // 关注者的动态
       followDynamics: [],
       // 已登录用户所有点赞过的id
@@ -125,11 +141,8 @@ export default {
     }
   },
   computed: {
-    userInfo () {
-      return this.$store.state.userInfo
-    },
     user_login_token () {
-      return this.$store.state.token
+      return this.$store.state.token.token
     }
   },
   beforeCreate () {

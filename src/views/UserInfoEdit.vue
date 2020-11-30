@@ -1,14 +1,6 @@
 <template>
   <div class="xianyu-userinfo-edit">
-    <van-sticky>
-      <van-nav-bar title="编辑资料" sticky left-arrow @click-left="$router.go(-1)">
-        <template #left>
-          <div class="back-container">
-            <i class="iconfont icon-left"></i>
-          </div>
-        </template>
-      </van-nav-bar>
-    </van-sticky>
+    <back-top title="我的资料"></back-top>
 
     <van-cell-group>
       <van-cell class="xianyu-upload-avatar" title="头像" value="内容" />
@@ -48,6 +40,11 @@
           <van-cell title="女" clickable @click="sexRadio = '女'">
             <template #right-icon>
               <van-radio name="女" />
+            </template>
+          </van-cell>
+          <van-cell title="保密" clickable @click="sexRadio = '保密'">
+            <template #right-icon>
+              <van-radio name="保密" />
             </template>
           </van-cell>
         </van-cell-group>

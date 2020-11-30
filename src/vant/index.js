@@ -38,6 +38,8 @@ import {
   Radio,
   RadioGroup,
   Area,
+  Tag,
+  Loading,
   Image as VanImage
 } from 'vant'
 
@@ -79,3 +81,5 @@ Vue.use(NavBar)
   .use(RadioGroup)
   .use(Radio)
   .use(Area)
+  .use(Tag)
+  .use(Loading)

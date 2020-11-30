@@ -1,6 +1,6 @@
 <template>
   <div class="dynamic-publish">
-    <van-nav-bar title="标题" left-text="返回" left-arrow>
+    <van-nav-bar title="动态发布" left-text="返回" left-arrow>
       <template #right>
         <i name="right" class="iconfont icon-fabu" @click="publish"></i>
       </template>
@@ -131,6 +131,14 @@ export default {
   .iconfont {
     font-size: 21px;
     font-weight: 500;
+  }
+
+  /deep/ .van-nav-bar {
+    background-color: #409fea!important;
+    color: #fff;
+    .van-nav-bar__title {
+      color: #fff;
+    }
   }
 
   /deep/ .van-nav-bar__right {

@@ -1,12 +1,6 @@
 <template>
   <div class="knowledge-competition">
-    <van-nav-bar title="课后练习" left-text="返回" left-arrow @click-left="back">
-      <template #left>
-        <div class="back-container">
-          <i class="iconfont icon-left"></i>
-        </div>
-      </template>
-    </van-nav-bar>
+    <back-top title="趣味答题"></back-top>
     <!-- 答题区 -->
     <div class="question-container">
       <div class="question-container-area" v-if="!showResult">

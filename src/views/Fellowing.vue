@@ -1,13 +1,7 @@
 <template>
   <!-- 我关注的 -->
   <div class="xianyu-fellowing">
-    <van-nav-bar fixed title="我的关注" left-arrow @click-left="$router.go(-1)">
-      <template #left>
-        <div class="back-container">
-          <i class="iconfont icon-left"></i>
-        </div>
-      </template>
-    </van-nav-bar>
+    <back-top title="我的关注"></back-top>
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
       <div class="xianyu-fellowing-container" v-if="hasFellowData">
         <van-list
