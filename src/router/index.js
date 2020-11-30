@@ -156,25 +156,31 @@ const routes = [
   {
     path: '/my-detail',
     component: () => import('../views/MyDetail.vue'),
-    name: 'UserDetail',
+    name: 'MyDetail',
     meta: { requiresAuth: true }
   },
   {
     path: '/feedback',
     component: () => import('../views/Feedback.vue'),
     name: 'Feedback',
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: false }
   },
   {
     path: '/userinfo-edit',
     component: () => import('../views/UserInfoEdit.vue'),
     name: 'UserInfoEdit',
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: false }
   },
   {
     path: '/bind-telephone',
     component: () => import('../views/BindTelephone.vue'),
     name: 'BindTelephone',
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/setting',
+    component: () => import('../views/Setting.vue'),
+    name: 'Setting',
     meta: { requiresAuth: true }
   }
 ]

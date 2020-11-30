@@ -40,6 +40,7 @@ import {
   Area,
   Tag,
   Loading,
+  DatetimePicker,
   Image as VanImage
 } from 'vant'
 
@@ -83,3 +84,4 @@ Vue.use(NavBar)
   .use(Area)
   .use(Tag)
   .use(Loading)
+  .use(DatetimePicker)

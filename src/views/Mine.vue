@@ -74,6 +74,14 @@
     <divide-area></divide-area>
 
     <div class="xianyu-mine-feedback">
+      <van-cell-group @click="$router.push('/setting')">
+        <van-cell title="设置" border class="iconfont icon-shoucang">
+          <template #right-icon>
+            <i class="iconfont right-i-tag icon-right"></i>
+          </template>
+        </van-cell>
+      </van-cell-group>
+
       <van-cell-group @click="$router.push('/feedback')">
         <van-cell title="意见反馈" border class="iconfont icon-shoucang">
           <template #right-icon>
