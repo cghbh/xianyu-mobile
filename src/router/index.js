@@ -28,26 +28,26 @@ const routes = [
       {
         path: 'mine',
         name: 'Mine',
-        component: () => import(/* webpackChunkName: "group-index" */ '../views/Mine.vue'),
+        component: () => import(/* webpackChunkName: "group-index-other" */ '../views/Mine.vue'),
         meta: { requiresAuth: false }
       },
       {
         path: '/mymessage',
-        component: () => import(/* webpackChunkName: "group-index" */ '../views/MyMessage.vue'),
+        component: () => import(/* webpackChunkName: "group-index-other" */ '../views/MyMessage.vue'),
         name: 'MyMessage',
         meta: { requiresAuth: true }
       },
       {
         path: '',
-        component: () => import(/* webpackChunkName: "group-index" */ '../views/Discover.vue'),
+        component: () => import(/* webpackChunkName: "group-index-other" */ '../views/Discover.vue'),
         name: 'Discover',
-        meta: { requiresAuth: false }
+        meta: { requiresAuth: false, keepAlive: true }
       }
     ]
   },
   {
     path: '/login',
-    component: () => import('../views/Login.vue'),
+    component: () => import(/* webpackChunkName: "group-user" */'../views/Login.vue'),
     name: 'Login',
     meta: { requiresAuth: false }
   },
@@ -106,16 +106,28 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/good-article',
-    component: () => import('../views/GoodArticle.vue'),
-    name: 'GoodArticle',
+    path: '/article-detail',
+    component: () => import('../views/ArticleDetail.vue'),
+    name: 'ArticleDetail',
     meta: { requiresAuth: false }
   },
   {
-    path: '/ancient-poetry',
+    path: '/article-list',
+    component: () => import('../views/ArticleList.vue'),
+    name: 'ArticleList',
+    meta: { requiresAuth: false, keepAlive: true }
+  },
+  {
+    path: '/ancient-poetry/:poemId',
     component: () => import('../views/AncientPoetry.vue'),
     name: 'AncientPoetry',
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: false, keepAlive: false }
+  },
+  {
+    path: '/ancient-poetrylist',
+    component: () => import('../views/AncientPoetryList.vue'),
+    name: 'AncientPoetryList',
+    meta: { requiresAuth: false, keepAlive: true }
   },
   {
     path: '/dynamic-publish',
@@ -130,9 +142,15 @@ const routes = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/dictionary',
-    component: () => import('../views/Dictionary.vue'),
-    name: 'Dictionary',
+    path: '/dictionary-list',
+    component: () => import('../views/DictionaryList.vue'),
+    name: 'DictionaryList',
+    meta: { requiresAuth: false, keepAlive: true }
+  },
+  {
+    path: '/dictionary-detail',
+    component: () => import('../views/DictionaryDetail.vue'),
+    name: 'DictionaryDetail',
     meta: { requiresAuth: false }
   },
   {
@@ -149,7 +167,7 @@ const routes = [
   },
   {
     path: '/register',
-    component: () => import('../views/Register.vue'),
+    component: () => import(/* webpackChunkName: "group-user" */ '../views/Register.vue'),
     name: 'Register',
     meta: { requiresAuth: false }
   },
@@ -161,7 +179,7 @@ const routes = [
   },
   {
     path: '/feedback',
-    component: () => import('../views/Feedback.vue'),
+    component: () => import(/* webpackChunkName: "group-user" */ '../views/Feedback.vue'),
     name: 'Feedback',
     meta: { requiresAuth: false }
   },
@@ -181,6 +199,12 @@ const routes = [
     path: '/setting',
     component: () => import('../views/Setting.vue'),
     name: 'Setting',
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/replace-telephone',
+    component: () => import('../views/ReplaceTelephone.vue'),
+    name: 'ReplaceTelephone',
     meta: { requiresAuth: true }
   }
 ]

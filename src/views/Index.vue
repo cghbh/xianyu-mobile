@@ -1,8 +1,6 @@
 <template>
   <div class="xianyu-index">
-    <keep-alive>
-      <router-view/>
-    </keep-alive>
+    <router-view/>
     <van-tabbar route v-model="active" active-color="#409fea" inactive-color="#000">
       <van-tabbar-item v-for="item in bottomIcon" :key=item.to :to="item.to">
         <span>{{ item.title }}</span>

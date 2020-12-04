@@ -58,22 +58,22 @@
             <!-- <homepage-item v-for="(item, index) in 2" :key="index" :isFirst="index === 0"></homepage-item> -->
           </div>
         </van-pull-refresh>
-        
+
         <!-- 未登录 -->
         <div class="dynamic-follow-unlogin" v-if="!user_login_token">
           <p class="dynamic-follow-unlogin-tips">需要登录，或登录已过期需要重新登录</p>
           <a class="dynamic-follow-unlogin-link" @click="$router.replace({ path: '/login', query: { redirect: '/dynamic' } })">去登录</a>
         </div>
-        
+
         <!-- 我的关注空状态 -->
         <van-empty v-if="showNoFollow && user_login_token" description="什么内容都没有" />
-        
+
         <!-- 正常内容显示 -->
         <div class="xianyu-my-follow-container">
           <homepage-item
             @itemlike="itemLikeHandle"
             @itemunlike="itemUnlikeHandle"
-            v-for="(item, index) in latestDynamics"
+            v-for="(item, index) in followDynamics"
             :key="item._id"
             :isFirst="index === 0"
             :itemValue="item"
@@ -209,8 +209,9 @@ export default {
     // 推荐内容的刷新事件，重新请求推荐内容
     async onRecommendRefresh () {
       const result = await getDynamics(0)
+
       if (result.errno === 0) {
-        this.dynamics = result.data
+        this.recommendDynamics = result.data
         this.isRecommendLoading = false
       } else {
         this.$toast({ message: '数据获取失败 ', duration: 800 })
@@ -236,8 +237,12 @@ export default {
 
 <style scoped lang="scss">
 .xianyu-home-page {
-  height: auto;
-  margin-bottom: 52px;
+  position: fixed;
+  top: 0;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+  overflow-y: auto;
   /deep/ .van-sticky {
     background-color: #fff;
   }
@@ -283,8 +288,6 @@ export default {
   flex-direction: column;
   align-items: center;
   background-color: #fff;
-  // height: 100%;
-  // height: calc(100vh - 98px);
   &-tips {
     font-size: 16px;
     margin-top: 240px;

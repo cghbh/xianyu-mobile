@@ -63,7 +63,7 @@
         </van-cell>
       </van-cell-group>
       <van-cell-group @click="$router.push('/userinfo-edit')">
-       <van-cell title="我的资料" border class="iconfont icon-shoucang">
+       <van-cell title="我的资料" border class="iconfont icon-ziliao">
           <template #right-icon>
             <i class="iconfont right-i-tag icon-right"></i>
           </template>
@@ -75,7 +75,7 @@
 
     <div class="xianyu-mine-feedback">
       <van-cell-group @click="$router.push('/setting')">
-        <van-cell title="设置" border class="iconfont icon-shoucang">
+        <van-cell title="设置" border class="iconfont icon-shezhi1">
           <template #right-icon>
             <i class="iconfont right-i-tag icon-right"></i>
           </template>
@@ -83,7 +83,7 @@
       </van-cell-group>
 
       <van-cell-group @click="$router.push('/feedback')">
-        <van-cell title="意见反馈" border class="iconfont icon-shoucang">
+        <van-cell title="意见反馈" border class="iconfont icon-yijianfankui">
           <template #right-icon>
             <i class="iconfont right-i-tag icon-right"></i>
           </template>

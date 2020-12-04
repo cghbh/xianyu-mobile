@@ -15,17 +15,17 @@
     <divide-area></divide-area>
 
     <van-cell-group>
-      <van-cell @click="showNicknameEdit = true" class="xianyu-user-edit-vant" is-link title="昵称" value="内容" />
-      <van-cell @click="showSexEditHandle" class="xianyu-user-edit-vant" is-link title="性别" value="内容" />
-      <van-cell @click="showBirthEdit = true" class="xianyu-user-edit-vant" is-link title="生日" value="内容" />
-      <van-cell @click="showEmailEdit = true" class="xianyu-user-edit-vant" is-link title="邮箱" value="内容" />
+      <van-cell @click="showNicknameEdit = true" class="xianyu-user-edit-vant" is-link title="昵称" value="愚蠢的兔子" />
+      <van-cell @click="showSexEditHandle" class="xianyu-user-edit-vant" is-link title="性别" value="男" />
+      <van-cell @click="showBirthEdit = true" class="xianyu-user-edit-vant" is-link title="生日" value="1995-08-20"/>
+      <van-cell @click="showEmailEdit = true" class="xianyu-user-edit-vant" is-link title="邮箱" value="914539467@qq.com" />
     </van-cell-group>
 
     <divide-area></divide-area>
 
     <van-cell-group>
-      <van-cell class="xianyu-user-edit-vant" @click="showAddressEdit = true" is-link title="地区" value="内容" />
-      <van-cell class="xianyu-user-edit-vant" @click="showPersonSignEdit = true" is-link title="个性签名" value="内容" />
+      <van-cell class="xianyu-user-edit-vant" @click="showAddressEdit = true" is-link title="地区" value="湖北省荆州市公安县" />
+      <van-cell class="xianyu-user-edit-vant xianyu-person-sign" @click="showPersonSignEdit = true" is-link title="个性签名" value="我的人参我自己主宰我的人参我自己主宰我的己主宰我的" />
     </van-cell-group>
 
     <divide-area></divide-area>
@@ -90,12 +90,13 @@
       <van-area title="标题" :area-list="areaList" value="110101" />
     </van-popup>
 
+    <!-- 个性签名 -->
     <van-popup v-model="showPersonSignEdit">
       <edituser-edit
         v-model="email"
         title="个性签名"
-        placeholder="请输入50个字以内的个性签名"
-        :maxlength="50"
+        placeholder="请输入25个字以内的个性签名"
+        :maxlength="25"
         @cancel="showPersonSignEdit = false"
         @confirm="showPersonSignEdit = false"></edituser-edit>
     </van-popup>
@@ -187,5 +188,19 @@ export default {
 // vant的overlay样式需要深作用域才能有效
 .xianyu-userinfo-edit /deep/ .edit-address-overlay {
   background-color: rgba(0,0,0,.5);
+}
+
+.xianyu-person-sign {
+  /deep/ .van-cell__title {
+    flex: 1;
+  }
+  /deep/ .van-cell__value {
+    flex: 3;
+    span {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 </style>

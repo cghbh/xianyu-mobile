@@ -1,6 +1,6 @@
 export default {
   baseURL: {
-    dev: 'http://42.192.120.52/api/v1',
-    prod: 'http://42.192.120.52/api/v1'
+    dev: 'https://www.cghbh.com/api/v1',
+    prod: 'https://www.cghbh.com/api/v1'
   }
 }

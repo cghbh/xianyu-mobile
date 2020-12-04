@@ -133,11 +133,11 @@ export default {
       margin-left: 5px;
       h1 {
         margin-bottom: 8px;
-        font-size: 16px;
+        font-size: 16PX;
         color: rgba(0, 0, 0, .8);
       }
       h3 {
-        font-size: 12px;
+        font-size: 12PX;
         color: rgba(0, 0, 0, .4);
       }
     }
@@ -145,7 +145,7 @@ export default {
 
   &-area {
     p {
-      font-size: 14PX;
+      font-size: 15PX;
       line-height: 25px;
       margin-bottom: 10px;
       color: rgba(0, 0, 0, .9);

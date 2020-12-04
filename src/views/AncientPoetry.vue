@@ -2,19 +2,16 @@
   <div class="ancient-poetry">
     <back-top title="诗词"></back-top>
     <div class="ancient-poetry-container" style="min-height: 400px;font-size: 14px; text-align: center;line-height: 32px;padding-top: 15px; color: #555;">
-      <h1 style="font-size: 20px;font-weight: bold;">蝶恋花·出塞</h1>
-      <p style="font-size: 16px; color: #666;">纳兰性德</p>
-      <p style="font-size: 16px;">今古河山无定据。画角声中，牧马频来去。</p>
-      <p style="font-size: 16px;">满目荒凉谁可语？西风吹老丹枫树。</p>
-      <p style="font-size: 16px;">从前幽怨应无数。铁马金戈，青冢黄昏路。</p>
-      <strong style="font-weight: bold;font-size: 16px;"> 一往情深深几许？深山夕照深秋雨。</strong>
+      <h1 style="font-size: 18px;font-weight: bold;">{{ poemObj.poem_title }}</h1>
+      <p style="font-size: 15px; color: #666; margin: 8px 0;">{{ poemObj.poem_author }}</p>
+      <div class="poem-content" v-html="poemObj.poem_content"></div>
     </div>
     <div class="zan-collect">
       <div class="zan-collect-container" :class="{ 'active': isZan }" @click="isZan = !isZan">
 
         <i class="iconfont icon-dianzan" v-if="isZan"></i>
         <i class="iconfont icon-dianzan1" v-else></i>
-        <span>999</span>
+        <span>{{ poemObj.zan_number }}</span>
       </div>
       <div class="zan-collect-container" :class="{ 'active': isCollect }" @click="isCollect = !isCollect">
 
@@ -27,6 +24,7 @@
 </template>
 
 <script>
+import { getPoemById } from '@/api/poem.js'
 export default {
   name: 'AncientPoetry',
   data () {
@@ -34,7 +32,30 @@ export default {
       // 是否点赞
       isZan: false,
       // 是否收藏
-      isCollect: false
+      isCollect: false,
+      poemObj: {}
+    }
+  },
+  computed: {
+    poemId () {
+      return this.$route.params.poemId
+    }
+  },
+  mounted () {
+    this.getPoemHandle()
+  },
+  methods: {
+    async getPoemHandle () {
+      try {
+        const result = await getPoemById(this.poemId.toString())
+        if (result.errno === 0) {
+          result.data.poem_content = result.data.poem_content.replace(/[\n\r]/g, '<br>')
+          this.poemObj = result.data
+        }
+      } catch (err) {
+        this.$toast('请求的数据不存在')
+        this.$router.go(-1)
+      }
     }
   }
 }
@@ -93,6 +114,18 @@ export default {
     .iconfont {
       color: #409fea;
     }
+  }
+}
+
+.poem-content {
+  font-size: 17px;
+  text-align: center;
+  padding: 0 15px;
+  line-height: 35px;
+  color: #333;
+
+  /deep/ strong {
+    font-weight: bold!important;
   }
 }
 </style>
