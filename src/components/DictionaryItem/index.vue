@@ -1,5 +1,9 @@
 <template>
-  <div class="xianyu-dictionary-item" :class="{ 'no-mragin-bottom-dic': noMarginBottom }">{{ dictionary }}</div>
+  <div 
+    class="xianyu-dictionary-item" 
+    :class="{ 'no-mragin-bottom-dic': noMarginBottom }"
+    @click="$emit('click')"
+    >{{ dictionary }}</div>
 </template>
 
 <script>

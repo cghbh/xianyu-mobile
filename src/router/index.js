@@ -106,7 +106,7 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/article-detail',
+    path: '/article-detail/:artId',
     component: () => import('../views/ArticleDetail.vue'),
     name: 'ArticleDetail',
     meta: { requiresAuth: false }
@@ -148,7 +148,7 @@ const routes = [
     meta: { requiresAuth: false, keepAlive: true }
   },
   {
-    path: '/dictionary-detail',
+    path: '/dictionary-detail/:dicId',
     component: () => import('../views/DictionaryDetail.vue'),
     name: 'DictionaryDetail',
     meta: { requiresAuth: false }

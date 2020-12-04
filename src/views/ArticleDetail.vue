@@ -2,9 +2,12 @@
   <div class="good-article">
     <back-top title="好文"></back-top>
     <div class="good-article-content">
-      <h1 style="text-align: center;">{{ mock.title }}</h1>
-      <h3 style="text-align: center;">{{ mock.author }}</h3>
-      <article class="article-container" v-html="mock.content"></article>
+      <h1 style="text-align: left;padding-left: ;">{{ article.article_title }}</h1>
+      <h3 style="text-align: left;">文 / {{ article.article_author }}</h3>
+      <div class="good-article-content-avatar">
+        <img :src="article.article_image">
+      </div>
+      <article class="article-container" v-html="article.article_content"></article>
       <div class="zan-collect">
         <div class="zan-collect-container" :class="{ 'active': isZan }" @click="isZan = !isZan">
 
@@ -25,15 +28,34 @@
 
 <script>
 import MockData from '../mock/GoodArticle.js'
+import { getArticleById } from '@/api/article.js'
 export default {
   name: 'GoodArticle',
   data () {
     return {
+      article: {},
       mock: MockData,
       // 是否点赞
       isZan: false,
       // 是否收藏
       isCollect: false
+    }
+  },
+  mounted () {
+    this.getArticleHandle()
+  },
+  methods: {
+    async getArticleHandle () {
+      try {
+        const result = await getArticleById(this.$route.params.artId)
+        if (result.errno === 0) {
+          this.article = result.data
+        }
+      } catch (err) {
+        this.$toast('请求的数据不存在')
+        this.$router.push('/article-list')
+        console.log(err, '错误捕获')
+      }
     }
   }
 }
@@ -52,7 +74,6 @@ export default {
 }
 
 .article-container {
-  padding: 0 10px;
   text-indent: 1.5em;
   font-size: 17px;
   line-height: 35px;
@@ -64,19 +85,20 @@ export default {
   padding-bottom: 30px;
 
   h1 {
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 700;
     color: rgba(0, 0, 0, .7);
-    margin: 15px 0;
+    margin: 24px 0;
   }
 
   h3 {
     margin-bottom: 15px;
     font-size: 14px;
+    color: #666;
   }
 
   &-content {
-    .refresh {}
+    padding: 0 10px;
   }
 }
 
@@ -108,6 +130,18 @@ export default {
     .iconfont {
       color: #409fea;
     }
+  }
+}
+
+.good-article-content-avatar {
+  max-height: 180px;
+  overflow: hidden;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+
+  img {
+    width: 100%;
+    max-height: 200px;
   }
 }
 </style>

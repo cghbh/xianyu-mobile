@@ -1,8 +1,8 @@
 <template>
   <div class="xianyu-dictionary">
     <back-top title="成语词典"></back-top>
-    <div class="xianyu-dictionary-container">
-      <div class="dictionary-item" v-for="(item, index) in mock.dic" :key="index">
+    <div class="xianyu-dictionary-container" v-cloak>
+      <div class="dictionary-item" v-for="(item, index) in dictionaryData.dic" :key="index.toString() + Math.random()">
         <div class="pinyin">{{ item.pinyin }}</div>
         <div class="hanzi">
           <div class="left-line"></div>
@@ -16,15 +16,15 @@
       </div>
     </div>
     <div class="word-meaning">
-      <div class="meaning-container">{{ mock.meaning }}</div>
-      <div class="source">{{ mock.source }}</div>
+      <div class="meaning-container">释义：{{ dictionaryData.meaning }}</div>
+      <div class="source">出处：{{ dictionaryData.source }}</div>
     </div>
     <div class="zan-collect">
       <div class="zan-collect-container" :class="{ 'active': isZan }" @click="isZan = !isZan">
 
         <i class="iconfont icon-dianzan" v-if="isZan"></i>
         <i class="iconfont icon-dianzan1" v-else></i>
-        <span>999</span>
+        <span>{{ dictionaryData.zan_number }}</span>
       </div>
       <div class="zan-collect-container" :class="{ 'active': isCollect }" @click="isCollect = !isCollect">
 
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { getDictionaryById } from '@/api/dictionary.js'
 export default {
   name: 'Dictionary',
   data () {
@@ -45,15 +46,36 @@ export default {
       isZan: false,
       // 是否收藏
       isCollect: false,
-      mock: {
-        dic: [
-          { pinyin: 'jiǒng', hanzi: '迥' },
-          { pinyin: 'rán', hanzi: '然' },
-          { pinyin: 'bù', hanzi: '不' },
-          { pinyin: 'tóng', hanzi: '同' }
-        ],
-        meaning: '意思是形容差别很大，一点儿也不相同。',
-        source: '宋·张戒《岁寒堂诗话》卷上：“文章古今迥然不同，钟嵘《诗品》以古诗第一，子建（曹植）次之，此论诚然。”'
+      dictionaryData: {}
+    }
+  },
+  mounted () {
+    this.getDictionaryDetail()
+  },
+  methods: {
+    // 根据id获取成语的详细内容
+    async getDictionaryDetail () {
+      try {
+        const result = await getDictionaryById(this.$route.params.dicId)
+        if (result.errno === 0) {
+          const pinyin = result.data.word_pinyin.trim().split(' ')
+          const hanzi = result.data.word_title.trim().split('')
+          const dic = []
+          pinyin.forEach((item, index) => {
+            dic.push({ pinyin: item, hanzi: hanzi[index] })
+          })
+          this.dictionaryData = {
+            dic: dic,
+            meaning: result.data.word_meaning,
+            source: result.data.word_birth,
+            zan_number: result.data.zan_number,
+            collect_number: result.data.collect_number
+          }
+        }
+      } catch (err) {
+        console.log(err, '错误捕获')
+        this.$toast('请求的数据不存在')
+        this.$router.push('/dictionary-list')
       }
     }
   }
@@ -64,6 +86,11 @@ export default {
 $distance: 1px;
 $color: #aaa;
 $fontColor: #000;
+
+[v-cloak] {
+  display: none;
+}
+
 .xianyu-dictionary {
   background-color: #fff;
   height: 100%;

@@ -1,15 +1,15 @@
 <template>
-  <div class="xianyu-article-item" :class="{ 'no-margin-bottom': noMarginBottom }">
+  <div class="xianyu-article-item" :class="{ 'no-margin-bottom': noMarginBottom }" @click="$emit('click')">
     <div class="xianyu-article-item-content">
-      <h1 class="xianyu-article-item-content-title">人生永远没有太晚的开始</h1>
-      <h3 class="xianyu-article-item-content-author">摩西奶奶</h3>
-      <p class="xianyu-article-item-content-about">我不知怎样生活的更美好，我能做的只是尽力接纳生活赋予我的这一切内容。</p>
+      <h1 class="xianyu-article-item-content-title">{{ article.article_title }}</h1>
+      <h3 class="xianyu-article-item-content-author">{{ article.article_author }}</h3>
+      <p class="xianyu-article-item-content-about">{{ article.article_introduce }}</p>
     </div>
     <van-image
       width="80px"
       height="80px"
       fit="cover"
-      src="https://img.yzcdn.cn/vant/cat.jpeg"
+      :src="article.article_image"
     >
       <template v-slot:loading>
         <van-loading type="spinner" size="20" />
@@ -26,6 +26,11 @@ export default {
     noMarginBottom: {
       type: Boolean,
       default: false
+    },
+    article: {
+      type: Object,
+      default: () => {},
+      required: true
     }
   }
 }
@@ -58,8 +63,14 @@ export default {
 
     &-about {
       color: #666;
-      font-size: 13px;
+      font-size: 14px;
       line-height: 20px;
+      height: 60px;
+      overflow : hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
     }
   }
 }

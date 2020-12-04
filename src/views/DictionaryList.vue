@@ -2,17 +2,43 @@
   <div class="xianyu-dictionary-detail">
     <back-top title="成语列表"></back-top>
     <div class="xianyu-dictionary-detail-container">
-      <dictionary-item v-for="item in 20" :dictionary="item + '成语词典'" :key="item" :no-margin-bottom="item === 20"></dictionary-item>
+      <dictionary-item
+        v-for="(item, index) in dictionarys"
+        :dictionary="item.word_title"
+        :key="item._id"
+        :no-margin-bottom="index === (dictionarys.length - 1)"
+        @click="$router.push(`/dictionary-detail/${item._id}`)"></dictionary-item>
     </div>
   </div>
 </template>
 
 <script>
 import DictionaryItem from '@/components/DictionaryItem/index.vue'
+import { getDictionaryList } from '@/api/dictionary.js'
 export default {
   name: 'DictionaryList',
+  data () {
+    return {
+      currentPage: 1,
+      dictionarys: [],
+      total: 0
+    }
+  },
   components: {
     DictionaryItem
+  },
+  mounted () {
+    this.getDictionaryListHandle()
+  },
+  methods: {
+    getDictionaryListHandle () {
+      getDictionaryList(this.currentPage).then(res => {
+        if (res.errno === 0) {
+          this.dictionarys = res.data
+          this.total = res.total
+        }
+      }).catch(() => {})
+    }
   }
 }
 </script>

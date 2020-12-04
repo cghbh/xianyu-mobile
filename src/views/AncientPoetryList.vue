@@ -43,6 +43,7 @@ export default {
       // 加载完毕
       finished: false,
       currentPage: 1,
+      // 所有的数据条数
       totalPage: 0,
       perPage: 10
     }
@@ -61,7 +62,7 @@ export default {
       const result = await getPoemList(this.currentPage)
       if (result.errno === 0) {
         this.poemList = result.data
-        this.totalPage = result.totalPage
+        this.totalPage = result.total
       }
     },
     async pullDownHandle () {
@@ -69,7 +70,7 @@ export default {
       const result = await getPoemList(this.currentPage)
       if (result.errno === 0) {
         this.poemList = result.data
-        this.totalPage = result.totalPage
+        this.totalPage = result.total
         this.$refs.loadmore.onTopLoaded()
       }
     },
