@@ -12,7 +12,7 @@
           :finished="loadMoreFinished"
           :immediate-check="false"
           :offset="50"
-          finished-text="没有更多了"
+          finished-text="我也是有底线的~"
           @load="onLoadMoreLoad"
         >
           <!-- 诗词列表组件 -->
