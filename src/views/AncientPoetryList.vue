@@ -60,7 +60,7 @@ export default {
     }
   },
   mounted () {
-    document.getElementById('ancient-list-container').addEventListener('scroll', debounce(this.listScrollHandle, 20))
+    document.getElementById('ancient-list-container').addEventListener('scroll', debounce(this.listScrollHandle, 30))
     this.getPoemHandle()
   },
   activated () {

@@ -89,6 +89,7 @@ export default {
     font-weight: 700;
     color: rgba(0, 0, 0, .7);
     margin: 24px 0;
+    line-height: 30px;
   }
 
   h3 {

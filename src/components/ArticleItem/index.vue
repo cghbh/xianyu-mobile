@@ -53,6 +53,13 @@ export default {
     &-title {
       font-size: 16px;
       margin-bottom: 10px;
+      height: 22px;
+      line-height: 22px;
+      overflow : hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
     }
 
     &-author {
