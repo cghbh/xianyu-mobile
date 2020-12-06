@@ -1,13 +1,31 @@
 <template>
   <div class="xianyu-dictionary-detail">
     <back-top title="成语列表"></back-top>
-    <div class="xianyu-dictionary-detail-container">
-      <dictionary-item
-        v-for="(item, index) in dictionarys"
-        :dictionary="item.word_title"
-        :key="item._id"
-        :no-margin-bottom="index === (dictionarys.length - 1)"
-        @click="$router.push(`/dictionary-detail/${item._id}`)"></dictionary-item>
+    <div class="xianyu-dictionary-detail-container" id="dictionary-list-container" ref="dictionary-list-container">
+      <!-- 下拉刷新 -->
+
+      <van-pull-refresh v-model="pullDown" @refresh="onPullDownRefresh">
+
+        <!-- 列表组件，上拉加载更多 -->
+        <van-list
+          v-model="loadMore"
+          :finished="loadMoreFinished"
+          :immediate-check="false"
+          :offset="50"
+          finished-text="没有更多了"
+          @load="onLoadMoreLoad"
+        >
+          <!-- 诗词列表组件 -->
+          <dictionary-item
+            v-for="(item, index) in dictionarys"
+            :dictionary="item.word_title"
+            :key="item._id"
+            :no-margin-bottom="index === (dictionarys.length - 1)"
+            @click="$router.push(`/dictionary-detail/${item._id}`)"
+          >
+          </dictionary-item>
+        </van-list>
+      </van-pull-refresh>
     </div>
   </div>
 </template>
@@ -15,13 +33,24 @@
 <script>
 import DictionaryItem from '@/components/DictionaryItem/index.vue'
 import { getDictionaryList } from '@/api/dictionary.js'
+import { debounce } from 'lodash'
 export default {
   name: 'DictionaryList',
   data () {
     return {
       currentPage: 1,
+      // 每页返回的数据
+      perPage: 20,
       dictionarys: [],
-      total: 0
+      total: 0,
+      // 下拉刷新
+      pullDown: false,
+      // 上拉加载更多
+      loadMore: false,
+      // 上拉加载结束
+      loadMoreFinished: false,
+      // 列表的滚动的高度
+      dictionaryListScrollTop: 0
     }
   },
   components: {
@@ -29,6 +58,15 @@ export default {
   },
   mounted () {
     this.getDictionaryListHandle()
+    this.$refs.['dictionary-list-container'].addEventListener('scroll', debounce(this.scrollHandle, 30))
+  },
+  activated () {
+    this.$refs['dictionary-list-container'].scrollTop = this.dictionaryListScrollTop
+  },
+  computed: {
+    totalPage () {
+      return Math.ceil(this.total / this.perPage)
+    }
   },
   methods: {
     getDictionaryListHandle () {
@@ -38,6 +76,32 @@ export default {
           this.total = res.total
         }
       }).catch(() => {})
+    },
+    onPullDownRefresh () {
+      this.currentPage = 1
+      this.loadMoreFinished = false
+      getDictionaryList(this.currentPage).then(res => {
+        if (res.errno === 0) {
+          this.dictionarys = res.data
+          this.total = res.total
+          this.pullDown = false
+          this.$toast('刷新成功')
+        }
+      }).catch(() => {})
+    },
+    // 上拉加载更多
+    async onLoadMoreLoad () {
+      if (this.currentPage >= this.totalPage - 1) {
+        this.loadMoreFinished = true
+      }
+      const result = await getDictionaryList(++this.currentPage)
+      if (result.errno === 0) {
+        this.dictionarys = [...this.dictionarys, ...result.data]
+        this.loadMore = false
+      }
+    },
+    scrollHandle () {
+      this.dictionaryListScrollTop = this.$refs['dictionary-list-container'].scrollTop
     }
   }
 }
