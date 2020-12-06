@@ -1,7 +1,7 @@
 <template>
   <div class="xianyu-article-list">
     <back-top title="好文列表"></back-top>
-    <div class="xianyu-article-list-container">
+    <div class="xianyu-article-list-container" ref="list">
       <article-item
         v-for="(item, index) in articles"
         :article="item"
@@ -24,6 +24,11 @@ export default {
       articles: []
     }
   },
+  // created () {
+  //   window.addEventListener('scroll', () => {
+  //     console.log(this.$refs.list.scrollTop)
+  //   })
+  // },
   mounted () {
     this.getArticleListHandle()
   },

@@ -1,7 +1,7 @@
 <template>
   <div class="ancient-list">
     <back-top title="诗词列表"></back-top>
-    <div class="ancient-list-container">
+    <div class="ancient-list-container" id="ancient-list-container" ref="ancient-list-container">
       <mt-loadmore
         :bottom-method="pullUpHandle"
         :top-method="pullDownHandle"
@@ -14,14 +14,16 @@
         bottom-drop-text="别老拽着,快放开我"
         bottom-loading-text="正在加载..."
         ref="loadmore">
-        <div class="ancient-item" @click="$router.push('/ancient-poetry/' + item._id)" v-for="(item, index) in poemList" :key="item._id + index">
-          <div class="ancient-item-title">
-            <h1>{{ item.poem_title }}</h1>
-            <p>
-              [<span>{{ item.author_dynasty }}</span>]
-            </p>
+        <div class="poem-list-container">
+          <div class="ancient-item" @click="$router.push('/ancient-poetry/' + item._id)" v-for="(item, index) in poemList" :key="item._id + index">
+            <div class="ancient-item-title">
+              <h1>{{ item.poem_title }}</h1>
+              <p>
+                [<span>{{ item.author_dynasty }}</span>]
+              </p>
+            </div>
+            <p class="ancient-item-author">{{ item.poem_author }}</p>
           </div>
-          <p class="ancient-item-author">{{ item.poem_author }}</p>
         </div>
       </mt-loadmore>
     </div>
@@ -30,6 +32,7 @@
 
 <script>
 import { getPoemList } from '@/api/poem.js'
+import { debounce } from 'lodash'
 // import PoemItem from '@/components/PoemItem/index.vue'
 export default {
   name: 'AncientPoetryList',
@@ -45,7 +48,9 @@ export default {
       currentPage: 1,
       // 所有的数据条数
       totalPage: 0,
-      perPage: 10
+      perPage: 10,
+      // 记录滚动的距离
+      listScrollTop: 0
     }
   },
   computed: {
@@ -55,7 +60,15 @@ export default {
     }
   },
   mounted () {
+    document.getElementById('ancient-list-container').addEventListener('scroll', debounce(this.listScrollHandle, 20))
     this.getPoemHandle()
+  },
+  activated () {
+    this.$refs['ancient-list-container'].scrollTop = this.listScrollTop
+  },
+  beforeDestroy () {
+    // 第三个参数必须为true，否则不能卸载事件
+    document.getElementById('ancient-list-container').removeEventListener('scroll', this.listScrollHandle, true)
   },
   methods: {
     async getPoemHandle () {
@@ -79,6 +92,10 @@ export default {
         this.finished = false
         this.$refs.loadmore.onTopLoaded()
       }, 500)
+    },
+    listScrollHandle () {
+      console.log(this.$refs['ancient-list-container'].scrollTop, '1')
+      this.listScrollTop = this.$refs['ancient-list-container'].scrollTop
     }
   }
 }
