@@ -11,4 +11,9 @@ const getArticleById = (id) => {
   return axios.get(`/articles/${id}`)
 }
 
-export { getArticleList, getArticleById }
+// 获取热门好文,根据点赞量决定
+const getHotArticle = () => {
+  return axios.post('/articles/hot')
+}
+
+export { getArticleList, getArticleById, getHotArticle }

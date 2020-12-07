@@ -2,31 +2,34 @@
   <div class="ancient-list">
     <back-top title="诗词列表"></back-top>
     <div class="ancient-list-container" id="ancient-list-container" ref="ancient-list-container">
-      <mt-loadmore
-        :bottom-method="pullUpHandle"
-        :top-method="pullDownHandle"
-        :bottom-all-loaded="finished"
-        :auto-fill="false"
-        top-pull-text="下拉即可刷新"
-        top-drop-text="别老拽着,快放开我"
-        top-loading-text="正在飞快刷新中......"
-        bottom-pull-text="上拉加载更多"
-        bottom-drop-text="别老拽着,快放开我"
-        bottom-loading-text="正在加载..."
-        ref="loadmore">
+      <van-pull-refresh
+        loosing-text="别老拽着,快放开我"
+        loading-text="正在刷新中"
+        success-text="刷新成功"
+        v-model="pullDown"
+        @refresh="pullDownRefresh">
         <div class="poem-list-container">
-          <div class="ancient-item" @click="$router.push('/ancient-poetry/' + item._id)" v-for="(item, index) in poemList" :key="item._id + index">
-            <div class="ancient-item-title">
-              <h1>{{ item.poem_title }}</h1>
-              <p>
-                [<span>{{ item.author_dynasty }}</span>]
-              </p>
+          <van-list
+            :finished="lodeMoreFinished"
+            :immediate-check="false"
+            v-model="lodeMore"
+            finished-text="没有更多了"
+            @load="onLoadMoreHandle"
+          >
+            <div class="ancient-item" @click="$router.push('/ancient-poetry/' + item._id)" v-for="(item, index) in poemList" :key="item._id + index">
+              <div class="ancient-item-title">
+                <h1>{{ item.poem_title }}</h1>
+                <p>
+                  [<span>{{ item.author_dynasty }}</span>]
+                </p>
+              </div>
+              <p class="ancient-item-author">{{ item.poem_author }}</p>
             </div>
-            <p class="ancient-item-author">{{ item.poem_author }}</p>
-          </div>
+          </van-list>
         </div>
-      </mt-loadmore>
+      </van-pull-refresh>
     </div>
+
   </div>
 </template>
 
@@ -42,26 +45,26 @@ export default {
       // 下拉刷新状态
       pullDown: false,
       // 上拉加载更多
-      pullUp: false,
+      lodeMore: false,
       // 加载完毕
-      finished: false,
+      lodeMoreFinished: false,
       currentPage: 1,
       // 所有的数据条数
-      totalPage: 0,
-      perPage: 10,
+      total: 0,
+      perPage: 20,
       // 记录滚动的距离
       listScrollTop: 0
     }
   },
   computed: {
     // 当前的数据一共有几页
-    pages () {
-      return Math.ceil(this.totalPage / this.perPage)
+    totalPage () {
+      return Math.ceil(this.total / this.perPage)
     }
   },
   mounted () {
-    document.getElementById('ancient-list-container').addEventListener('scroll', debounce(this.listScrollHandle, 30))
     this.getPoemHandle()
+    document.getElementById('ancient-list-container').addEventListener('scroll', debounce(this.listScrollHandle, 30))
   },
   activated () {
     this.$refs['ancient-list-container'].scrollTop = this.listScrollTop
@@ -75,26 +78,33 @@ export default {
       const result = await getPoemList(this.currentPage)
       if (result.errno === 0) {
         this.poemList = result.data
-        this.totalPage = result.total
+        this.total = result.total
       }
     },
-    async pullDownHandle () {
+    // 下拉刷新
+    async pullDownRefresh () {
       this.currentPage = 1
       const result = await getPoemList(this.currentPage)
       if (result.errno === 0) {
         this.poemList = result.data
-        this.totalPage = result.total
-        this.$refs.loadmore.onTopLoaded()
+        this.total = result.total
+        this.pullDown = false
+        this.$toast('刷新成功')
       }
     },
-    pullUpHandle () {
-      setTimeout(() => {
-        this.finished = false
-        this.$refs.loadmore.onTopLoaded()
-      }, 500)
+    // 上拉加载更多
+    async onLoadMoreHandle () {
+      if (this.currentPage >= this.totalPage) {
+        this.lodeMoreFinished = true
+        return
+      }
+      const result = await getPoemList(++this.currentPage)
+      if (result.errno === 0) {
+        this.poemList = [...this.poemList, ...result.data]
+        this.lodeMore = false
+      }
     },
     listScrollHandle () {
-      console.log(this.$refs['ancient-list-container'].scrollTop, '1')
       this.listScrollTop = this.$refs['ancient-list-container'].scrollTop
     }
   }

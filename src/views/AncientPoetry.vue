@@ -1,11 +1,13 @@
 <template>
   <div class="ancient-poetry">
     <back-top title="诗词"></back-top>
-    <div class="ancient-poetry-container" style="min-height: 400px;font-size: 14px; text-align: center;line-height: 32px;padding-top: 15px; color: #555;">
+    <div class="ancient-poetry-container" style="min-height: 300px;font-size: 14px; text-align: center;line-height: 32px;padding-top: 15px; color: #555;">
       <h1 style="font-size: 18px;font-weight: bold;">{{ poemObj.poem_title }}</h1>
       <p style="font-size: 15px; color: #666; margin: 8px 0;">{{ poemObj.poem_author }}</p>
       <div class="poem-content" v-html="poemObj.poem_content"></div>
     </div>
+    <h1 class="poem-meaning-title">诗词释义:</h1>
+    <div class="poem-meaning" v-html="poemObj.poem_appreciation"></div>
     <div class="zan-collect">
       <div class="zan-collect-container" :class="{ 'active': isZan }" @click="isZan = !isZan">
 
@@ -17,7 +19,7 @@
 
         <i class="iconfont icon-shoucang1" v-if="isCollect"></i>
         <i class="iconfont icon-shoucang" v-else></i>
-        <span>收藏</span>
+        <span>{{ poemObj.collect_number }}</span>
       </div>
     </div>
   </div>
@@ -50,6 +52,7 @@ export default {
         const result = await getPoemById(this.poemId.toString())
         if (result.errno === 0) {
           result.data.poem_content = result.data.poem_content.replace(/[\n\r]/g, '<br>')
+          result.data.poem_appreciation = result.data.poem_appreciation.replace(/[\n\r]/g, '<br>')
           this.poemObj = result.data
         }
       } catch (err) {
@@ -127,5 +130,19 @@ export default {
   /deep/ strong {
     font-weight: bold!important;
   }
+}
+
+.poem-meaning-title {
+  padding: 10px 15px;
+  padding-bottom: 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.poem-meaning {
+  padding: 0 15px;
+  font-size: 16px;
+  line-height: 36px;
+  color: #666;
 }
 </style>

@@ -1,27 +1,41 @@
 <template>
   <div class="moment-joke">
-    <back-top title="开心一刻"></back-top>
-    <div class="moment-joke-content">
-      话说有一只猴子，死后去见阎罗王！这猴子说，下辈子我不想再做猴子了，想转世为人！阎罗王想了想，说：“好吧。既然你想做人，那么必须把身上的毛全部拔掉。”说完，立马叫来了夜叉，给猴子拔毛。谁知道才刚拔第一根，猴子就痛得大叫，大呼受不了了。阎王哈哈大笑说：“哎，你看你，一毛不拔，如何能做人呢？”
-    </div>
+    <van-sticky>
+      <van-nav-bar
+        title="开心一刻"
+        right-text="换一个"
+        sticky
+        left-arrow
+        @click-left="$router.go(-1)"
+        @click-right="switchOne">
+        <template #left>
+          <div class="back-container">
+            <i class="iconfont icon-left"></i>
+          </div>
+        </template>
+      </van-nav-bar>
+    </van-sticky>
+    <div class="moment-joke-content">{{ joke.content }}</div>
     <div class="zan-collect">
       <div class="zan-collect-container" :class="{ 'active': isZan }" @click="isZan = !isZan">
 
         <i class="iconfont icon-dianzan" v-if="isZan"></i>
         <i class="iconfont icon-dianzan1" v-else></i>
-        <span>999</span>
+        <span>{{ joke.zan_number }}</span>
       </div>
       <div class="zan-collect-container" :class="{ 'active': isCollect }" @click="isCollect = !isCollect">
 
         <i class="iconfont icon-shoucang1" v-if="isCollect"></i>
         <i class="iconfont icon-shoucang" v-else></i>
-        <span>收藏</span>
+        <span>{{ joke.collect_number }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getJokeRandom } from '@/api/joke.js'
+import { debounce } from 'lodash'
 export default {
   name: 'MomentJoke',
   data () {
@@ -29,8 +43,27 @@ export default {
       // 是否点赞
       isZan: false,
       // 是否收藏
-      isCollect: false
+      isCollect: false,
+      joke: {}
     }
+  },
+  mounted () {
+    this.getJokeRandomHandle()
+  },
+  methods: {
+    async getJokeRandomHandle () {
+      const result = await getJokeRandom()
+      if (result.errno === 0) {
+        this.joke = result.data
+      }
+    },
+    switchOne: debounce(function () {
+      getJokeRandom().then(result => {
+        if (result.errno === 0) {
+          this.joke = result.data
+        }
+      })
+    }, 150)
   }
 }
 </script>
@@ -40,9 +73,24 @@ export default {
   background-color: #fff;
   height: 100%;
   overflow: auto;
+
+  /deep/ .van-nav-bar {
+    background-color: #409fea;
+    color: #fff;
+  }
+
+  /deep/ .van-nav-bar__title {
+    color: #fff;
+  }
+
+  /deep/ .van-nav-bar__text {
+    color: #fff;
+    font-size: 16px;
+  }
 }
 .moment-joke-content {
-  height: 520px;
+  min-height: 320px;
+  margin-top: 100px;
   display: flex;
   align-items: center;
   font-size: 17px;

@@ -16,8 +16,9 @@
       </div>
     </div>
     <div class="word-meaning">
-      <div class="meaning-container">释义：{{ dictionaryData.meaning }}</div>
-      <div class="source">出处：{{ dictionaryData.source }}</div>
+      <div class="meaning-container"><strong class="word-strong">释义：</strong>{{ dictionaryData.meaning }}</div>
+      <div class="source"><strong class="word-strong">出处：</strong>{{ dictionaryData.source }}</div>
+      <div class="story" v-if="dictionaryData.story.length > 0"><strong class="word-strong">成语故事：</strong>{{ dictionaryData.story }}</div>
     </div>
     <div class="zan-collect">
       <div class="zan-collect-container" :class="{ 'active': isZan }" @click="isZan = !isZan">
@@ -30,7 +31,7 @@
 
         <i class="iconfont icon-shoucang1" v-if="isCollect"></i>
         <i class="iconfont icon-shoucang" v-else></i>
-        <span>收藏</span>
+        <span>{{ dictionaryData.collect_number }}</span>
       </div>
     </div>
   </div>
@@ -69,7 +70,8 @@ export default {
             meaning: result.data.word_meaning,
             source: result.data.word_birth,
             zan_number: result.data.zan_number,
-            collect_number: result.data.collect_number
+            collect_number: result.data.collect_number,
+            story: result.data.word_story
           }
         }
       } catch (err) {
@@ -104,9 +106,10 @@ $fontColor: #000;
 .xianyu-dictionary-container {
   display: flex;
   padding: 0 20px;
-  padding-top: 160px;
+  padding-top: 75px;
   align-items: flex-start;
   box-sizing: border-box;
+  flex-wrap: wrap;
   .dictionary-item {
     width: 70px;
     height: 70px;
@@ -114,10 +117,11 @@ $fontColor: #000;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
+    margin-top: 12px;
     .pinyin {
       width: 50px;
       text-align: center;
-      font-size: 14px;
+      font-size: 18px;
       color: $fontColor;
     }
 
@@ -215,6 +219,12 @@ $fontColor: #000;
   .source {
     margin-top: 20px;
   }
+
+  .story {
+    margin-top: 20px;
+    font-size: 16px;
+    line-height: 32px;
+  }
 }
 
 .zan-collect {
@@ -246,5 +256,10 @@ $fontColor: #000;
       color: #409fea;
     }
   }
+}
+
+.word-strong {
+  font-weight: bold;
+  font-size: 16px;
 }
 </style>

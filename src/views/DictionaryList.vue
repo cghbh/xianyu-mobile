@@ -91,8 +91,9 @@ export default {
     },
     // 上拉加载更多
     async onLoadMoreLoad () {
-      if (this.currentPage >= this.totalPage - 1) {
+      if (this.currentPage >= this.totalPage) {
         this.loadMoreFinished = true
+        return
       }
       const result = await getDictionaryList(++this.currentPage)
       if (result.errno === 0) {

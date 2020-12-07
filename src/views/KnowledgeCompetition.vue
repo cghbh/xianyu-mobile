@@ -1,6 +1,14 @@
 <template>
   <div class="knowledge-competition">
-    <back-top title="趣味答题"></back-top>
+    <van-sticky>
+      <van-nav-bar title="趣味答题" sticky left-arrow @click-left="back">
+        <template #left>
+          <div class="back-container">
+            <i class="iconfont icon-left"></i>
+          </div>
+        </template>
+      </van-nav-bar>
+    </van-sticky>
     <!-- 答题区 -->
     <div class="question-container">
       <div class="question-container-area" v-if="!showResult">
@@ -19,17 +27,17 @@
         </div>
         <div class="question-container-area-subject">
           <div class="question-container-area-subject-title">
-            {{ activeQuestion.question }}
+            {{ activeQuestion && activeQuestion.question_title }}
           </div>
           <div
             class="question-container-area-subject-option"
-            :class="{ 'selecting': selectOptions.includes(value), 'disabled': disabled, 'error': false, 'right': rightAnswer && rightAnswer === value, 'error': rightAnswer && rightAnswer !== selectOptions.join('') && selectOptions.includes(value) }"
-            @click="selectOption(value)"
-            v-for="(item, value) in activeQuestion.options"
-            :key="value">
-            <div :class="{ 'error': false, 'right': rightAnswer && rightAnswer === value, 'error': rightAnswer && rightAnswer !== selectOptions.join('') && selectOptions.includes(value), 'content': true }">
-              <span>{{ value }}</span>
-              <span>{{ item }}</span>
+            :class="{ 'selecting': selectOptions.includes(item.option), 'disabled': disabled, 'error': false, 'right': rightAnswer && rightAnswer === item.option, 'error': rightAnswer && rightAnswer !== selectOptions.join('') && selectOptions.includes(item.option) }"
+            @click="selectOption(item.option)"
+            v-for="item in activeQuestion && activeQuestion.question_options"
+            :key="item._id">
+            <div :class="{ 'error': false, 'right': rightAnswer && rightAnswer === item.option, 'error': rightAnswer && rightAnswer !== selectOptions.join('') && selectOptions.includes(item.option), 'content': true }">
+              <span>{{ item.option }}</span>
+              <span>{{ item.option_title }}</span>
             </div>
             <div class="iconfont-container">
               <img src="../assets/images/icon-check-circle-fill.svg" class="icon-check-circle-fill">
@@ -57,7 +65,7 @@
 </template>
 
 <script>
-import mockList from '../mock/practice.js'
+import { getSubjects } from '@/api/subject.js'
 export default {
   name: 'KnowledgeCompetition',
   data () {
@@ -78,25 +86,29 @@ export default {
       showResultTag: 0,
       // 答对的题目数量
       rightNumber: 0,
-      mockList: mockList.list
+      // 获取的题目
+      subjects: []
     }
   },
   computed: {
     // 正在回答的题目
     activeQuestion () {
-      return this.mockList[this.activeIndex - 1]
+      return this.subjects[this.activeIndex - 1]
     },
     // 总的题目数量
     totalQuestions () {
-      return this.mockList.length
+      return this.subjects.length
     },
     // 是否单选
     isSingle () {
-      return this.activeQuestion.answer.length === 1
+      return true
     },
     rightRate () {
       return `${parseInt((this.rightNumber / this.totalQuestions * 100))}%`
     }
+  },
+  mounted () {
+    this.getSubjectsHandle()
   },
   methods: {
     back () {
@@ -112,7 +124,14 @@ export default {
           this.$router.go(-1)
         })
     },
+    async getSubjectsHandle () {
+      const result = await getSubjects()
+      if (result.errno === 0) {
+        this.subjects = result.data
+      }
+    },
     selectOption (item) {
+      console.log(item)
       if (this.isSingle) {
         // 如果没有当前没有选择就选择一个
         if (this.selectOptions.length <= 0) {
@@ -129,7 +148,7 @@ export default {
       }
     },
     confirm () {
-      this.rightAnswer = this.activeQuestion.answer
+      this.rightAnswer = this.activeQuestion.question_answer
       this.disabled = true
       if (this.rightAnswer === this.selectOptions.join('')) {
         this.rightNumber++
@@ -234,7 +253,7 @@ body /deep/ .van-dialog__message {
         font-family: PingFangSC-Regular;
         font-size: 16px;
         font-weight: 700;
-        line-height: 20px;
+        line-height: 24px;
         color: #2E353E;
         letter-spacing: 0;
       }

@@ -13,13 +13,13 @@
 
           <i class="iconfont icon-dianzan" v-if="isZan"></i>
           <i class="iconfont icon-dianzan1" v-else></i>
-          <span>999</span>
+          <span>{{ article.zan_number }}</span>
         </div>
         <div class="zan-collect-container" :class="{ 'active': isCollect }" @click="isCollect = !isCollect">
 
           <i class="iconfont icon-shoucang1" v-if="isCollect"></i>
           <i class="iconfont icon-shoucang" v-else></i>
-          <span>收藏</span>
+          <span>{{ article.collect_number }}</span>
         </div>
       </div>
     </div>
