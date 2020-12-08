@@ -83,13 +83,7 @@ export default {
       })
         .then((e) => {
           this.$store.commit('clearSearchKeyWords')
-          // 提示用户清楚历史记录成功
-          setTimeout(() => {
-            this.$toast({
-              message: '清除成功！',
-              position: 'top'
-            })
-          }, 200)
+          this.$toast({ message: '清除成功！', position: 'top' })
         })
         .catch((e) => {
           console.log(e)

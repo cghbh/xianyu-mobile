@@ -55,12 +55,14 @@ export default {
       const result = await getJokeRandom()
       if (result.errno === 0) {
         this.joke = result.data
+        this.$store.commit('addReadJokes', result.data._id)
       }
     },
     switchOne: debounce(function () {
       getJokeRandom().then(result => {
         if (result.errno === 0) {
           this.joke = result.data
+          this.$store.commit('addReadJokes', result.data._id)
         }
       })
     }, 150)

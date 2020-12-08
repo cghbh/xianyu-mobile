@@ -90,4 +90,34 @@ const userLikeDynamics = (id) => {
   return axios.get(`users/${id}/likeDynamcis`)
 }
 
-export { getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics }
+// 指定用户id收藏过的好文
+const userCollectArticle = (id) => {
+  return axios.get(`users/${id}/collectArticles`)
+}
+
+// 指定用户id赞过的好文
+const useZanArticle = (id) => {
+  return axios.get(`/users/${id}/likeArticles`)
+}
+
+// 用户取消收藏好文
+const userCancelCollectArticleHandle = (id) => {
+  return axios.request({ method: 'DELETE', url: `/users/cancelCollectArticle/${id}` })
+}
+
+// 用户收藏好文
+const userCollectArticleHandle = (id) => {
+  return axios.get(`/users/collectArticle/${id}`)
+}
+
+// 用户点赞好文
+const userZanArticleHandle = (id) => {
+  return axios.get(`/users/likeArticle/${id}`)
+}
+
+// 用户取消赞好文
+const userCancelZanArticleHandle = (id) => {
+  return axios.request({ method: 'DELETE', url: `/users/unlikeArticle/${id}` })
+}
+
+export { getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle }

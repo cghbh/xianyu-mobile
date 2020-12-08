@@ -3,7 +3,6 @@
     <back-top title="成语列表"></back-top>
     <div class="xianyu-dictionary-detail-container" id="dictionary-list-container" ref="dictionary-list-container">
       <!-- 下拉刷新 -->
-
       <van-pull-refresh v-model="pullDown" @refresh="onPullDownRefresh">
 
         <!-- 列表组件，上拉加载更多 -->
@@ -80,6 +79,7 @@ export default {
     onPullDownRefresh () {
       this.currentPage = 1
       this.loadMoreFinished = false
+      this.loadMore = false
       getDictionaryList(this.currentPage).then(res => {
         if (res.errno === 0) {
           this.dictionarys = res.data
