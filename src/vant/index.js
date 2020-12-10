@@ -13,8 +13,6 @@ import {
   Search,
   Dialog,
   Empty,
-  Swipe,
-  SwipeItem,
   Lazyload,
   Toast,
   Circle,
@@ -41,6 +39,7 @@ import {
   Tag,
   Loading,
   DatetimePicker,
+  Divider,
   Image as VanImage
 } from 'vant'
 
@@ -56,8 +55,6 @@ Vue.use(NavBar)
   .use(Search)
   .use(Dialog)
   .use(Empty)
-  .use(Swipe)
-  .use(SwipeItem)
   .use(Lazyload)
   .use(Toast)
   .use(Circle)
@@ -85,3 +82,4 @@ Vue.use(NavBar)
   .use(Tag)
   .use(Loading)
   .use(DatetimePicker)
+  .use(Divider)

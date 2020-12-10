@@ -64,15 +64,15 @@ export default {
 
     &-author {
       font-size: 12px;
-      color: #bbb;
+      color: #888;
       margin-bottom: 10px;
     }
 
     &-about {
       color: #666;
       font-size: 14px;
-      line-height: 20px;
-      height: 60px;
+      line-height: 22px;
+      height: 64px;
       overflow : hidden;
       text-overflow: ellipsis;
       display: -webkit-box;

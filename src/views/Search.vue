@@ -1,79 +1,146 @@
 <template>
+  <!-- 如果页面是取消搜索的话，取消页面的缓存功能 -->
   <div class="xianyu-search">
     <van-search
       @click="$router.push('/search')"
+      @blur="userBlur"
       @search="onSearch"
-      @cancel="$router.go(-1)"
-      v-model="searchValue"
+      @cancel="userCancel"
+      v-model.trim="searchValue"
       input-align="left"
-      placeholder="请输入搜索关键词"
-      show-action
-      background="#409fea"/>
-    <div class="xianyu-search-container">
+      clearable
+      autofocus
+      placeholder="搜索好文/诗词/成语"
+      show-action/>
+    <div v-if="!showSearchArea" class="xianyu-search-container">
       <div class="xianyu-search-container-history" v-if="searchKeyWords.length">
         <div class="xianyu-search-container-history-title">
           <h2>历史记录</h2>
           <i @click="askClearSearchHistory" class="iconfont icon-delete"></i>
         </div>
         <div class="xianyu-search-container-history-container">
-          <div class="xianyu-search-container-history-item" v-for="item in searchKeyWords" :key="item">{{ item }}</div>
+          <div
+            class="xianyu-search-container-history-item"
+            v-for="item in searchKeyWords"
+            :key="item"
+            @click="historySearch(item)">{{ item }}</div>
         </div>
       </div>
-      <divide-area v-if="searchKeyWords.length"></divide-area>
-      <div class="xianyu-search-topic">
-        <div class="xianyu-search-topic-title">热门好文</div>
-        <div class="xianyu-search-topic-container">
-          <div class="xianyu-search-topic-container-item"
-            v-for="(item, index) in hotArticles"
-            @click="$router.push('/article-detail/' + item._id)"
-            :key="item._id">
-            <i :style="{ 'background-color': index === 0 ? '#FE2D46': index === 1 ? '#F60': index === 2 ? '#FAA90E': '#409fea'}" class="iconfont icon-huati1"></i>
-            <span>{{ item.article_title }}</span>
+    </div>
+
+    <div v-else class="search-result">
+      <van-tabs v-model="active" animated swipeable color="#409fea">
+        <van-tab title="好文">
+          <divide-area></divide-area>
+          <div class="search-results-container" v-if="artcileResult.length > 0">
+            <article-item
+              v-for="(item, index) in artcileResult"
+              :article="item"
+              :key="item._id"
+              :no-margin-bottom="index === (artcileResult.length - 1)"
+              @click="$router.push(`/article-detail/${item._id}`)"/>
           </div>
-        </div>
-      </div>
+          <search-empty v-else></search-empty>
+        </van-tab>
+        <van-tab title="诗词">
+          <divide-area></divide-area>
+          <div class="search-results-container" v-if="poemResult.length > 0">
+            <poem-item
+              @click="$router.push('/ancient-poetry/' + item._id)"
+              v-for="(item, index) in poemResult"
+              :itemvalue="item"
+              :key="item._id"
+              :no-margin="index === poemResult.length - 1 "/>
+          </div>
+          <search-empty v-else></search-empty>
+        </van-tab>
+        <van-tab title="词典">
+          <div class="search-word-container">
+            <divide-area></divide-area>
+            <div class="search-results-container" v-if="wordResult.length > 0">
+              <dictionary-item
+                v-for="item in wordResult"
+                :dictionary="item.word_title"
+                :key="item._id"
+                @click="$router.push(`/dictionary-detail/${item._id}`)"/>
+            </div>
+            <search-empty v-else></search-empty>
+          </div>
+        </van-tab>
+        <van-tab title="用户">
+          <divide-area></divide-area>
+          <div class="search-results-container" v-if="userResult.length > 0">
+            <follow-item
+              v-for="(item, index) in userResult"
+              :no-border-bottom="index === 5"
+              :key="item._id"
+              :user="item"/>
+          </div>
+          <search-empty v-else></search-empty>
+        </van-tab>
+      </van-tabs>
     </div>
   </div>
 </template>
 
 <script>
-import DivideArea from '../components/PublicComponents/DivideArea.vue'
-import { getHotArticle } from '@/api/article.js'
+import DivideArea from '@/components/PublicComponents/DivideArea.vue'
+import ArticleItem from '@/components/ArticleItem/index.vue'
+import FollowItem from '@/components/FollowItem/index.vue'
+import DictionaryItem from '@/components/DictionaryItem/index.vue'
+import PoemItem from '@/components/PoemItem/index.vue'
+import SearchEmpty from '@/components/SearchEmpty/index.vue'
+import { getArticleList } from '@/api/article.js'
+import { searchUsersByKeyWords } from '@/api/user.js'
+import { getDictionaryList } from '@/api/dictionary.js'
+import { getPoemList } from '@/api/poem.js'
 export default {
   name: 'Search',
   data () {
     return {
+      active: 0,
       searchValue: '',
-      mockSearchHistory: [
-        '算法',
-        'Node.js博客系统',
-        'Vue3造轮子',
-        'Typescript',
-        'React17-RC最新版',
-        'Webpack5',
-        'HTML5'
-      ],
-      hotArticles: []
+      artcileResult: [],
+      userResult: [],
+      poemResult: [],
+      wordResult: [],
+      wordCurrentPage: 1,
+      poemCurrentPage: 1,
+      articleCurrentPage: 1
     }
+  },
+  activated () {
+    console.log(this.$route, '返回的路径检查')
   },
   computed: {
     searchKeyWords () {
       return this.$store.state.searchKeyWords
+    },
+    // 搜索到的内容是否为空
+    searchResultState () {
+      return this.artcileResult.length > 0 || this.userResult.length > 0 || this.poemResult.length > 0 || this.wordResult.length > 0
+    },
+    // 是否显示搜索结果
+    showSearchArea () {
+      return this.searchValue.length > 0
     }
   },
-  mounted () {
-    this.genHotArticleHandle()
+  watch: {
+    active: {
+      handler (newVal) {
+        this.getSearchResultByActive(newVal)
+      }
+    }
   },
   methods: {
     // 回车搜索
     onSearch () {
-      this.$store.commit('addSearchKeyWords', this.searchValue)
-    },
-    async genHotArticleHandle () {
-      const result = await getHotArticle()
-      if (result.errno === 0) {
-        this.hotArticles = result.data
+      if (this.searchValue.trim().length <= 0) {
+        this.searchValue = ''
+        return this.$toast('搜索的内容不能为空！')
       }
+      this.$store.commit('addSearchKeyWords', this.searchValue)
+      this.getSearchResultByActive(this.active)
     },
     // 询问是否删除搜索历史
     askClearSearchHistory () {
@@ -88,18 +155,93 @@ export default {
         .catch((e) => {
           console.log(e)
         })
+    },
+    userBlur () {
+      this.artcileResult = this.userResult = this.poemResult = this.wordResult = []
+    },
+    async searchUsers () {
+      const result = await searchUsersByKeyWords(this.searchValue)
+      if (result.errno === 0) {
+        this.userResult = result.data
+      }
+    },
+    async searchWords () {
+      const result = await getDictionaryList(this.wordCurrentPage, this.searchValue)
+      if (result.errno === 0) {
+        this.wordResult = result.data
+      }
+    },
+    async searchPoems () {
+      const result = await getPoemList(this.poemCurrentPage, this.searchValue)
+      if (result.errno === 0) {
+        this.poemResult = result.data
+      }
+    },
+    async searchArticles () {
+      const result = await getArticleList(this.articleCurrentPage, this.searchValue)
+      if (result.errno === 0) {
+        this.artcileResult = result.data
+      }
+    },
+    // 点击搜索记录搜索
+    historySearch (item) {
+      this.searchValue = item
+      this.onSearch()
+    },
+    // 用户退出搜索
+    userCancel () {
+      this.$router.go(-1)
+      this.artcileResult = []
+      this.poemResult = []
+      this.userResult = []
+      this.wordResult = []
+    },
+    // 根据切换的active的值搜索不同的内容
+    getSearchResultByActive (value) {
+      if (value === 0) {
+        this.searchArticles()
+      } else if (value === 1) {
+        this.searchPoems()
+      } else if (value === 2) {
+        this.searchWords()
+      } else if (value === 3) {
+        this.searchUsers()
+      }
     }
   },
   components: {
-    DivideArea
+    ArticleItem,
+    DivideArea,
+    FollowItem,
+    DictionaryItem,
+    PoemItem,
+    SearchEmpty
   }
 }
 </script>
 
 <style scoped lang="scss">
-.xianyu-search /deep/ .van-search__action {
-  background-color: transparent;
-  color: #fff;
+.xianyu-search {
+  height: 100%;
+
+  /deep/ .van-search__action {
+    background-color: transparent;
+    color: #666;
+  }
+
+  /deep/ .van-tab {
+    font-size: 16px;
+  }
+
+  /deep/ .divide-area {
+    background-color: rgba(38, 38, 38, .07);
+  }
+
+  /deep/ .xianyu-dictionary-item,
+  /deep/ .ancient-item {
+    margin-bottom: 0;
+    border-bottom: 1px solid #efefef;
+  }
 }
 
 .xianyu-search-container {
@@ -180,6 +322,21 @@ export default {
         margin-right: 8px;
       }
     }
+  }
+}
+
+.search-word-container {
+  // background-color: rgba(38, 38, 38, .07);
+
+  /deep/ .divide-area {
+    // background-color: #fff;
+  }
+}
+
+.search-results-container {
+  /deep/ .xianyu-article-item {
+    margin-bottom: 5px;
+    border-bottom: 1px solid #efefef;
   }
 }
 </style>

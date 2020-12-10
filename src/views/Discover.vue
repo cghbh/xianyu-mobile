@@ -1,80 +1,128 @@
 <template>
-  <div class="xianyu-discover">
+  <div class="xianyu-discover" ref="discover" id="xianyu-discover">
     <van-search
       @click="$router.push('/search')"
       input-align="center"
-      shape="round"
-      v-model="value"
       placeholder="搜索好文/诗词/成语"
       readonly
       disabled
     />
-    <div style="padding: 10px 20px 15px 20px;">
-      <van-swipe :lazy-render="true" :autoplay="2000" loop touchable indicator-color="#409fea">
-        <van-swipe-item v-for="item in swiperList" :key="item._id">
-          <img :src="item.swiper_url" style="height: auto;height: auto;max-width: 100%;min-height: 28.4vh;">
-        </van-swipe-item>
-      </van-swipe>
-    </div>
-    <div class="xianyu-discover-container">
-      <!-- for的优先级比if高，因此在这里使用template实现循环，里面使用if实现条件判断 -->
-      <template v-for="item in channelList">
-        <channel-item v-if="item.isSelect" :BgColor="item.color" router :to="item.to" :key="item.title">
-          <h1 class="item-header" slot="header">{{ item.title }}</h1>
-          <p class="item-content" slot="content">{{ item.desp }}</p>
-        </channel-item>
-      </template>
 
-      <div class="xianyu-discover-add-channel" @click="$router.push('/addchannel')">
-        <i class="icon-jia iconfont"></i>
-        <span>添加频道</span>
+    <div class="xianyu-discover-touser">
+      <h1>致用户大人</h1>
+      <h2>如何玩转新版闲语</h2>
+    </div>
+    <div class="xianyu-classify">
+      <div class="xianyu-classify-item" @click="$router.push('/article-list')">
+        <i class="iconfont icon-huokewenzhang"></i>
+        <span>好文</span>
       </div>
+      <div class="xianyu-classify-item" @click="$router.push('/ancient-poetrylist')">
+        <i class="iconfont icon-wenxue"></i>
+        <span>诗词</span>
+      </div>
+      <div class="xianyu-classify-item" @click="$router.push('/dictionary-list')">
+        <i class="iconfont icon-datiqia"></i>
+        <span>词典</span>
+      </div>
+      <div class="xianyu-classify-item" @click="$router.push('/joke')">
+        <i class="iconfont icon-xiaolian"></i>
+        <span>段子</span>
+      </div>
+      <div class="xianyu-classify-item" @click="$router.push('/knowledge-competition')">
+        <i class="iconfont icon-bisai"></i>
+        <span>答题</span>
+      </div>
+    </div>
+
+    <div class="title-container">
+      <h1 class="xianyu-discover-title-recommend" :class="{ 'active': activeIndex === 1 }" @click="activeIndex = 1">推荐好文</h1>
+      <h1 class="xianyu-discover-title-recommend" :class="{ 'active': activeIndex === 2 }" @click="activeIndex = 2">推荐诗词</h1>
+    </div>
+
+    <div class="article-recommend-container" v-if="activeIndex === 1">
+      <article-item
+        v-for="(item, index) in recommendArticles"
+        :article="item"
+        :no-margin-bottom="index === (recommendArticles.length - 1)"
+        @click="$router.push(`/article-detail/${item._id}`)"
+        :key="item._id"
+      >
+      </article-item>
+    </div>
+
+    <div class="poem-recommend-container" v-if="activeIndex === 2">
+      <poem-item
+        @click="$router.push('/ancient-poetry/' + item._id)"
+        v-for="(item, index) in recommendPoems"
+        :itemvalue="item"
+        :key="item._id"
+        :no-margin="index === recommendPoems.length - 1 "
+      >
+      </poem-item>
     </div>
   </div>
 </template>
 
 <script>
-import ChannelItem from '../components/PublicComponents/ChannelItem.vue'
-import { getSwiper } from '@/api/swiper.js'
-
-const list = [
-  { title: '好文', desp: '凌云健笔意纵横', to: '/article-list', color: '#F3F3F3', isSelect: true },
-  { title: '诗词', desp: '小楼一夜听春雨', to: '/ancient-poetrylist', color: '#FAF4F4', isSelect: true },
-  { title: '成语词典', desp: '清词丽句必为邻', to: '/dictionary-list', color: '#F9F4F0', isSelect: true },
-  { title: '趣味答题', desp: '似曾相识燕归来', to: '/knowledge-competition', color: '#F9F4F0', isSelect: true },
-  { title: '开心一刻', desp: '仰天大笑出门去', to: '/joke', color: '#F3F3F3', isSelect: true }
-]
+import ArticleItem from '@/components/ArticleItem/index.vue'
+import PoemItem from '@/components/PoemItem/index.vue'
+import { getHotArticle } from '@/api/article.js'
+import { recommendPoem } from '@/api/poem.js'
+import { debounce } from 'lodash'
 export default {
   name: 'Discover',
   data () {
     return {
-      value: '',
-      channelList: JSON.parse(localStorage.getItem('channel')) || list,
-      swiperList: []
+      activeIndex: 1,
+      recommendArticles: [],
+      recommendPoems: [],
+      scrollTop: 0
+    }
+  },
+  watch: {
+    activeIndex: {
+      handler (newVal) {
+        if (newVal === 1) {
+          this.getRecommendArticle()
+        } else {
+          this.getrecommendPoem()
+        }
+      },
+      immediate: true
     }
   },
   mounted () {
-    localStorage.removeItem('channel')
-    localStorage.setItem('channel', JSON.stringify(this.channelList))
-    this.getSwiperHandle()
+    document.getElementById('xianyu-discover').addEventListener('scroll', debounce(this.discoverPageScroll, 30))
   },
-
-  // 组件载入之后重新获取数据
   activated () {
-    const channel = JSON.parse(localStorage.getItem('channel')) || list
-    this.channelList = channel
+    this.$refs.discover.scrollTop = this.scrollTop
   },
-
+  beforeDestroy () {
+    document.getElementById('xianyu-discover').removeEventListener('scroll', this.discoverPageScroll, true)
+  },
   methods: {
-    async getSwiperHandle () {
-      const result = await getSwiper()
+    // 推荐好文
+    async getRecommendArticle () {
+      const result = await getHotArticle()
       if (result.errno === 0) {
-        this.swiperList = result.data.slice(0, 5)
+        this.recommendArticles = result.data
       }
+    },
+    async getrecommendPoem () {
+      const result = await recommendPoem()
+      if (result.errno === 0) {
+        this.recommendPoems = result.data
+      }
+    },
+    discoverPageScroll () {
+      const scrollTop = this.$refs.discover.scrollTop
+      this.scrollTop = scrollTop
     }
   },
   components: {
-    ChannelItem
+    ArticleItem,
+    PoemItem
   }
 }
 </script>
@@ -88,14 +136,25 @@ export default {
 }
 .xianyu-discover {
   background-color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 50px;
+  overflow-y: auto;
 }
 .xianyu-discover {
+  padding-top: 8px;
   /deep/ .van-swipe {
     border-radius: 6px;
   }
 
   /deep/ .van-search {
     padding: 15px 12px 6px 12px;
+  }
+
+  /deep/ .van-search__content {
+    border-radius: 5px;
   }
 
   /deep/ .van-field__control:disabled {
@@ -110,10 +169,17 @@ export default {
     height: 28.4vh;
     overflow: hidden;
   }
+
+  /deep/ .xianyu-article-item {
+    padding-left: 12px;
+  }
+
+  /deep/ .divide-area {
+    background-color: rgba(38, 38, 38, .05);
+  }
 }
 
 .xianyu-discover {
-  height: 100%;
   background-color: #fff;
 }
 .xianyu-discover-container {
@@ -121,42 +187,108 @@ export default {
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 0 20px;
+}
 
-  .xianyu-discover-add-channel {
-    border: 1px dashed #CECECE;
-    display: flex;
-    justify-content: center;
-    color: rgba(0, 0, 0, .6);
-    user-select: none;
-    flex-direction: row;
-    width: 47.6%;
-    height: 80px;
-    border-radius: 3px;
-    margin-bottom: 15px;
+.xianyu-classify {
+  display: flex;
+  justify-content: space-between;
+  padding: 30px 15px;
+
+  &-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    color: #020202;
+
     .iconfont {
-      margin-right: 5px;
-      margin-bottom: 10px;
+      width: 45px;
+      height: 45px;
+      color: #fff;
+      display: flex;
+      font-size: 18px;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      margin-bottom: 15px;
     }
+
+    .iconfont.icon-huokewenzhang {
+      background-color: #4FBFAB;
+      font-size: 24px;
+    }
+
+    .iconfont.icon-wenxue {
+      background-color: #FB7D77;
+      font-size: 20px;
+    }
+
+    .iconfont.icon-datiqia {
+      background-color: #878EF3;
+      font-size: 19px;
+    }
+
+    .iconfont.icon-bisai {
+      background-color: #409fdc;
+      font-size: 22px;
+    }
+
+    .iconfont.icon-xiaolian {
+      background-color: #6B9BFE;
+      font-size: 24px;
+    }
+
     span {
-      font-size: 14px;
-      color: rgba(0, 0, 0, 1);
+      font-size: 15px;
     }
   }
 }
 
-.item-header {
-  font-size: 15px;
-  margin-bottom: 10px;
-  font-weight: 700;
-  color: rgba(0, 0, 0, .75);
+.xianyu-discover-touser {
+  display: flex;
+  padding: 0 15px;
+  height: 150px;
+  background-color: rgba(45,162,255, .8);
+  margin: 15px 12px 5px 12px;
+  border-radius: 8px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  letter-spacing: 1.5px;
+
+  h1 {
+    margin-bottom: 12px;
+    font-size: 22px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
 }
-.item-content {
-  font-size: 13px;
-  color: rgba(0, 0, 0, .85);
+
+.title-container {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.xianyu-discover-title-recommend {
+  margin-left: 12px;
+  font-size: 17px;
+  color: #555;
+  padding-bottom: 10px;
+}
+
+.xianyu-discover-title-recommend.active {
+  font-size: 20px;
+  color: #409fea;
+  font-weight: bold;
+}
+.article-recommend-container {
+  background-color: rgba(38, 38, 38, 0.05);
+}
+
+.poem-recommend-container {
+  background-color: rgba(38, 38, 38, 0.05);
 }
 </style>

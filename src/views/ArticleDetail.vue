@@ -70,14 +70,13 @@ export default {
       return this.$route.params.artId
     },
 
-    /* 收藏状态 true---> 已登录已点赞， false---> 未登录或者是未点赞 */
+    /* 收藏状态 true---> 已登录已收藏， false---> 未登录或者是未收藏 */
     collectState () {
       return this.isLogin && this.userCollectId.includes(this.articleId)
     },
 
     /* 点赞的状态 true ---> 已登录已点赞  false ----> 未登录或未点赞 */
     zanState () {
-      console.log(this.userZanId, 'usezanid')
       return this.isLogin && this.userZanId.includes(this.articleId)
     }
   },

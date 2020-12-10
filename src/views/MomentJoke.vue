@@ -16,20 +16,6 @@
       </van-nav-bar>
     </van-sticky>
     <div class="moment-joke-content">{{ joke.content }}</div>
-    <div class="zan-collect">
-      <div class="zan-collect-container" :class="{ 'active': isZan }" @click="isZan = !isZan">
-
-        <i class="iconfont icon-dianzan" v-if="isZan"></i>
-        <i class="iconfont icon-dianzan1" v-else></i>
-        <span>{{ joke.zan_number }}</span>
-      </div>
-      <div class="zan-collect-container" :class="{ 'active': isCollect }" @click="isCollect = !isCollect">
-
-        <i class="iconfont icon-shoucang1" v-if="isCollect"></i>
-        <i class="iconfont icon-shoucang" v-else></i>
-        <span>{{ joke.collect_number }}</span>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -40,10 +26,6 @@ export default {
   name: 'MomentJoke',
   data () {
     return {
-      // 是否点赞
-      isZan: false,
-      // 是否收藏
-      isCollect: false,
       joke: {}
     }
   },

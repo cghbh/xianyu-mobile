@@ -1,5 +1,9 @@
 <template>
-  <div class="ancient-item">
+  <div 
+    class="ancient-item"
+    @click="$emit('click')"
+    :class="{'no-margin': noMargin }"
+    >
     <div class="ancient-item-title">
       <h1>{{ itemvalue.poem_title }}</h1>
       <p>
@@ -23,6 +27,10 @@ export default {
       type: Object,
       default: () => {},
       required: true
+    },
+    noMargin: {
+      type: Boolean,
+      default: false
     }
   }
 }

@@ -8,7 +8,7 @@
       <div class="edit-user" ref="edit">编辑资料</div>
     </div>
     <div class="user-detail-img" id="img">
-      <img src="../assets/images/095314-150898279496ba.jpg" alt="">
+      <!-- <img src="../assets/images/095314-150898279496ba.jpg" alt=""> -->
     </div>
 
     <!-- 用户信息展示 -->

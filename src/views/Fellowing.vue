@@ -11,12 +11,12 @@
           finished-text="别刷了,真的没有啦......"
           @load="onLoad"
         >
-          <div class="xianyu-fellowing-container-item" v-for="item in list" :key="item._id">
+          <div class="xianyu-fellowing-container-item" v-for="item in 10" :key="item">
             <div class="xianyu-fellowing-item-left">
               <img src="../assets/images/logo.png">
               <div class="xianyu-fellowing-item-left-user">
-                <h1>{{ item.nickname }}</h1>
-                <span>{{ item.personal_sign }}</span>
+                <h1>用户昵称</h1>
+                <span>用户个性签名</span>
               </div>
             </div>
             <!-- <div class="xianyu-fellowing-item-right"  @click="cancelFellow">{{ isFellowed ? '已关注': '关注'}}</div> -->
@@ -150,65 +150,6 @@ export default {
   &-container {
     margin-top: 46px;
     margin-bottom: 20px;
-    &-item {
-      display: flex;
-      align-items: center;
-      padding: 18px;
-      border-bottom: 1px solid rgba(68, 68, 68, .08);
-    }
-    &-item:last-of-type {
-      border: none;
-    }
-  }
-
-  &-item {
-    &-left {
-      width: 270px;
-      display: flex;
-      align-items: center;
-      img {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin-right: 8px;
-      }
-      &-user {
-        width: 221px;
-        display: flex;
-        flex-direction: column;
-        h1 {
-          font-size: 16px;
-          margin-bottom: 8px;
-        }
-        span {
-          display: inline-block;
-          width: 100%;
-          font-size: 13px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-      }
-    }
-    &-right {
-      width: 80px;
-      height: 28px;
-      border-radius: 5px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 13px;
-      background-color: #409fea;
-      color: #fff;
-      padding: 4px;
-      box-sizing: border-box;
-    }
-
-    &-right.active {
-      background-color: #fff;
-      color: #409fea;
-      border: 1px solid #409fea;
-    }
   }
 }
 </style>

@@ -18,6 +18,7 @@ const routes = [
     redirect: '/homepage',
     component: () => import(/* webpackChunkName: "group-index" */ '../views/Index.vue'),
     name: 'Index',
+    meta: { requiresAuth: false, keepAlive: true },
     children: [
       {
         path: 'dynamic',
@@ -55,7 +56,7 @@ const routes = [
     path: '/search',
     component: () => import('../views/Search.vue'),
     name: 'Search',
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: false, keepAlive: true }
   },
   {
     path: '/mycollection',

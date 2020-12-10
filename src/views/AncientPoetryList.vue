@@ -16,15 +16,14 @@
             finished-text="没有更多了"
             @load="onLoadMoreHandle"
           >
-            <div class="ancient-item" @click="$router.push('/ancient-poetry/' + item._id)" v-for="(item, index) in poemList" :key="item._id + index">
-              <div class="ancient-item-title">
-                <h1>{{ item.poem_title }}</h1>
-                <p>
-                  [<span>{{ item.author_dynasty }}</span>]
-                </p>
-              </div>
-              <p class="ancient-item-author">{{ item.poem_author }}</p>
-            </div>
+            <poem-item
+              @click="$router.push('/ancient-poetry/' + item._id)"
+              v-for="(item, index) in poemList"
+              :itemvalue="item"
+              :key="item._id"
+              :no-margin="index === poemList.length - 1 "
+            >
+            </poem-item>
           </van-list>
         </div>
       </van-pull-refresh>
@@ -36,7 +35,7 @@
 <script>
 import { getPoemList } from '@/api/poem.js'
 import { debounce } from 'lodash'
-// import PoemItem from '@/components/PoemItem/index.vue'
+import PoemItem from '@/components/PoemItem/index.vue'
 export default {
   name: 'AncientPoetryList',
   data () {
@@ -84,11 +83,14 @@ export default {
     // 下拉刷新
     async pullDownRefresh () {
       this.currentPage = 1
+      this.lodeMoreFinished = false
+      this.loadMore = true
       const result = await getPoemList(this.currentPage)
       if (result.errno === 0) {
         this.poemList = result.data
         this.total = result.total
         this.pullDown = false
+        this.lodeMore = false
         this.$toast('刷新成功')
       }
     },
@@ -107,6 +109,9 @@ export default {
     listScrollHandle () {
       this.listScrollTop = this.$refs['ancient-list-container'].scrollTop
     }
+  },
+  components: {
+    PoemItem
   }
 }
 </script>

@@ -1,5 +1,9 @@
 import axios from '@/utils/http.js'
 
+const searchUsersByKeyWords = (q = '') => {
+  return axios.get(`/users?q=${q}`)
+}
+
 // 获取验证码
 const getCaptcha = () => {
   return axios.get('/captcha')
@@ -120,4 +124,34 @@ const userCancelZanArticleHandle = (id) => {
   return axios.request({ method: 'DELETE', url: `/users/unlikeArticle/${id}` })
 }
 
-export { getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle }
+// 用户赞过的诗词
+const userZanPoems = (id) => {
+  return axios.get(`/users/${id}/likePoems`)
+}
+
+// 用户收藏过的诗词
+const userCollectPoems = (id) => {
+  return axios.get(`/users/${id}/collectPoems`)
+}
+
+// 用户赞诗词
+const userZanPoemHandle = (id) => {
+  return axios.get(`/users/likePoems/${id}`)
+}
+
+// 用户取消赞诗词
+const userCancelZanPoemHandle = (id) => {
+  return axios.request({ method: 'DELETE', url: `/users/unlikePoems/${id}` })
+}
+
+// 用户收藏诗词
+const userCollectPoemHandle = (id) => {
+  return axios.get(`/users/collectPoems/${id}`)
+}
+
+// 用户取消收藏诗词
+const userCancelCollectPoemHandle = (id) => {
+  return axios.request({ method: 'DELETE', url: `/users/cancelCollectPoems/${id}` })
+}
+
+export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle }

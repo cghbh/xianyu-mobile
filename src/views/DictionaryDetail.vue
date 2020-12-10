@@ -18,7 +18,7 @@
     <div class="word-meaning">
       <div class="meaning-container"><strong class="word-strong">释义：</strong>{{ dictionaryData.meaning }}</div>
       <div class="source"><strong class="word-strong">出处：</strong>{{ dictionaryData.source }}</div>
-      <div class="story" v-if="dictionaryData.story.length > 0"><strong class="word-strong">成语故事：</strong>{{ dictionaryData.story }}</div>
+      <div class="story" v-if="dictionaryData.story && dictionaryData.story.length > 0"><strong class="word-strong">成语故事：</strong>{{ dictionaryData.story }}</div>
     </div>
     <div class="zan-collect">
       <div class="zan-collect-container" :class="{ 'active': isZan }" @click="isZan = !isZan">
