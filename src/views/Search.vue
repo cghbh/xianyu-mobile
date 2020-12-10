@@ -5,13 +5,16 @@
       @click="$router.push('/search')"
       @blur="userBlur"
       @search="onSearch"
-      @cancel="userCancel"
       v-model.trim="searchValue"
       input-align="left"
       clearable
       autofocus
-      placeholder="搜索好文/诗词/成语"
-      show-action/>
+      placeholder="搜索好文/诗词/成语/用户"
+      show-action>
+      <template #action>
+        <div @click="$router.go(-1)">取消</div>
+      </template>
+    </van-search>
     <div v-if="!showSearchArea" class="xianyu-search-container">
       <div class="xianyu-search-container-history" v-if="searchKeyWords.length">
         <div class="xianyu-search-container-history-title">
@@ -94,6 +97,7 @@ import { getArticleList } from '@/api/article.js'
 import { searchUsersByKeyWords } from '@/api/user.js'
 import { getDictionaryList } from '@/api/dictionary.js'
 import { getPoemList } from '@/api/poem.js'
+
 export default {
   name: 'Search',
   data () {
@@ -106,12 +110,25 @@ export default {
       wordResult: [],
       wordCurrentPage: 1,
       poemCurrentPage: 1,
-      articleCurrentPage: 1
+      articleCurrentPage: 1,
+      // 按下回车键之后才开始执行搜索
+      confirmSearch: false
     }
   },
-  activated () {
-    console.log(this.$route, '返回的路径检查')
+
+  deactivated () {
+    if (this.$router.currentRoute.fullPath.split('?')[0] === '/') {
+      this.artcileResult = []
+      this.poemResult = []
+      this.userResult = []
+      this.wordResult = []
+      // 避免出现退出时清除输入框的抖动问题，延迟清除输入框
+      setTimeout(() => {
+        this.searchValue = ''
+      }, 50)
+    }
   },
+
   computed: {
     searchKeyWords () {
       return this.$store.state.searchKeyWords
@@ -122,16 +139,40 @@ export default {
     },
     // 是否显示搜索结果
     showSearchArea () {
-      return this.searchValue.length > 0
+      return this.searchValue.length > 0 && this.confirmSearch
     }
   },
+
   watch: {
     active: {
       handler (newVal) {
-        this.getSearchResultByActive(newVal)
+        // 切换搜索内容的时候，如果有数据则不发送请求，除非上拉加载更多的情况
+        if (newVal === 0) {
+          if (this.artcileResult.length <= 0) {
+            this.searchArticles()
+          }
+        } else if (newVal === 1) {
+          if (this.poemResult.length <= 0) {
+            this.searchPoems()
+          }
+        } else if (newVal === 2) {
+          if (this.wordResult.length <= 0) {
+            this.searchWords()
+          }
+        } else if (newVal === 3) {
+          if (this.userResult.length <= 0) {
+            this.searchUsers()
+          }
+        }
+      }
+    },
+    searchValue (newVal, oldVal) {
+      if (oldVal.length > 0) {
+        this.confirmSearch = false
       }
     }
   },
+
   methods: {
     // 回车搜索
     onSearch () {
@@ -139,6 +180,7 @@ export default {
         this.searchValue = ''
         return this.$toast('搜索的内容不能为空！')
       }
+      this.confirmSearch = true
       this.$store.commit('addSearchKeyWords', this.searchValue)
       this.getSearchResultByActive(this.active)
     },
@@ -185,16 +227,9 @@ export default {
     },
     // 点击搜索记录搜索
     historySearch (item) {
+      this.confirmSearch = true
       this.searchValue = item
       this.onSearch()
-    },
-    // 用户退出搜索
-    userCancel () {
-      this.$router.go(-1)
-      this.artcileResult = []
-      this.poemResult = []
-      this.userResult = []
-      this.wordResult = []
     },
     // 根据切换的active的值搜索不同的内容
     getSearchResultByActive (value) {
@@ -209,6 +244,7 @@ export default {
       }
     }
   },
+
   components: {
     ArticleItem,
     DivideArea,

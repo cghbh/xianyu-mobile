@@ -3,7 +3,7 @@
     <van-search
       @click="$router.push('/search')"
       input-align="center"
-      placeholder="搜索好文/诗词/成语"
+      placeholder="搜索好文/诗词/成语/用户"
       readonly
       disabled
     />
