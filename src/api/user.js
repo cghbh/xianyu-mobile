@@ -55,8 +55,8 @@ const userRegister = (data) => {
 }
 
 // 获取指定用户的关注的人
-const userFollows = (id) => {
-  return axios.get(`users/${id}/following`)
+const userFollows = (id, currentPage = 1) => {
+  return axios.get(`users/${id}/following?current_page=${currentPage}`)
 }
 
 // 取消关注
@@ -154,4 +154,16 @@ const userCancelCollectPoemHandle = (id) => {
   return axios.request({ method: 'DELETE', url: `/users/cancelCollectPoems/${id}` })
 }
 
-export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle }
+// 用户点赞成语
+const userZanWordHandle = (id) => {}
+
+// 用户取消点赞成语
+const userCancelZanWordHandle = (id) => {}
+
+// 用户收藏成语
+const userCollectWordHandle = (id) => {}
+
+// 用户取消收藏成语
+const userCancelCollectHandle = (id) => {}
+
+export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle, userZanWordHandle, userCancelZanWordHandle, userCollectWordHandle, userCancelCollectHandle }

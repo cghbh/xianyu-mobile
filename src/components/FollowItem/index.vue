@@ -7,12 +7,14 @@
         <span>{{ user.personal_sign }}</span>
       </div>
     </div>
-    <div class="xianyu-fellowing-item-right" v-if="isFollowed">取消关注</div>
-    <div class="xianyu-fellowing-item-right active" :class="{ 'active': !isFollowed }" v-else>关注</div>
+    <div
+      class="xianyu-fellowing-item-right"
+      @click="$emit('cancelFollow')">取消关注</div>
   </div>
 </template>
 
 <script>
+// 是否是关注的，既然是我的关注，默认都是关注的状态
 export default {
   name: 'FollowItem',
   props: {
@@ -24,11 +26,6 @@ export default {
       type: Object,
       default: () => {}
     }
-  },
-  data () {
-    return {
-      isFollowed: true
-    }
   }
 }
 </script>
@@ -37,8 +34,9 @@ export default {
 .xianyu-fellowing-container-item {
   display: flex;
   align-items: center;
-  padding: 18px;
+  padding: 18px 12px;
   border-bottom: 1px solid rgba(68, 68, 68, .08);
+  justify-content: space-between;
 }
 
 .xianyu-fellowing-container-item.none {
@@ -47,15 +45,16 @@ export default {
 
 .xianyu-fellowing-item {
   &-left {
-    width: 270px;
     display: flex;
     align-items: center;
+    width: 72vw;
+    margin-right: 10px;
 
     img {
       width: 50px;
       height: 50px;
       border-radius: 50%;
-      margin-right: 14px;
+      margin-right: 10px;
     }
 
     &-user {
@@ -70,7 +69,7 @@ export default {
 
       span {
         display: inline-block;
-        width: 100%;
+        width: 58vw;
         font-size: 13px;
         white-space: nowrap;
         overflow: hidden;
@@ -82,7 +81,7 @@ export default {
   &-right {
     width: 80px;
     height: 28px;
-    border-radius: 5px;
+    border-radius: 4px;
     display: flex;
     justify-content: center;
     align-items: center;

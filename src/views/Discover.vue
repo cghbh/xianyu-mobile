@@ -27,7 +27,7 @@
       </div>
       <div class="xianyu-classify-item" @click="$router.push('/joke')">
         <i class="iconfont icon-xiaolian"></i>
-        <span>段子</span>
+        <span>开心一刻</span>
       </div>
       <div class="xianyu-classify-item" @click="$router.push('/knowledge-competition')">
         <i class="iconfont icon-bisai"></i>

@@ -118,6 +118,8 @@ export default {
 
   deactivated () {
     if (this.$router.currentRoute.fullPath.split('?')[0] === '/') {
+      // 页面卸载之后，默认搜索左侧第一个内容
+      this.active = 0
       this.artcileResult = []
       this.poemResult = []
       this.userResult = []

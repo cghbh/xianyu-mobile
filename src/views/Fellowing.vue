@@ -1,134 +1,147 @@
 <template>
   <!-- 我关注的 -->
-  <div class="xianyu-fellowing">
+  <div class="xianyu-fellowing" v-cloak>
     <back-top title="我的关注"></back-top>
-    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-      <div class="xianyu-fellowing-container" v-if="hasFellowData">
+    <div class="xianyu-fellowing-container">
+      <van-pull-refresh v-model="pullDown" @refresh="onPullDownRefresh" v-if="hasFellowData">
         <van-list
-          v-model="loading"
-          :finished="finished"
+          v-model="loadMore"
+          :finished="loadMoreFinished"
+          :immediate-check="false"
           loading-text="正在飞奔中......"
           finished-text="别刷了,真的没有啦......"
-          @load="onLoad"
+          @load="onLoadMoreHandle"
         >
-          <div class="xianyu-fellowing-container-item" v-for="item in 10" :key="item">
-            <div class="xianyu-fellowing-item-left">
-              <img src="../assets/images/logo.png">
-              <div class="xianyu-fellowing-item-left-user">
-                <h1>用户昵称</h1>
-                <span>用户个性签名</span>
-              </div>
-            </div>
-            <!-- <div class="xianyu-fellowing-item-right"  @click="cancelFellow">{{ isFellowed ? '已关注': '关注'}}</div> -->
-            <div class="xianyu-fellowing-item-right" @click="cancelFollow(item._id)" v-if="item.follow">取消关注</div>
-            <div class="xianyu-fellowing-item-right active" :class="{ 'active': !item.follow }" @click="userFollowHandle(item._id)" v-else>关注</div>
-          </div>
+          <follow-item
+            v-for="item in followingList"
+            :key="item._id"
+            :user="item"
+            @cancelFollow="cancelFellowHandle(item.nickname, item._id)"></follow-item>
         </van-list>
-      </div>
-    </van-pull-refresh>
-    <van-empty v-if="!hasFellowData" description="你还没有关注过一个人哟......" />
+      </van-pull-refresh>
+    </div>
+    <van-empty v-if="!hasFellowData && tag" description="你还没有关注过一个人哟......" />
   </div>
 </template>
 
 <script>
-import { userFollows, userCancelFollow, userFollow } from '@/api/user.js'
+import FollowItem from '@/components/FollowItem/index.vue'
+// import { userFollows, userCancelFollow, userFollow } from '@/api/user.js'
+import { userFollows, loadUserInfo, userCancelFollow } from '@/api/user.js'
 export default {
-  name: 'MyCollection',
+  name: 'Following',
   data () {
     return {
-      active: '',
-      isFellowed: false,
-      hasFellowData: true,
-      list: [],
-      loading: false,
-      finished: true,
-      isLoading: false
+      // 下拉刷新
+      pullDown: false,
+      // 我关注的人
+      followingList: [],
+      // 上拉加载更多
+      loadMore: false,
+      // 上拉加载更多结束
+      loadMoreFinished: true,
+      // 用户登录的id号
+      userId: null,
+      // 避免初始化情况下没有数据，展示的是空状态图，后面数据来了之后，展示的却是列表，这种矛盾的问题
+      // 也就是说默认情况下不展示，处分监听到的数据是空的，就展示空的占位图
+      tag: false,
+      // 数据从第一页开始
+      currentPage: 1,
+      // 总的关注条数
+      total: 0
     }
   },
   mounted () {
-    if (this.$store.state.userInfo._id) {
-      this.getFollowingList(this.$store.state.userInfo._id)
+    this.getUserId()
+  },
+  watch: {
+    userId (newVal) {
+      if (newVal) {
+        this.getUserFollows(newVal)
+      }
+    },
+    followingList (newVal) {
+      if (newVal.length <= 0) {
+        this.tag = true
+      }
+    }
+  },
+  computed: {
+    hasFellowData () {
+      return this.followingList.length > 0
+    },
+    isLogin () {
+      return this.$store.state.token.token
+    },
+    // 关注者的id，如果取消关注就删除这个id
+    followsId () {
+      const arrayId = []
+      this.followingList.forEach(item => {
+        arrayId.push(item._id)
+      })
+      return arrayId
     }
   },
   methods: {
-    cancelFellow () {
-      this.isFellowed = !this.isFellowed
-      if (!this.isFellowed) {
-        this.$dialog.confirm({
-          title: '确定要取消关注XXX吗？',
-          width: '280px',
-          confirmButtonText: '取消关注',
-          cancelButtonText: '放弃'
-        }).then(res => {
-          console.log(res)
-        }).catch(err => {
-          console.log(err)
-        })
+    // 获取用户的id
+    async getUserId () {
+      const result = await loadUserInfo()
+      if (result.errno === 0) {
+        this.userId = result.data._id
       }
     },
-    onLoad () {
-      // setTimeout(() => {
-      //   for (let i = 0; i < 8; i++) {
-      //     this.list.push(this.list.length + 1)
-      //   }
 
-      //   // 加载状态结束
-      //   this.loading = false
+    // 获取我关注的人
+    async getUserFollows (id) {
+      const result = await userFollows(id)
+      if (result.errno === 0) {
+        this.followingList = result.data
+        this.total = result.total
+      }
+    },
 
-      //   // 数据全部加载完成
-      //   if (this.list.length >= 40) {
-      //     this.finished = true
-      //   }
-      // }, 1000)
-    },
-    onRefresh () {
-      setTimeout(() => {
-        this.$toast('刷新成功')
-        this.isLoading = false
-      }, 1000)
-    },
-    // 获取用户的关注
-    async getFollowingList (id) {
-      const data = await userFollows(id)
-      if (data.code === 200) {
-        this.list = data.data
-        this.list.map(item => {
-          this.$set(item, 'follow', true)
-        })
+    // 下拉刷新操作
+    async onPullDownRefresh () {
+      const result = await userFollows(this.userId)
+      if (result.errno === 0) {
+        this.followingList = result.data
+        this.total = result.total
+        this.pullDown = false
       }
     },
-    // 取消关注
-    async cancelFollow (id) {
-      const data = await userCancelFollow(id)
-      if (data.code === 200) {
-        const index = this.list.findIndex(item => item._id === id)
-        if (index > -1) {
-          this.list[index].follow = false
+
+    // 上拉加载更多操作
+    onLoadMoreHandle () {},
+
+    cancelFellowHandle (name, id) {
+      this.$dialog.confirm({
+        title: `确定要取消关注${name}吗？`,
+        width: '280px',
+        confirmButtonText: '取消关注',
+        cancelButtonText: '放弃'
+      }).then(async () => {
+        const result = await userCancelFollow(id)
+        if (result.errno === 0) {
+          const index = this.followingList.findIndex(item => item._id === id)
+          this.followingList.splice(index, 1)
+          this.$toast('取消关注成功')
         }
-        this.$toast({
-          message: '取消关注成功！',
-          duration: 1500
-        })
-      }
-    },
-    async userFollowHandle (id) {
-      const data = await userFollow(id)
-      if (data.code === 200) {
-        const index = this.list.findIndex(item => item._id === id)
-        if (index > -1) {
-          this.list[index].follow = true
-        }
-        this.$toast({
-          message: '关注成功！',
-          duration: 1500
-        })
-      }
+        console.log(result, '取消的结果')
+      }).catch(err => {
+        console.log(err)
+      })
     }
+  },
+  components: {
+    FollowItem
   }
 }
 </script>
 
 <style scoped lang="scss">
+[v-cloak]{
+  display: none;
+}
 .back-container {
   display: flex;
   justify-content: flex-start;
@@ -140,16 +153,9 @@ export default {
   }
 }
 .xianyu-fellowing {
-  // 这个根据是否有内容决定是否需要显示100%的高度
-  height: 100%;
-  overflow: auto;
   /deep/ .van-empty {
     height: 100%!important;
   }
   background-color: #fff;
-  &-container {
-    margin-top: 46px;
-    margin-bottom: 20px;
-  }
 }
 </style>
