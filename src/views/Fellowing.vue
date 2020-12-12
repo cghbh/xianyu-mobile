@@ -2,7 +2,7 @@
   <!-- 我关注的 -->
   <div class="xianyu-fellowing" v-cloak>
     <back-top title="我的关注"></back-top>
-    <div class="xianyu-fellowing-container">
+    <div class="xianyu-fellowing-container" ref="xianyu-fellowing-container" id="xianyu-fellowing-container">
       <van-pull-refresh v-model="pullDown" @refresh="onPullDownRefresh" v-if="hasFellowData">
         <van-list
           v-model="loadMore"
@@ -16,7 +16,8 @@
             v-for="item in followingList"
             :key="item._id"
             :user="item"
-            @cancelFollow="cancelFellowHandle(item.nickname, item._id)"></follow-item>
+            @cancelFollow="cancelFellowHandle(item.nickname, item._id)"
+            @click="$router.push('/my-detail')"></follow-item>
         </van-list>
       </van-pull-refresh>
     </div>
@@ -26,8 +27,9 @@
 
 <script>
 import FollowItem from '@/components/FollowItem/index.vue'
-// import { userFollows, userCancelFollow, userFollow } from '@/api/user.js'
 import { userFollows, loadUserInfo, userCancelFollow } from '@/api/user.js'
+// 滚动性能节流处理
+import { debounce } from 'lodash'
 export default {
   name: 'Following',
   data () {
@@ -39,7 +41,7 @@ export default {
       // 上拉加载更多
       loadMore: false,
       // 上拉加载更多结束
-      loadMoreFinished: true,
+      loadMoreFinished: false,
       // 用户登录的id号
       userId: null,
       // 避免初始化情况下没有数据，展示的是空状态图，后面数据来了之后，展示的却是列表，这种矛盾的问题
@@ -48,11 +50,23 @@ export default {
       // 数据从第一页开始
       currentPage: 1,
       // 总的关注条数
-      total: 0
+      total: 0,
+      // 每页展示的数据
+      perPage: 20,
+      // 记录缓存页面返回的高度
+      scrollTop: 0
     }
   },
   mounted () {
     this.getUserId()
+    document.getElementById('xianyu-fellowing-container').addEventListener('scroll', debounce(this.getScrollTopHandle, 30))
+  },
+  activated () {
+    document.getElementById('xianyu-fellowing-container').scrollTop = this.scrollTop
+  },
+  // 组件销毁之前卸载事件
+  beforeDestroy () {
+    document.getElementById('xianyu-fellowing-container').removeEventListener('scroll', this.getScrollTopHandle, true)
   },
   watch: {
     userId (newVal) {
@@ -80,6 +94,10 @@ export default {
         arrayId.push(item._id)
       })
       return arrayId
+    },
+    // 总的数据条数/ 每页展示的数据
+    totalPage () {
+      return Math.ceil(this.total / this.perPage)
     }
   },
   methods: {
@@ -102,7 +120,10 @@ export default {
 
     // 下拉刷新操作
     async onPullDownRefresh () {
-      const result = await userFollows(this.userId)
+      this.currentPage = 1
+      this.loadMoreFinished = false
+      this.loadMore = false
+      const result = await userFollows(this.userId, this.currentPage)
       if (result.errno === 0) {
         this.followingList = result.data
         this.total = result.total
@@ -111,7 +132,17 @@ export default {
     },
 
     // 上拉加载更多操作
-    onLoadMoreHandle () {},
+    async onLoadMoreHandle () {
+      if (this.totalPage <= this.currentPage) {
+        this.loadMoreFinished = true
+        return
+      }
+      const result = await userFollows(this.userId, ++this.currentPage)
+      if (result.errno === 0) {
+        this.followingList = [...this.followingList, ...result.data]
+        this.loadMore = false
+      }
+    },
 
     cancelFellowHandle (name, id) {
       this.$dialog.confirm({
@@ -126,10 +157,12 @@ export default {
           this.followingList.splice(index, 1)
           this.$toast('取消关注成功')
         }
-        console.log(result, '取消的结果')
       }).catch(err => {
         console.log(err)
       })
+    },
+    getScrollTopHandle () {
+      this.scrollTop = document.getElementById('xianyu-fellowing-container').scrollTop
     }
   },
   components: {
@@ -157,5 +190,14 @@ export default {
     height: 100%!important;
   }
   background-color: #fff;
+
+  &-container {
+    position: fixed;
+    top: 46px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+  }
 }
 </style>

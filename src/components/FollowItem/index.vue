@@ -1,7 +1,9 @@
 <template>
-  <div class="xianyu-fellowing-container-item" :class="{ 'none': noBorderBottom }">
+  <div
+    class="xianyu-fellowing-container-item"
+    :class="{ 'none': noBorderBottom }">
     <div class="xianyu-fellowing-item-left">
-      <img :src="user.avatar_url">
+      <img @click="$emit('click')" :src="user.avatar_url">
       <div class="xianyu-fellowing-item-left-user">
         <h1>{{ user.nickname }}</h1>
         <span>{{ user.personal_sign }}</span>
@@ -54,13 +56,15 @@ export default {
       width: 50px;
       height: 50px;
       border-radius: 50%;
-      margin-right: 10px;
+      margin-right: 0px;
     }
 
     &-user {
       width: 221px;
       display: flex;
       flex-direction: column;
+      padding-left: 8px;
+      box-sizing: border-box;
 
       h1 {
         font-size: 16px;

@@ -68,7 +68,7 @@ const routes = [
     path: '/fellowing',
     component: () => import('../views/Fellowing.vue'),
     name: 'Fellowing',
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, keepAlive: true }
   },
   {
     path: '/addchannel',
