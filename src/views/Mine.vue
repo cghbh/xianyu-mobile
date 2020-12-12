@@ -120,7 +120,6 @@ export default {
       const result = await loadUserInfo()
       if (result.errno === 0) {
         this.userInfo = result.data
-        console.log(result, 'userInfo')
       } else {
         this.$toast('请求用户信息失败')
       }

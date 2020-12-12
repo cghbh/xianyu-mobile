@@ -55,8 +55,8 @@ const userRegister = (data) => {
 }
 
 // 获取指定用户的关注的人
-const userFollows = (id, currentPage = 1) => {
-  return axios.get(`users/${id}/following?current_page=${currentPage}`)
+const userFollows = (id, currentPage = 1, showTotal = '1') => {
+  return axios.get(`users/${id}/following?current_page=${currentPage}&show_total=${showTotal}`)
 }
 
 // 取消关注
@@ -70,8 +70,8 @@ const userFollow = (id) => {
 }
 
 // 我的粉丝列表
-const getMyFans = (id) => {
-  return axios.get(`/users/${id}/follower`)
+const getMyFans = (id, currentPage = 1) => {
+  return axios.get(`/users/${id}/follower?current_page=${currentPage}`)
 }
 
 // 用户点赞

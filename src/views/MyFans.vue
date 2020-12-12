@@ -1,95 +1,202 @@
 <template>
   <div class="xianyu-fans">
     <back-top title="我的粉丝"></back-top>
-    <div class="xianyu-fans-container">
-      <div class="xianyu-fans-container-item" v-for="item in fansList" :key="item._id">
-        <div class="xianyu-fans-container-item-left">
-          <img src="../assets/images/logo.png">
-          <div class="xianyu-fans-container-item-left-user">
-            <h1>{{ item.nickname }}</h1>
-            <span>{{ item.personal_sign }}</span>
-          </div>
-        </div>
-        <div class="xianyu-fans-container-item-right" v-if="followListId.includes(item._id)" @click="userCancelFollowHandle(item._id)">取消关注</div>
-        <div class="xianyu-fans-container-item-right active" @click="userFollowHandle(item._id)" v-else>关注</div>
-      </div>
+    <div class="xianyu-fans-container" id="xianyu-fans-container" ref="xianyu-fans-container">
+      <van-pull-refresh v-model="pullDown" @refresh="onPullDownRefresh" v-if="hasFansData">
+        <van-list
+          v-model="loadMore"
+          :finished="loadMoreFinished"
+          :immediate-check="false"
+          loading-text="正在飞奔中......"
+          finished-text="别刷了,真的没有啦......"
+          @load="onLoadMoreHandle"
+        >
+          <follow-item
+            v-for="item in fansList"
+            :user="item"
+            :key="item._id"
+            :is-follow="followListId.some(item1 => item1 === item._id)"
+            @goDetail="$router.push('/my-detail')"
+            @cancelFollow="cancelFollow(item._id)"
+            @followMyFans="userFollowHandle(item._id)"
+          />
+        </van-list>
+      </van-pull-refresh>
+
     </div>
+    <van-empty :image="emptyImg" v-if="!hasFansData && tag" description="还没有一个人关注过你哟......" />
   </div>
 </template>
 
 <script>
-import { getMyFans, userFollows, userCancelFollow, userFollow } from '@/api/user.js'
+import { loadUserInfo, getMyFans, userFollows, userCancelFollow, userFollow } from '@/api/user.js'
+import FollowItem from '@/components/FansItem/index.vue'
+import { debounce } from 'lodash'
 export default {
   name: 'MyFans',
   data () {
     return {
-      // 粉丝列表
+      // 我的粉丝列表
       fansList: [],
       // 我的关注列表的id
-      followListId: []
+      followListId: [],
+      userId: null,
+      tag: false,
+      emptyImg: require('../assets/images/empty-image-default.png'),
+      pullDown: false,
+      loadMore: false,
+      loadMoreFinished: false,
+      currentPage: 1,
+      total: 0,
+      perPage: 20,
+      scrollTop: 0
     }
   },
   computed: {
-    id () {
-      return this.$store.state.userInfo._id
+    isLogin () {
+      return this.$store.state.token.token
+    },
+    // 是否有人关注
+    hasFansData () {
+      return this.fansList.length
+    },
+    totalPage () {
+      return Math.ceil(this.total / this.perPage)
+    }
+  },
+  watch: {
+    userId (newVal) {
+      if (newVal) {
+        this.getUserFollowsHandle(newVal)
+        this.getMyfollow(newVal)
+      }
     }
   },
   mounted () {
-    this.getMyFansHandle()
-    this.getFollowHandle()
+    this.loadUserInfoHandle()
+    document.getElementById('xianyu-fans-container').addEventListener('scroll', debounce(this.scrollTopHandle, 30))
+  },
+  activated () {
+    this.$refs['xianyu-fans-container'].scrollTop = this.scrollTop
   },
   methods: {
-    async getMyFansHandle () {
-      const data = await getMyFans(this.id)
-      if (data.code === 200) {
-        this.fansList = data.users
+    // 根据用户的token加载用户的id信息
+    async loadUserInfoHandle () {
+      const result = await loadUserInfo()
+      if (result.errno === 0) {
+        this.userId = result.data._id
       }
     },
-    async  getFollowHandle () {
-      const data = await userFollows(this.id)
-      if (data.code === 200) {
-        this.followListId = []
-        data.data.forEach(item => {
+
+    // 加载我的粉丝
+    async getUserFollowsHandle (id) {
+      const result = await getMyFans(id, this.currentPage)
+      if (result.errno === 0) {
+        this.tag = true
+        this.fansList = result.data
+        this.total = result.total
+      }
+    },
+
+    // 获取我的关注
+    async getMyfollow (id) {
+      // 1表示从第一页获取数据，2则是后端是否分页的区分
+      const result = await userFollows(id, 1, '2')
+      if (result.errno === 0) {
+        result.data.forEach(item => {
           this.followListId.push(item._id)
         })
       }
     },
-    // 取消关注
-    async userCancelFollowHandle (id) {
-      const data = await userCancelFollow(id)
-      const index = this.followListId.indexOf(id)
-      this.followListId.splice(index, 1)
-      if (data.code === 200) {
-        this.$toast({
-          message: '取消关注成功！',
-          duration: 500
-        })
+
+    // 取消关注 debounce节流
+    cancelFollow: debounce(async function cancelFollow (id) {
+      console.log(id, '取消的id')
+      const result = await userCancelFollow(id)
+      if (result.errno === 0) {
+        const index = this.followListId.indexOf(id)
+        console.log(index, 'index索引值')
+        // 存在才可以删除
+        if (index > -1) {
+          this.followListId.splice(index, 1)
+        }
+        this.$toast('取消关注成功')
       }
-      // 取消关注之后刷新数据
-      // this.getMyFansHandle()
-      this.getFollowHandle()
+    }, 80),
+
+    // 用户关注操作，debounce节流
+    userFollowHandle: debounce(async function (id) {
+      console.log(id, '关注的id')
+      const result = await userFollow(id)
+      if (result.errno === 0) {
+        // 如果关注列表有的话不需要push
+        if (!this.followListId.includes(id)) {
+          this.followListId.push(id)
+        }
+        this.$toast('关注成功')
+      }
+    }, 80),
+
+    // 下拉刷新
+    async onPullDownRefresh () {
+      this.currentPage = 1
+      this.loadMoreFinished = false
+      this.loadMore = false
+      const result = await getMyFans(this.userId, this.currentPage)
+      if (result.errno === 0) {
+        this.fansList = result.data
+        this.pullDown = false
+        this.total = result.total
+      }
     },
-    // 关注某人
-    async userFollowHandle (id) {
-      const data = await userFollow(id)
-      if (data.code === 200) {
-        this.$toast({
-          message: '关注成功！',
-          duration: 500
-        })
+
+    // 上拉加载更多
+    async onLoadMoreHandle () {
+      if (this.totalPage <= this.currentPage) {
+        this.loadMoreFinished = true
+        return
       }
-      // 关注成功之后刷新数据
-      this.getFollowHandle()
+      const result = await getMyFans(this.userId, ++this.currentPage)
+      if (result.errno === 0) {
+        this.loadMore = false
+        this.fansList = [...this.fansList, ...result.data]
+      }
+    },
+
+    // 记住滚动到顶部的距离
+    scrollTopHandle () {
+      this.scrollTop = this.$refs['xianyu-fans-container'].scrollTop
     }
+  },
+  components: {
+    FollowItem
   }
+  // beforeRouteEnter (to, from, next) {
+  //   // 如果是从mine路由进来的话，需要重新刷新数据
+  //   if (from.path === '/mine') {
+
+  //   }
+  //   console.log(to, '去哪')
+  //   console.log(from, '从哪来')
+  //   console.log(next)
+  //   next()
+  // }
 }
 </script>
 
 <style scoped lang="scss">
-.xianyu-fans {
-  height: 100%;
+.xianyu-fans-container {
+  position: fixed;
   background-color: #fff;
-  overflow: auto;
+  top: 46px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+
+  /deep/ .van-empty {
+    padding: 150px 0 100px 0;
+  }
 
   &-container {
     margin-bottom: 20px;

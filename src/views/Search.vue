@@ -77,7 +77,11 @@
               v-for="(item, index) in userResult"
               :no-border-bottom="index === 5"
               :key="item._id"
-              :user="item"/>
+              :user="item"
+              :is-follow="isLogin && myFollows.includes(item._id)"
+              @followMyFans="followMyFansHandle(item._id)"
+              @cancelFollow="cancelFollowHandle(item._id)"
+            />
           </div>
           <search-empty v-else></search-empty>
         </van-tab>
@@ -86,15 +90,17 @@
   </div>
 </template>
 
+
+
 <script>
 import DivideArea from '@/components/PublicComponents/DivideArea.vue'
 import ArticleItem from '@/components/ArticleItem/index.vue'
-import FollowItem from '@/components/FollowItem/index.vue'
+import FollowItem from '@/components/FansItem/index.vue'
 import DictionaryItem from '@/components/DictionaryItem/index.vue'
 import PoemItem from '@/components/PoemItem/index.vue'
 import SearchEmpty from '@/components/SearchEmpty/index.vue'
 import { getArticleList } from '@/api/article.js'
-import { searchUsersByKeyWords } from '@/api/user.js'
+import { searchUsersByKeyWords, loadUserInfo, userFollows, userFollow, userCancelFollow } from '@/api/user.js'
 import { getDictionaryList } from '@/api/dictionary.js'
 import { getPoemList } from '@/api/poem.js'
 
@@ -111,8 +117,12 @@ export default {
       wordCurrentPage: 1,
       poemCurrentPage: 1,
       articleCurrentPage: 1,
+      userCurrentPage: 1,
       // 按下回车键之后才开始执行搜索
-      confirmSearch: false
+      confirmSearch: false,
+      userId: null,
+      // 我的关注，用在搜索用户之后判断是否已经关注搜索到的用户
+      myFollows: []
     }
   },
 
@@ -142,9 +152,11 @@ export default {
     // 是否显示搜索结果
     showSearchArea () {
       return this.searchValue.length > 0 && this.confirmSearch
+    },
+    isLogin () {
+      return this.$store.state.token.token
     }
   },
-
   watch: {
     active: {
       handler (newVal) {
@@ -207,6 +219,20 @@ export default {
       const result = await searchUsersByKeyWords(this.searchValue)
       if (result.errno === 0) {
         this.userResult = result.data
+        if (this.isLogin) {
+          const userIdResult = await loadUserInfo()
+          if (userIdResult.errno === 0) {
+            this.userId = userIdResult.data._id
+          }
+          if (userIdResult.data._id) {
+            const myFollowResult = await userFollows(userIdResult.data._id, this.userCurrentPage)
+            if (myFollowResult.errno === 0) {
+              myFollowResult.data.forEach(item => {
+                this.myFollows.push(item._id)
+              })
+            }
+          }
+        }
       }
     },
     async searchWords () {
@@ -243,6 +269,49 @@ export default {
         this.searchWords()
       } else if (value === 3) {
         this.searchUsers()
+      }
+    },
+
+    // 搜索到用户关注，但是需要先判断当前用户是否登录
+    async followMyFansHandle (id) {
+      if (!this.isLogin) {
+        this.$dialog.confirm({
+          message: '<p style="font-size: 16px;line-height: 25px">此操作需要登录，\n是否跳转到登录页面？</p>',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          confirmButtonColor: '#409fea',
+          cancelButtonText: '取消',
+          cancelButtonColor: '#666'
+        }).then(() => {
+          this.$router.replace({
+            path: '/login',
+            query: {
+              redirect: this.$route.fullPath
+            }
+          })
+        }).catch(err => { console.log(err) })
+      } else {
+        // 已登录执行关注的操作
+        const result = await userFollow(id)
+        if (result.errno === 0) {
+          if (!this.myFollows.includes(id)) {
+            this.myFollows.push(id)
+          }
+          this.$toast('关注成功')
+        }
+      }
+    },
+
+    // 已关注可以取消关注
+    async cancelFollowHandle (id) {
+      const result = await userCancelFollow(id)
+      if (result.errno === 0) {
+        const index = this.myFollows.indexOf(id)
+        if (index > -1) {
+          this.myFollows.splice(index, 1)
+        }
+        this.$toast('取消关注成功')
       }
     }
   },

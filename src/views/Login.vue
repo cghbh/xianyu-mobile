@@ -210,12 +210,12 @@ export default {
       console.log(codeResult, 'codeResult')
       if (codeResult.errno === 0) {
         this.$store.commit('setToken', codeResult.token)
-        this.$toast({ message: codeResult.message + '，正在飞速跳转中', duration: 600 })
+        this.$toast({ message: codeResult.message + '，正在飞速跳转中', duration: 400 })
         setTimeout(() => {
           this.$router.push(this.$route.query.redirect || '/')
           this.telephone1 = ''
           this.code = ''
-        }, 700)
+        }, 500)
       } else {
         this.$toast({ message: codeResult.message, duration: 1000 })
       }
@@ -230,15 +230,15 @@ export default {
         if (result.errno === 0) {
           this.$store.commit('setToken', result.token)
           this.$toast({
-            message: result.message + '，正在飞速跳转中......',
-            duration: 600
+            message: result.message + '，正在飞速跳转中',
+            duration: 400
           })
           setTimeout(() => {
             this.$router.push(this.$route.query.redirect || '/')
             this.userCaptcha = ''
             this.telephone2 = ''
             this.password = ''
-          }, 700)
+          }, 500)
         } else {
           this.$toast({
             message: result.message,

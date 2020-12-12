@@ -17,11 +17,12 @@
             :key="item._id"
             :user="item"
             @cancelFollow="cancelFellowHandle(item.nickname, item._id)"
-            @click="$router.push('/my-detail')"></follow-item>
+            @click="$router.push('/my-detail')"
+          />
         </van-list>
       </van-pull-refresh>
     </div>
-    <van-empty v-if="!hasFellowData && tag" description="你还没有关注过一个人哟......" />
+    <van-empty :image="emptyImg" v-if="!hasFellowData && tag" description="你还没有关注过一个人哟......" />
   </div>
 </template>
 
@@ -54,7 +55,8 @@ export default {
       // 每页展示的数据
       perPage: 20,
       // 记录缓存页面返回的高度
-      scrollTop: 0
+      scrollTop: 0,
+      emptyImg: require('../assets/images/empty-image-default.png')
     }
   },
   mounted () {
@@ -187,7 +189,7 @@ export default {
 }
 .xianyu-fellowing {
   /deep/ .van-empty {
-    height: 100%!important;
+    padding: 150px 0 100px 0;
   }
   background-color: #fff;
 

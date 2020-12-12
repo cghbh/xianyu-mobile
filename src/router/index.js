@@ -104,7 +104,7 @@ const routes = [
     path: '/myfans',
     component: () => import('../views/MyFans.vue'),
     name: 'MyFans',
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, keepAlive: true }
   },
   {
     path: '/article-detail/:artId',
