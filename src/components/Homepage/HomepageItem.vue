@@ -7,8 +7,6 @@
           <h3>{{ itemValue.createdAt | timeformat }}</h3>
         </div>
       </div>
-    <!-- </van-skeleton> -->
-    <!-- <van-skeleton :row="4" row-width="100%" :loading="loading"> -->
       <div class="homepage-item-area">
         <p @click="$router.push(`/dynamic-detail/${itemValue._id}`)">{{ itemValue.content }}</p>
         <van-image
@@ -16,7 +14,6 @@
           width="100"
           height="100"
           fit="cover"
-          lazy-load
           v-for="(item, index) in itemValue.avatar_url"
           :src="item"
           :key="item">
@@ -26,8 +23,8 @@
         <!-- 一像素边框的实现 -->
         <div class="one-px"></div>
         <div class="zan-icon">
-          <i @click="unlike" v-if="loginUserLikeDynamics.includes(itemValue._id)" class="iconfont icon-dianzan"></i>
-          <i v-else @click="like" class="iconfont icon-dianzan1"></i>
+          <i @click="$emit('unlike')" v-if="isLike" class="iconfont icon-dianzan"></i>
+          <i v-else @click="$emit('like')" class="iconfont icon-dianzan1"></i>
           <span>{{ itemValue.zan_number }}</span>
         </div>
         <div class="comment-icon" @click="$router.push(`/dynamic-detail/${itemValue._id}`)">
@@ -56,17 +53,9 @@ export default {
       type: Object,
       default: () => {}
     },
-    loginUserLikeDynamics: {
-      type: Array,
-      default: () => []
-    },
-    loading: {
-      type: Boolean
-    }
-  },
-  data () {
-    return {
-      isLike: false
+    isLike: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -81,15 +70,6 @@ export default {
         startPosition: index,
         closeable: true
       })
-    },
-    like () {
-      // 传递动态id
-      this.$emit('itemlike', this.itemValue._id)
-      this.isLike = true
-    },
-    unlike () {
-      this.$emit('itemunlike', this.itemValue._id)
-      this.isLike = false
     }
   }
 }

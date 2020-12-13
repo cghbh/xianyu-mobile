@@ -34,8 +34,8 @@ const dynamicPublish = (data) => {
 /**
  * 获取推荐或者最新的动态
  */
-const getDynamics = (sort) => {
-  return axios.get(`/dynamics?sort=${sort}`)
+const getDynamics = (sort, currentPage = 1, perpage = 20) => {
+  return axios.get(`/dynamics?sort=${sort}&current_page=${currentPage}&perpage=${perpage}`)
 }
 
 const getDynamicDetail = (id) => {

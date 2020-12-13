@@ -24,7 +24,24 @@ const routes = [
         path: 'dynamic',
         name: 'Dynamic',
         component: () => import(/* webpackChunkName: "group-index" */ '../views/Dynamic.vue'),
-        meta: { requiresAuth: false }
+        children: [
+          {
+            path: '',
+            component: () => import(/* webpackChunkName: "group-index" */ '../views/DynamicRecommend.vue'),
+            name: 'DynamicRecommend',
+            meta: { requiresAuth: false, keepAlive: true }
+          },
+          {
+            path: 'latest',
+            component: () => import(/* webpackChunkName: "group-index" */ '../views/DynamicLatest.vue'),
+            name: 'DynamicLatest'
+          },
+          {
+            path: 'follow',
+            component: () => import(/* webpackChunkName: "group-index" */ '../views/DynamicFollow.vue'),
+            name: 'DynamicFollow'
+          }
+        ]
       },
       {
         path: 'mine',
