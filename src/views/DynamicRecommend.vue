@@ -1,8 +1,8 @@
 <template>
   <div class="xianyu-dynamic-recommend-r" ref="xianyu-dynamic-recommend-r" id="xianyu-dynamic-recommend-r">
     <van-pull-refresh
-      v-model="isRecommendLoading"
-      @refresh="onRecommendRefresh"
+      v-model="pullDown"
+      @refresh="onPullDownRefresh"
       v-if="recommendDynamics.length > 0"
       loosing-text="别老拽着,快放开我"
       loading-text="正在刷新中"
@@ -21,7 +21,7 @@
           v-for="(item, index) in recommendDynamics"
           :key="item._id + Math.random()"
           :is-first="index === 0"
-          :itemValue="item"
+          :item-value="item"
           :is-like="isLike" />
       </van-list>
     </van-pull-refresh>
@@ -38,7 +38,7 @@ export default {
   data () {
     return {
       // 下拉刷新的状态
-      isRecommendLoading: false,
+      pullDown: false,
       recommendDynamics: [],
       // 是否点赞的状态
       isLike: true,
@@ -83,7 +83,7 @@ export default {
       }
     },
     // 下拉刷新
-    async onRecommendRefresh () {
+    async onPullDownRefresh () {
       this.currentPage = 1
       this.loadMore = false
       this.loadMoreFinished = false

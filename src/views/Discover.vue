@@ -93,13 +93,13 @@ export default {
     }
   },
   mounted () {
-    document.getElementById('xianyu-discover').addEventListener('scroll', debounce(this.discoverPageScroll, 30))
+    this.$refs.discover.addEventListener('scroll', debounce(this.discoverPageScroll, 30))
   },
   activated () {
     this.$refs.discover.scrollTop = this.scrollTop
   },
   beforeDestroy () {
-    document.getElementById('xianyu-discover').removeEventListener('scroll', this.discoverPageScroll, true)
+    this.$refs.discover.removeEventListener('scroll', this.discoverPageScroll, true)
   },
   methods: {
     // 推荐好文

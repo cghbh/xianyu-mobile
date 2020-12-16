@@ -116,25 +116,4 @@ export default {
   border-radius: 50%;
   padding: 10px;
 }
-
-.dynamic-follow-unlogin {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #fff;
-  height: calc(100vh - 94px);
-  &-tips {
-    font-size: 16px;
-  }
-
-  &-link {
-    font-size: 14px;
-    margin-top: 30px;
-    padding: 10px 20px;
-    background-color: #409fea;
-    color: #fff;
-    border-radius: 6px;
-  }
-}
 </style>

@@ -13,10 +13,8 @@
           @itemunlike="itemUnlikeHandle"
           v-for="(item, index) in latestDynamics"
           :key="item._id"
-          :isFirst="index === 0"
-          :itemValue="item"
-          :loading="isLoading"
-          :loginUserLikeDynamics="loginUserLikeDynamics"></homepage-item>
+          :is-first="index === 0"
+          :item-value="item"></homepage-item>
       </div>
     </van-pull-refresh>
     <van-empty v-if="!showNoLatest" description="什么内容都没有" />
@@ -30,6 +28,15 @@ export default {
     return {
       latestDynamics: []
     }
+  },
+  computed: {
+    showNoLatest () {
+      return this.latestDynamics.length <= 0
+    }
+  },
+  methods: {
+    itemLikeHandle () {},
+    itemUnlikeHandle () {}
   }
 }
 </script>

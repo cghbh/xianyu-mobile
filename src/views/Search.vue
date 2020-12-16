@@ -78,6 +78,7 @@
               :no-border-bottom="index === 5"
               :key="item._id"
               :user="item"
+              :is-self="item._id === userId"
               :is-follow="isLogin && myFollows.includes(item._id)"
               @followMyFans="followMyFansHandle(item._id)"
               @cancelFollow="cancelFollowHandle(item._id)"
@@ -162,7 +163,7 @@ export default {
     },
     // 搜索词汇高亮
     replaceString () {
-      return `<span style='color: #409fea'>${this.searchValue}</span>`
+      return `<span style='color: #e92322'>${this.searchValue}</span>`
     }
   },
   watch: {

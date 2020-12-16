@@ -76,7 +76,7 @@ export default {
 
     // 点击非图片的区域，跳转到动态的详情页面
     goDynamicDetail (e) {
-      if (e.target.classList[0] !== 'van-image__img') {
+      if (![...e.target.classList].includes('van-image__img')) {
         this.$router.push(`/dynamic-detail/${this.itemValue._id}`)
       }
     }

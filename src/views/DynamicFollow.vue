@@ -45,7 +45,7 @@ export default {
       emptyImg: require('../assets/images/empty-image-default.png'),
       // 下拉刷新状态
       pullDown: false,
-      followDynamis: []
+      followDynamics: []
     }
   },
   computed: {
@@ -53,7 +53,7 @@ export default {
       return this.$store.state.token.token
     },
     showNoFollow () {
-      return this.followDynamis.length <= 0
+      return this.followDynamics.length <= 0
     }
   },
   methods: {
@@ -64,5 +64,25 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="scss">
+.dynamic-follow-unlogin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  height: calc(100vh - 94px);
+  &-tips {
+    font-size: 16px;
+  }
+
+  &-link {
+    font-size: 14px;
+    margin-top: 30px;
+    padding: 10px 20px;
+    background-color: #409fea;
+    color: #fff;
+    border-radius: 6px;
+  }
+}
 </style>

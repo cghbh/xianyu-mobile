@@ -12,13 +12,13 @@
     <div
       class="xianyu-fellowing-item-right"
       @click="$emit('cancelFollow')"
-      v-if="isFollow"
+      v-if="isFollow && !isSelf"
     >
       取消关注
     </div>
     <div
       class="xianyu-fellowing-item-right active"
-      v-else
+      v-if="!isFollow && !isSelf"
       @click="$emit('followMyFans')"
     >
       关注
@@ -41,6 +41,10 @@ export default {
     },
     // 是否关注
     isFollow: {
+      type: Boolean,
+      default: false
+    },
+    isSelf: {
       type: Boolean,
       default: false
     }
