@@ -23,7 +23,7 @@
         :key="item">
       </van-image>
     </div>
-    <divide-area :height="8"></divide-area>
+    <divide-area :height="10"></divide-area>
     <comment-list></comment-list>
     <bottom-comment></bottom-comment>
   </div>
@@ -46,19 +46,15 @@ export default {
     }
   },
   computed: {
-    userInfo () {
-      return this.$store.state.userInfo
-    },
-    login_user_id () {
-      return this.userInfo && this.userInfo._id
-    },
-    user_login_token () {
-      return this.$store.state.token
+    // 用户是否登录
+    isLogin () {
+      return this.$store.state.token.token
     }
   },
   async mounted () {
     const result = await getDynamicDetail(this.$route.params.id)
-    if (result.code === 200) {
+    console.log(result, '详细的数据')
+    if (result.errno === 0) {
       this.dynamic = result.data
     } else {
       this.$toast({ message: '数据获取失败', duration: 800 })
@@ -116,10 +112,15 @@ export default {
   overflow-y: auto;
   padding-bottom: 50px;
 
+  /deep/ .divide-area {
+    background-color: rgba(38, 38, 38, .06);
+  }
+
   /deep/ .van-image {
     margin-right: 5px;
     margin-bottom: 3px;
   }
+
   &-user {
     display: flex;
     align-items: center;

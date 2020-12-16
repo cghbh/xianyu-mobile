@@ -5,12 +5,12 @@
     :class="{'no-margin': noMargin }"
     >
     <div class="ancient-item-title">
-      <h1>{{ itemvalue.poem_title }}</h1>
+      <h1 v-html="itemvalue.poem_title"></h1>
       <p>
-        [<span>{{ itemvalue.author_dynasty }}</span>]
+        [<span v-html="itemvalue.author_dynasty"></span>]
       </p>
     </div>
-    <p class="ancient-item-author">{{ itemvalue.poem_author }}</p>
+    <p class="ancient-item-author" v-html="itemvalue.poem_author"></p>
   </div>
 </template>
 

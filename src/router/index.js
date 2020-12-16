@@ -224,6 +224,10 @@ const routes = [
     component: () => import('../views/ReplaceTelephone.vue'),
     name: 'ReplaceTelephone',
     meta: { requiresAuth: true }
+  },
+  {
+    path: '*',
+    component: () => import('../views/404.vue')
   }
 ]
 

@@ -15,7 +15,7 @@
         finished-text="别刷了,真的没有啦......"
         @load="onLoadMoreHandle"
       >
-        <homepage-item
+        <dynamic-item
           @like="itemLikeHandle"
           @unlike="itemUnlikeHandle(item._id)"
           v-for="(item, index) in recommendDynamics"
@@ -31,7 +31,7 @@
 
 <script>
 import { getDynamics } from '@/api/dynamic.js'
-import HomepageItem from '@/components/Homepage/HomepageItem.vue'
+import DynamicItem from '@/components/DynamicItem/index.vue'
 import { debounce } from 'lodash'
 export default {
   name: 'DynamicRecommend',
@@ -122,7 +122,7 @@ export default {
     }
   },
   components: {
-    HomepageItem
+    DynamicItem
   }
 }
 </script>

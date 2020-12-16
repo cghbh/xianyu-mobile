@@ -155,6 +155,14 @@ export default {
     },
     isLogin () {
       return this.$store.state.token.token
+    },
+    // 搜索词汇正则
+    reg () {
+      return new RegExp(this.searchValue, 'gi')
+    },
+    // 搜索词汇高亮
+    replaceString () {
+      return `<span style='color: #409fea'>${this.searchValue}</span>`
     }
   },
   watch: {
@@ -215,10 +223,11 @@ export default {
     userBlur () {
       this.artcileResult = this.userResult = this.poemResult = this.wordResult = []
     },
+
     async searchUsers () {
       const result = await searchUsersByKeyWords(this.searchValue)
       if (result.errno === 0) {
-        this.userResult = result.data
+        this.userResult = JSON.parse(JSON.stringify(result.data).replace(this.reg, this.replaceString))
         if (this.isLogin) {
           const userIdResult = await loadUserInfo()
           if (userIdResult.errno === 0) {
@@ -235,22 +244,24 @@ export default {
         }
       }
     },
+
     async searchWords () {
       const result = await getDictionaryList(this.wordCurrentPage, this.searchValue)
       if (result.errno === 0) {
-        this.wordResult = result.data
+        // 搜索词高亮替换文本
+        this.wordResult = JSON.parse(JSON.stringify(result.data).replace(this.reg, this.replaceString))
       }
     },
     async searchPoems () {
       const result = await getPoemList(this.poemCurrentPage, this.searchValue)
       if (result.errno === 0) {
-        this.poemResult = result.data
+        this.poemResult = JSON.parse(JSON.stringify(result.data).replace(this.reg, this.replaceString))
       }
     },
     async searchArticles () {
       const result = await getArticleList(this.articleCurrentPage, this.searchValue)
       if (result.errno === 0) {
-        this.artcileResult = result.data
+        this.artcileResult = JSON.parse(JSON.stringify(result.data).replace(this.reg, this.replaceString))
       }
     },
     // 点击搜索记录搜索

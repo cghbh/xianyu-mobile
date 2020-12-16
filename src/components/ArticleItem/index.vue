@@ -1,9 +1,9 @@
 <template>
   <div class="xianyu-article-item" :class="{ 'no-margin-bottom': noMarginBottom }" @click="$emit('click')">
     <div class="xianyu-article-item-content">
-      <h1 class="xianyu-article-item-content-title">{{ article.article_title }}</h1>
-      <h3 class="xianyu-article-item-content-author">{{ article.article_author }}</h3>
-      <p class="xianyu-article-item-content-about">{{ article.article_introduce }}</p>
+      <h1 class="xianyu-article-item-content-title" v-html="article.article_title"></h1>
+      <h3 class="xianyu-article-item-content-author" v-html="article.article_author"></h3>
+      <p class="xianyu-article-item-content-about" v-html="article.article_introduce"></p>
     </div>
     <van-image
       width="80px"

@@ -50,7 +50,7 @@ export default {
   },
   computed: {
     isLogin () {
-      return this.$store.state.token.token()
+      return this.$store.state.token.token
     },
     showNoFollow () {
       return this.followDynamis.length <= 0

@@ -1,9 +1,11 @@
 <template>
-  <div 
-    class="xianyu-dictionary-item" 
+  <div
+    class="xianyu-dictionary-item"
     :class="{ 'no-mragin-bottom-dic': noMarginBottom }"
     @click="$emit('click')"
-    >{{ dictionary }}</div>
+    v-html="dictionary"
+    >
+  </div>
 </template>
 
 <script>
@@ -31,6 +33,7 @@ export default {
   line-height: 64px;
   padding-left: 20px;
   color: #555;
+  letter-spacing: 1px;
 }
 
 .xianyu-dictionary-item.no-mragin-bottom-dic {

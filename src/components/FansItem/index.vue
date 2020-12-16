@@ -5,7 +5,7 @@
     <div class="xianyu-fellowing-item-left">
       <img @click="$emit('goDetail')" :src="user.avatar_url">
       <div class="xianyu-fellowing-item-left-user">
-        <h1>{{ user.nickname }}</h1>
+        <h1 v-html="user.nickname"></h1>
         <span>{{ user.personal_sign }}</span>
       </div>
     </div>
