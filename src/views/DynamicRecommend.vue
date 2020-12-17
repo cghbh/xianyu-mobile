@@ -74,7 +74,6 @@ export default {
   },
   methods: {
     async getRecommendDynamics () {
-      console.log('执行次数')
       const result = await getDynamics(0, this.currentPage, this.perPage)
       if (result.errno === 0) {
         this.recommendDynamics = result.data
