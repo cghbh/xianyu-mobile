@@ -50,9 +50,11 @@ export default {
       dictionaryData: {}
     }
   },
+
   mounted () {
     this.getDictionaryDetail()
   },
+
   methods: {
     // 根据id获取成语的详细内容
     async getDictionaryDetail () {
@@ -103,6 +105,7 @@ $fontColor: #000;
     background-color: #fff;
   }
 }
+
 .xianyu-dictionary-container {
   display: flex;
   padding: 0 20px;
@@ -110,6 +113,7 @@ $fontColor: #000;
   align-items: flex-start;
   box-sizing: border-box;
   flex-wrap: wrap;
+
   .dictionary-item {
     width: 70px;
     height: 70px;
@@ -118,6 +122,7 @@ $fontColor: #000;
     align-items: flex-start;
     justify-content: center;
     margin-top: 12px;
+
     .pinyin {
       width: 50px;
       text-align: center;
@@ -233,9 +238,11 @@ $fontColor: #000;
   height: 60px;
   align-items: center;
   margin-top: 20px;
+
   &-container:first-of-type {
     margin-right: 30px;
   }
+  
   &-container {
     padding: 0px 20px;
     height: 35px;

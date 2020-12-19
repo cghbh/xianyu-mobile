@@ -50,17 +50,7 @@ export default {
       scrollTop: 0
     }
   },
-  methods: {
-    toRecommend () {
-      this.$router.push('/dynamic')
-    },
-    toLatest () {
-      this.$router.push('/dynamic/latest')
-    },
-    toFollow () {
-      this.$router.push('/dynamic/follow')
-    }
-  },
+
   components: {
     RecomendDynamics,
     FollowDynamics,

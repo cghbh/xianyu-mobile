@@ -48,6 +48,7 @@ export default {
       collectNumber: 0
     }
   },
+  
   computed: {
     poemId () {
       return this.$route.params.poemId
@@ -64,6 +65,7 @@ export default {
       return this.isLogin && this.collectPoemsId.includes(this.poemId)
     }
   },
+
   watch: {
     userId (newVal) {
       if (newVal) {
@@ -72,12 +74,14 @@ export default {
       }
     }
   },
+
   mounted () {
     this.getPoemHandle()
     if (this.isLogin) {
       this.getUserId()
     }
   },
+
   methods: {
     async getPoemHandle () {
       try {

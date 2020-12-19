@@ -15,6 +15,7 @@
         <div @click="$router.go(-1)">取消</div>
       </template>
     </van-search>
+    
     <div v-if="!showSearchArea" class="xianyu-search-container">
       <div class="xianyu-search-container-history" v-if="searchKeyWords.length">
         <div class="xianyu-search-container-history-title">
@@ -35,16 +36,17 @@
       <van-tabs v-model="active" animated swipeable color="#409fea">
         <van-tab title="好文">
           <divide-area></divide-area>
-          <div class="search-results-container" v-if="artcileResult.length > 0">
+          <div class="search-results-container" v-if="articleResult.length > 0">
             <article-item
-              v-for="(item, index) in artcileResult"
+              v-for="(item, index) in articleResult"
               :article="item"
               :key="item._id"
-              :no-margin-bottom="index === (artcileResult.length - 1)"
+              :no-margin-bottom="index === (articleResult.length - 1)"
               @click="$router.push(`/article-detail/${item._id}`)"/>
           </div>
-          <search-empty v-else></search-empty>
+          <search-empty v-if="articleResult.length <= 0 && showArticleTag"></search-empty>
         </van-tab>
+
         <van-tab title="诗词">
           <divide-area></divide-area>
           <div class="search-results-container" v-if="poemResult.length > 0">
@@ -55,7 +57,7 @@
               :key="item._id"
               :no-margin="index === poemResult.length - 1 "/>
           </div>
-          <search-empty v-else></search-empty>
+          <search-empty v-if="poemResult.length <= 0 && showPoemTag"></search-empty>
         </van-tab>
         <van-tab title="词典">
           <div class="search-word-container">
@@ -67,7 +69,7 @@
                 :key="item._id"
                 @click="$router.push(`/dictionary-detail/${item._id}`)"/>
             </div>
-            <search-empty v-else></search-empty>
+            <search-empty v-if="wordResult.length <= 0 && showWordTag"></search-empty>
           </div>
         </van-tab>
         <van-tab title="用户">
@@ -84,7 +86,7 @@
               @cancelFollow="cancelFollowHandle(item._id)"
             />
           </div>
-          <search-empty v-else></search-empty>
+          <search-empty v-if="userResult.length <= 0 && showUserTag"></search-empty>
         </van-tab>
       </van-tabs>
     </div>
@@ -111,7 +113,7 @@ export default {
     return {
       active: 0,
       searchValue: '',
-      artcileResult: [],
+      articleResult: [],
       userResult: [],
       poemResult: [],
       wordResult: [],
@@ -123,7 +125,11 @@ export default {
       confirmSearch: false,
       userId: null,
       // 我的关注，用在搜索用户之后判断是否已经关注搜索到的用户
-      myFollows: []
+      myFollows: [],
+      showArticleTag: false,
+      showWordTag: false,
+      showPoemTag: false,
+      showUserTag: false
     }
   },
 
@@ -229,6 +235,7 @@ export default {
       const result = await searchUsersByKeyWords(this.searchValue)
       if (result.errno === 0) {
         this.userResult = JSON.parse(JSON.stringify(result.data).replace(this.reg, this.replaceString))
+        this.userResult.length <= 0 ? this.showUserTag = true : this.showUserTag = false
         if (this.isLogin) {
           const userIdResult = await loadUserInfo()
           if (userIdResult.errno === 0) {
@@ -251,18 +258,21 @@ export default {
       if (result.errno === 0) {
         // 搜索词高亮替换文本
         this.wordResult = JSON.parse(JSON.stringify(result.data).replace(this.reg, this.replaceString))
+        this.wordResult.length <= 0 ? this.showWordTag = true : this.showWordTag = false
       }
     },
     async searchPoems () {
       const result = await getPoemList(this.poemCurrentPage, this.searchValue)
       if (result.errno === 0) {
         this.poemResult = JSON.parse(JSON.stringify(result.data).replace(this.reg, this.replaceString))
+        this.poemResult.length <= 0 ? this.showPoemTag = true : this.showPoemTag = false
       }
     },
     async searchArticles () {
       const result = await getArticleList(this.articleCurrentPage, this.searchValue)
       if (result.errno === 0) {
-        this.artcileResult = JSON.parse(JSON.stringify(result.data).replace(this.reg, this.replaceString))
+        this.articleResult = JSON.parse(JSON.stringify(result.data).replace(this.reg, this.replaceString))
+        this.articleResult.length <= 0 ? this.showArticleTag = true : this.showArticleTag = false
       }
     },
     // 点击搜索记录搜索

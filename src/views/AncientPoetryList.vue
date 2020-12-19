@@ -55,12 +55,14 @@ export default {
       listScrollTop: 0
     }
   },
+
   computed: {
     // 当前的数据一共有几页
     totalPage () {
       return Math.ceil(this.total / this.perPage)
     }
   },
+
   mounted () {
     this.getPoemHandle()
     document.getElementById('ancient-list-container').addEventListener('scroll', debounce(this.listScrollHandle, 30))
@@ -72,6 +74,7 @@ export default {
     // 第三个参数必须为true，否则不能卸载事件
     document.getElementById('ancient-list-container').removeEventListener('scroll', this.listScrollHandle, true)
   },
+
   methods: {
     async getPoemHandle () {
       const result = await getPoemList(this.currentPage)
@@ -94,6 +97,7 @@ export default {
         this.$toast('刷新成功')
       }
     },
+
     // 上拉加载更多
     async onLoadMoreHandle () {
       if (this.currentPage >= this.totalPage) {
@@ -110,6 +114,7 @@ export default {
       this.listScrollTop = this.$refs['ancient-list-container'].scrollTop
     }
   },
+
   components: {
     PoemItem
   }
@@ -133,6 +138,7 @@ export default {
   padding: 20px 15px 15px 15px;
   margin-bottom: 12px;
   background-color: #fff;
+  
   &-title {
     display: flex;
     justify-content: space-between;

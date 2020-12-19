@@ -56,6 +56,7 @@ export default {
   height: 100%;
   background-color: #fff;
 }
+
 .add-channel-container {
   display: flex;
   flex-wrap: wrap;

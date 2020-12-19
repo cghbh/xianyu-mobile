@@ -46,12 +46,14 @@ export default {
       zanNumber: 0
     }
   },
+
   mounted () {
     this.getArticleHandle()
     if (this.isLogin) {
       this.getUserId()
     }
   },
+
   watch: {
     userId (newVal) {
       if (newVal) {
@@ -60,6 +62,7 @@ export default {
       }
     }
   },
+
   computed: {
     // 是否登录
     isLogin () {
@@ -80,6 +83,7 @@ export default {
       return this.isLogin && this.userZanId.includes(this.articleId)
     }
   },
+
   methods: {
     async getArticleHandle () {
       try {
@@ -280,9 +284,11 @@ export default {
   height: 60px;
   align-items: center;
   margin-top: 20px;
+
   &-container:first-of-type {
     margin-right: 30px;
   }
+  
   &-container {
     width: 80px;
     // padding: 0px 20px;

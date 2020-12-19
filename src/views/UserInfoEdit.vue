@@ -157,14 +157,17 @@ export default {
     border-radius: 3px;
   }
 }
+
 .xianyu-upload-avatar {
   line-height: 45px;
   font-size: 16px;
 }
+
 .xianyu-upload-bgurl {
   line-height: 45px;
   font-size: 16px;
 }
+
 .xianyu-user-edit-vant {
   display: flex;
   align-items: center;
@@ -196,6 +199,7 @@ export default {
   }
   /deep/ .van-cell__value {
     flex: 3;
+    
     span {
       display: inline-block;
       width: 100%;

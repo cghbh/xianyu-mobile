@@ -48,24 +48,30 @@ export default {
       total: 0
     }
   },
+
   mounted () {
     this.getArticleListHandle()
     document.getElementById('pull-refresh-article-container').addEventListener('scroll', debounce(this.scrollHandle, 30))
   },
+
   computed: {
     totalPage () {
       return Math.ceil(this.total / this.perPage)
     }
   },
+
   activated () {
     this.$refs['pull-refresh-article-container'].scrollTop = this.articleScrollTop
   },
+
   beforeDestroy () {
-    document.getElementById('pull-refresh-article-container').removeEventListener('scroll', this.scrollHandle, true)
+    this.$refs['pull-refresh-article-container'].removeEventListener('scroll', this.scrollHandle, true)
   },
+
   components: {
     ArticleItem
   },
+
   methods: {
     async getArticleListHandle () {
       const result = await getArticleList(this.currentPage)
@@ -74,9 +80,11 @@ export default {
         this.total = result.total
       }
     },
+
     scrollHandle () {
       this.articleScrollTop = this.$refs['pull-refresh-article-container'].scrollTop
     },
+
     async onPullRefresh () {
       // 刷新页面,重置数据起始页
       this.currentPage = 1
@@ -89,6 +97,7 @@ export default {
         this.pullRefresh = false
       }
     },
+    
     async pullUpHandle () {
       if (this.currentPage >= this.totalPage) {
         this.pullUpfinished = true

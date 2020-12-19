@@ -60,9 +60,6 @@ export default {
       default: false
     }
   },
-  mounted () {
-    console.log(this.itemValue, 'itemValue')
-  },
   computed: {
     user_login_id () {
       return this.$store.state.userInfo._id

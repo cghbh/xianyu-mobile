@@ -16,8 +16,6 @@
         @load="onLoadMoreHandle"
       >
         <dynamic-item
-          @like="itemLikeHandle"
-          @unlike="itemUnlikeHandle(item._id)"
           v-for="(item, index) in recommendDynamics"
           :key="item._id + Math.random()"
           :is-first="index === 0"
@@ -69,7 +67,6 @@ export default {
     document.getElementById('xianyu-dynamic-recommend-r').addEventListener('scroll', debounce(this.scrollTopHandle, 30))
   },
   activated () {
-    console.log('组件激活')
     this.$refs['xianyu-dynamic-recommend-r'].scrollTop = this.scrollTop
   },
   methods: {
@@ -89,19 +86,11 @@ export default {
       const result = await getDynamics(0, this.currentPage, this.perPage)
       if (result.errno === 0) {
         this.recommendDynamics = result.data
-        this.isRecommendLoading = false
+        this.pullDown = false
         this.total = result.total
         this.recommendDynamics.length > 0 ? (this.showDynamicsTag = true) : (this.showDynamicsTag = false)
         this.$toast('刷新成功')
       }
-    },
-
-    // 点赞
-    itemLikeHandle () {},
-
-    // 取消点赞
-    itemUnlikeHandle (id) {
-      console.log(id, 'id号')
     },
 
     // 上拉加载操作

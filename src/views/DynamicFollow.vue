@@ -72,6 +72,7 @@ export default {
   justify-content: center;
   background-color: #fff;
   height: calc(100vh - 94px);
+  
   &-tips {
     font-size: 16px;
   }

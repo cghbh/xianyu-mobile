@@ -140,19 +140,23 @@ export default {
     }
 
     &-name {
+      
       h1 {
         margin-bottom: 8px;
         font-size: 16px;
         color: rgba(0, 0, 0, .8);
       }
+
       h3 {
         font-size: 13px;
         color: rgba(0, 0, 0, .6);
       }
     }
   }
+
   &-content {
     padding: 0 10px 12px 10px;
+
     p {
       font-size: 15PX;
       line-height: 25px;

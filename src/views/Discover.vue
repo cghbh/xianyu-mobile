@@ -134,6 +134,7 @@ export default {
   margin-top: 8px;
   border-radius: 4px;
 }
+
 .xianyu-discover {
   background-color: #fff;
   position: fixed;
@@ -145,6 +146,7 @@ export default {
 }
 .xianyu-discover {
   padding-top: 8px;
+
   /deep/ .van-swipe {
     border-radius: 6px;
   }
@@ -182,6 +184,7 @@ export default {
 .xianyu-discover {
   background-color: #fff;
 }
+
 .xianyu-discover-container {
   display: flex;
   flex-wrap: wrap;
@@ -284,6 +287,7 @@ export default {
   color: #409fea;
   font-weight: bold;
 }
+
 .article-recommend-container {
   background-color: rgba(38, 38, 38, 0.05);
 }
