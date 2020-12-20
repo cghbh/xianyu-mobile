@@ -200,29 +200,35 @@ export default {
 
   &-container {
     margin-bottom: 20px;
+
     &-item {
       display: flex;
       align-items: center;
       padding: 18px;
       border-bottom: 1px solid rgba(68, 68, 68, .08);
+
       &-left {
         width: 270px;
         display: flex;
         align-items: center;
+
         img {
           width: 50px;
           height: 50px;
           border-radius: 50%;
           margin-right: 8px;
         }
+
         &-user {
           width: 221px;
           display: flex;
           flex-direction: column;
+
           h1 {
             font-size: 16px;
             margin-bottom: 8px;
           }
+          
           span {
             display: inline-block;
             width: 100%;

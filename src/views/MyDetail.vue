@@ -92,6 +92,7 @@ export default {
 
 <style scoped lang="scss">
 .user-detail {
+  
   &-header {
     position: fixed;
     width: 100%;

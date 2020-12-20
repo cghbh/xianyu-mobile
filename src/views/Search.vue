@@ -15,7 +15,7 @@
         <div @click="$router.go(-1)">取消</div>
       </template>
     </van-search>
-    
+
     <div v-if="!showSearchArea" class="xianyu-search-container">
       <div class="xianyu-search-container-history" v-if="searchKeyWords.length">
         <div class="xianyu-search-container-history-title">
@@ -378,6 +378,7 @@ export default {
 
   &-history {
     padding: 15px 15px 0 15px;
+
     &-title {
       display: flex;
       justify-content: space-between;
@@ -395,6 +396,7 @@ export default {
         color: #e92322;
       }
     }
+
     &-container {
       display: flex;
       flex-wrap: wrap;
@@ -415,6 +417,7 @@ export default {
 
 .xianyu-search-topic {
   padding: 0 15px 15px 15px;
+
   &-title {
     font-size: 16px;
     font-weight: 700;
@@ -423,7 +426,9 @@ export default {
     padding-top: 18px;
     margin-bottom: 8px;
   }
+
   &-container {
+
     &-item {
       font-size: 14px;
       color: #555;
@@ -454,15 +459,8 @@ export default {
   }
 }
 
-.search-word-container {
-  // background-color: rgba(38, 38, 38, .07);
-
-  /deep/ .divide-area {
-    // background-color: #fff;
-  }
-}
-
 .search-results-container {
+  
   /deep/ .xianyu-article-item {
     margin-bottom: 5px;
     border-bottom: 1px solid #efefef;

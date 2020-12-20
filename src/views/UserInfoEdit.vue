@@ -197,9 +197,10 @@ export default {
   /deep/ .van-cell__title {
     flex: 1;
   }
+  
   /deep/ .van-cell__value {
     flex: 3;
-    
+
     span {
       display: inline-block;
       width: 100%;

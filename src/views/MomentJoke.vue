@@ -90,9 +90,11 @@ export default {
   align-items: center;
   margin-top: 20px;
   padding-bottom: 30px;
+
   &-container:first-of-type {
     margin-right: 30px;
   }
+
   &-container {
     padding: 0px 20px;
     height: 35px;
@@ -109,6 +111,7 @@ export default {
   }
 
   &-container.active {
+    
     .iconfont {
       color: #409fea;
     }

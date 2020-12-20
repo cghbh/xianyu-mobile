@@ -119,6 +119,7 @@ export default {
 
 .xianyu-person-user {
   flex: 1;
+  
   &-name {
     margin-bottom: 4px;
     font-size: 16px;
