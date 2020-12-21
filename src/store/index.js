@@ -7,7 +7,6 @@ Vue.use(Vuex)
 const USER_TOKEN_KEY = 'xianyu_user_login_token'
 const SEARCH_KEY_WORD = 'xianyu_user_search_key_words'
 const READ_JOKES = 'xianyu_user-read-jokes'
-// const CACHED_PAGES = 'xianyu-cahced_pages'
 
 export default new Vuex.Store({
   state: {
@@ -19,11 +18,12 @@ export default new Vuex.Store({
     cachedPages: []
   },
   mutations: {
-    // 设置token
-    setToken (state, value) {
-      state.token = { token: value }
+    // 用户登陆，缓存token和userid备用
+    setUserLoginState (state, value) {
+      state.token = { token: value.token, userId: value.userId }
       setItem(USER_TOKEN_KEY, state.token)
     },
+
     // 缓存搜索的关键词
     addSearchKeyWords (state, word) {
       state.searchKeyWords.unshift(word)

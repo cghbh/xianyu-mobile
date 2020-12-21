@@ -207,9 +207,8 @@ export default {
     // 验证码登录
     async loginByTelephoneCode () {
       const codeResult = await loginByTelCode({ telephone: this.telephone1, code: this.code })
-      console.log(codeResult, 'codeResult')
       if (codeResult.errno === 0) {
-        this.$store.commit('setToken', codeResult.token)
+        this.$store.commit('setUserLoginState', { token: codeResult.token, userId: codeResult.id })
         this.$toast({ message: codeResult.message + '，正在飞速跳转中', duration: 400 })
         setTimeout(() => {
           this.$router.push(this.$route.query.redirect || '/')
@@ -228,7 +227,7 @@ export default {
       try {
         const result = await userLogin({ telephone: this.telephone2, password: this.password })
         if (result.errno === 0) {
-          this.$store.commit('setToken', result.token)
+          this.$store.commit('setUserLoginState', { token: result.token, userId: result.id })
           this.$toast({
             message: result.message + '，正在飞速跳转中',
             duration: 400

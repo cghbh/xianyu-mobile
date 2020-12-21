@@ -79,7 +79,7 @@ const routes = [
     path: '/mycollection',
     component: () => import('../views/MyCollection.vue'),
     name: 'MyCollection',
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, keepAlive: true }
   },
   {
     path: '/fellowing',

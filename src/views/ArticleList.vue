@@ -19,7 +19,7 @@
             :article="item"
             :key="item._id"
             :no-margin-bottom="index === (articles.length - 1)"
-            @click="$router.push(`/article-detail/${item._id}`)"></article-item>
+            @click="$router.push(`/article-detail/${item._id}`)"/>
         </van-list>
       </van-pull-refresh>
     </div>

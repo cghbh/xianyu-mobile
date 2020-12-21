@@ -1,6 +1,7 @@
 <template>
   <div class="ancient-list">
     <back-top title="诗词列表"></back-top>
+    
     <div class="ancient-list-container" id="ancient-list-container" ref="ancient-list-container">
       <van-pull-refresh
         loosing-text="别老拽着,快放开我"
@@ -22,8 +23,7 @@
               :itemvalue="item"
               :key="item._id"
               :no-margin="index === poemList.length - 1 "
-            >
-            </poem-item>
+            />
           </van-list>
         </div>
       </van-pull-refresh>
