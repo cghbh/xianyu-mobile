@@ -74,12 +74,12 @@ const getMyFans = (id, currentPage = 1) => {
   return axios.get(`/users/${id}/follower?current_page=${currentPage}`)
 }
 
-// 用户点赞
+// 用户动态点赞
 const likeDynamics = (id) => {
   return axios.get(`/users/likeDynamics/${id}`)
 }
 
-// 用户取消点赞
+// 用户动态取消点赞
 const unlikeDynamics = (id) => {
   return axios.request({ method: 'DELETE', url: `/users/unlikeDynamics/${id}` })
 }
@@ -154,16 +154,34 @@ const userCancelCollectPoemHandle = (id) => {
   return axios.request({ method: 'DELETE', url: `/users/cancelCollectPoems/${id}` })
 }
 
-// 用户点赞成语
-const userZanWordHandle = (id) => {}
+// 用户点赞成语,id词语的id
+const userZanWordHandle = (id) => {
+  return axios.get(`/users/likeWord/${id}`)
+}
 
-// 用户取消点赞成语
-const userCancelZanWordHandle = (id) => {}
+// 用户取消点赞成语，成语的id
+const userCancelZanWordHandle = (id) => {
+  return axios.request({ method: 'DELETE', url: `/users/unlikeWord/${id}` })
+}
+
+// 根据用户id获取用户点赞过的成语
+const getUserZanedWordHandle = (id) => {
+  return axios.get(`/users/${id}/likeWords`)
+}
 
 // 用户收藏成语
-const userCollectWordHandle = (id) => {}
+const userCollectWordHandle = (id) => {
+  return axios.get(`/users/collectWord/${id}`)
+}
 
 // 用户取消收藏成语
-const userCancelCollectHandle = (id) => {}
+const userCancelCollectHandle = (id) => {
+  return axios.request({ method: 'DELETE', url: `/users/cancelCollectWord/${id}` })
+}
 
-export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle, userZanWordHandle, userCancelZanWordHandle, userCollectWordHandle, userCancelCollectHandle }
+// 根据用户id获取用户收藏过的内容
+const getUserCollectedWordHandle = (id) => {
+  return axios.get(`/users/${id}/collectWords`)
+}
+
+export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle, userZanWordHandle, userCancelZanWordHandle, userCollectWordHandle, userCancelCollectHandle, getUserZanedWordHandle, getUserCollectedWordHandle }

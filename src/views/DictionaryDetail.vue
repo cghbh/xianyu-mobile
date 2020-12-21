@@ -21,17 +21,17 @@
       <div class="story" v-if="dictionaryData.story && dictionaryData.story.trim().length > 0"><strong class="word-strong">成语故事：</strong>{{ dictionaryData.story }}</div>
     </div>
     <div class="zan-collect">
-      <div class="zan-collect-container" :class="{ 'active': isZan }" @click="isZan = !isZan">
+      <div class="zan-collect-container" :class="{ 'active': zanState }" @click="userZanOrCancel">
 
-        <i class="iconfont icon-dianzan" v-if="isZan"></i>
+        <i class="iconfont icon-dianzan" v-if="zanState"></i>
         <i class="iconfont icon-dianzan1" v-else></i>
-        <span class="word-exble-style">{{ dictionaryData.zan_number }}</span>
+        <span class="word-exble-style">{{ zanNumber }}</span>
       </div>
-      <div class="zan-collect-container" :class="{ 'active': isCollect }" @click="isCollect = !isCollect">
+      <div class="zan-collect-container" :class="{ 'active': collectState }" @click="userCollectOrCancel">
 
-        <i class="iconfont icon-shoucang1" v-if="isCollect"></i>
+        <i class="iconfont icon-shoucang1" v-if="collectState"></i>
         <i class="iconfont icon-shoucang" v-else></i>
-        <span class="word-exble-style">{{ dictionaryData.collect_number }}</span>
+        <span class="word-exble-style">{{ collectNumber }}</span>
       </div>
     </div>
   </div>
@@ -39,20 +39,59 @@
 
 <script>
 import { getDictionaryById } from '@/api/dictionary.js'
+import { loadUserInfo, getUserZanedWordHandle, getUserCollectedWordHandle, userCancelCollectHandle, userCollectWordHandle, userCancelZanWordHandle, userZanWordHandle } from '@/api/user.js'
+
 export default {
   name: 'Dictionary',
   data () {
     return {
-      // 是否点赞
-      isZan: false,
-      // 是否收藏
-      isCollect: false,
-      dictionaryData: {}
+      dictionaryData: {},
+      userId: null,
+      // 用户点赞过的成语id
+      userLikeWordsId: [],
+      // 用户收藏过的成语的id
+      userCollectWordsId: [],
+      zanNumber: 0,
+      collectNumber: 0
+    }
+  },
+
+  watch: {
+    userId (newVal) {
+      if (newVal) {
+        this.getUserLikeWords(newVal)
+        this.getUserCollectWords(newVal)
+      }
     }
   },
 
   mounted () {
     this.getDictionaryDetail()
+    if (this.isLogin) {
+      this.getUserId()
+    }
+  },
+
+  computed: {
+    // 用户是否登陆的token
+    isLogin () {
+      return this.$store.state.token.token
+    },
+    
+    // 成语的id 
+    wordId () {
+      return this.$route.params.dicId
+    },
+
+    // 点赞的状态，如果登陆同时已经点赞，则为进行时的状态
+    zanState () {
+      return this.isLogin && this.userLikeWordsId.includes(this.wordId)
+    },
+
+    // 收藏的状态
+    collectState () {
+      return this.isLogin && this.userCollectWordsId.includes(this.wordId)
+    }
   },
 
   methods: {
@@ -67,6 +106,8 @@ export default {
           pinyin.forEach((item, index) => {
             dic.push({ pinyin: item, hanzi: hanzi[index] })
           })
+          this.zanNumber = result.data.zan_number
+          this.collectNumber = result.data.collect_number
           this.dictionaryData = {
             dic: dic,
             meaning: result.data.word_meaning,
@@ -80,6 +121,129 @@ export default {
         console.log(err, '错误捕获')
         this.$toast('请求的数据不存在')
         this.$router.push('/dictionary-list')
+      }
+    },
+
+    // 获取用户的id
+    async getUserId () {
+      const result = await loadUserInfo()
+      if (result.errno === 0) {
+        this.userId = result.data._id
+      }
+    },
+    
+    // 获取已登陆用户点赞的成语
+    async getUserLikeWords (id) {
+      const result = await getUserZanedWordHandle(id)
+      if (result.errno === 0) {
+        const tempArray = []
+        result.data.forEach(item => tempArray.push(item._id))
+        this.userLikeWordsId = tempArray
+      }
+    },
+
+    async getUserCollectWords (id) {
+      const result = await getUserCollectedWordHandle(id)
+      if (result.errno === 0) {
+        const tempArray = []
+        result.data.forEach(item => tempArray.push(item._id))
+        this.userCollectWordsId = tempArray
+      }
+    },
+
+    // 用户收藏或者取消收藏
+    async userCollectOrCancel () {
+      if (!this.isLogin) {
+        this.$dialog.confirm({
+          message: '<p style="font-size: 16px;line-height: 25px">此操作需要登录，\n是否跳转到登录页面？</p>',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          confirmButtonColor: '#409fea',
+          cancelButtonText: '取消',
+          cancelButtonColor: '#666'
+        }).then(() => {
+          this.$router.replace({
+            path: '/login',
+            query: {
+              redirect: this.$route.fullPath
+            }
+          })
+        }).catch(err => { console.log(err) })
+      } else {
+        if (this.collectState) {
+          // 取消收藏
+          const result = await userCancelCollectHandle(this.wordId)
+          if (result.errno === 0) {
+            this.$toast('取消收藏成功')
+            const index = this.userCollectWordsId.indexOf(this.wordId)
+            if (index > -1) {
+              this.userCollectWordsId.splice(index, 1)
+              const newResult = await getDictionaryById(this.wordId)
+              if (newResult.errno === 0) {
+                this.collectNumber = newResult.data.collect_number
+              }
+            }
+          }
+        } else {
+          // 加入收藏
+          const result = await userCollectWordHandle(this.wordId)
+          if (result.errno === 0 && !this.userCollectWordsId.includes(this.wordId)) {
+            this.$toast('收藏成功')
+            this.userCollectWordsId.push(this.wordId)
+            const newResult = await getDictionaryById(this.wordId)
+            if (newResult.errno === 0) {
+              this.collectNumber = newResult.data.collect_number
+            }
+          }
+        }
+      }
+    },
+
+    // 用户点赞或者取消点赞
+    async userZanOrCancel () {
+      if (!this.isLogin) {
+        this.$dialog.confirm({
+          message: '<p style="font-size: 16px;line-height: 25px">此操作需要登录，\n是否跳转到登录页面？</p>',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          confirmButtonColor: '#409fea',
+          cancelButtonText: '取消',
+          cancelButtonColor: '#666'
+        }).then(() => {
+          this.$router.replace({
+            path: '/login',
+            query: {
+              redirect: this.$route.fullPath
+            }
+          })
+        }).catch(err => { console.log(err) })
+      } else {
+        if (this.zanState) {
+          const result = await userCancelZanWordHandle(this.wordId)
+          if (result.errno === 0) {
+            this.$toast('取消点赞成功')
+            const index = this.userLikeWordsId.indexOf(this.wordId)
+            if (index > -1) {
+              this.userLikeWordsId.splice(index, 1)
+            }
+            const newResult = await getDictionaryById(this.wordId)
+            if (newResult.errno === 0) {
+              this.zanNumber = newResult.data.zan_number
+            }
+          }
+        } else {
+          const result = await userZanWordHandle(this.wordId)
+          if (result.errno === 0 && !this.userLikeWordsId.includes(this.wordId)) {
+            this.userLikeWordsId.push(this.wordId)
+            this.$toast('点赞成功')
+            const newResult = await getDictionaryById(this.wordId)
+            if (newResult.errno === 0) {
+              this.zanNumber = newResult.data.zan_number
+            }
+          }
+        }
       }
     }
   }
