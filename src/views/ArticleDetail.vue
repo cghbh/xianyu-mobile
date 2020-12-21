@@ -13,13 +13,13 @@
 
           <i class="iconfont icon-dianzan" v-if="zanState"></i>
           <i class="iconfont icon-dianzan1" v-else></i>
-          <span>{{ zanNumber > 999 ? '999+': zanNumber }}</span>
+          <span class="article-exble-number">{{ zanNumber > 999 ? '999+': zanNumber }}</span>
         </div>
 
         <div class="zan-collect-container" :class="{ 'active': collectState }" @click="userCollectOrCancelArticle">
           <i class="iconfont icon-shoucang1" v-if="collectState"></i>
           <i class="iconfont icon-shoucang" v-else></i>
-          <span>{{ collectNumber > 999 ? '999+': collectNumber }}</span>
+          <span class="article-exble-number">{{ collectNumber > 999 ? '999+': collectNumber }}</span>
         </div>
       </div>
     </div>
@@ -288,10 +288,9 @@ export default {
   &-container:first-of-type {
     margin-right: 30px;
   }
-  
+
   &-container {
     width: 80px;
-    // padding: 0px 20px;
     height: 35px;
     border: .5px solid rgba(0, 0, 0, .4);
     border-radius: 35px;
@@ -306,6 +305,7 @@ export default {
   }
 
   &-container.active {
+
     .iconfont {
       color: #409fea;
     }
@@ -322,5 +322,9 @@ export default {
     width: 100%;
     max-height: 200px;
   }
+}
+
+.article-exble-number {
+  font-size: 15px;
 }
 </style>

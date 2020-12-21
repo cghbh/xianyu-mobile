@@ -14,13 +14,13 @@
 
           <i class="iconfont icon-dianzan" v-if="zanState"></i>
           <i class="iconfont icon-dianzan1" v-else></i>
-          <span>{{ zanNumber }}</span>
+          <span class="poem-exble-style">{{ zanNumber }}</span>
         </div>
         <div class="zan-collect-container" :class="{ 'active': collectState }" @click="userCollectOrCancelHandle">
 
           <i class="iconfont icon-shoucang1" v-if="collectState"></i>
           <i class="iconfont icon-shoucang" v-else></i>
-          <span>{{ collectNumber }}</span>
+          <span class="poem-exble-style">{{ collectNumber }}</span>
         </div>
       </div>
     </div>
@@ -48,7 +48,7 @@ export default {
       collectNumber: 0
     }
   },
-  
+
   computed: {
     poemId () {
       return this.$route.params.poemId
@@ -287,7 +287,7 @@ export default {
 }
 
 .poem-content {
-  font-size: 17px;
+  font-size: 16px;
   text-align: center;
   padding: 0 15px;
   line-height: 35px;
@@ -310,5 +310,9 @@ export default {
   font-size: 16px;
   line-height: 36px;
   color: #666;
+}
+
+.poem-exble-style {
+  font-size: 15px;
 }
 </style>

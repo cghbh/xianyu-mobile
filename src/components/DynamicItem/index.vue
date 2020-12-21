@@ -27,16 +27,16 @@
         <div class="zan-icon">
           <i @click="$emit('unlike')" v-if="isLike" class="iconfont icon-dianzan"></i>
           <i v-else @click="$emit('like')" class="iconfont icon-dianzan1"></i>
-          <span>{{ itemValue.zan_number }}</span>
+          <span class="dynamic-exble-style">{{ itemValue.zan_number > 999 ? '999+': itemValue.zan_number }}</span>
         </div>
         <div class="comment-icon" @click="$router.push(`/dynamic-detail/${itemValue._id}`)">
           <i class="iconfont icon-pinglun"></i>
-          <span>{{ itemValue.comment_number }}</span>
+          <span class="dynamic-exble-style">{{ itemValue.comment_number > 999 ? '999+': itemValue.comment_number }}</span>
         </div>
         <div class="collect-icon">
           <i v-if="false" class="iconfont icon-shoucang1"></i>
           <i class="iconfont icon-shoucang"></i>
-          <span>{{ itemValue.collect_number }}</span>
+          <span class="dynamic-exble-style">{{ itemValue.collect_number > 999 ? '999+': itemValue.collect_number }}</span>
         </div>
       </div>
   </div>
@@ -136,7 +136,7 @@ export default {
     p {
       font-size: 15PX;
       line-height: 25px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       color: rgba(0, 0, 0, .9);
     }
   }
@@ -188,5 +188,9 @@ export default {
 .homepage-item /deep/ .van-image {
   margin-right: 5px;
   margin-bottom: 3px;
+}
+
+.dynamic-exble-style {
+  font-size: 14px;
 }
 </style>

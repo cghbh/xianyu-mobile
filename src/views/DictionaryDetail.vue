@@ -25,13 +25,13 @@
 
         <i class="iconfont icon-dianzan" v-if="isZan"></i>
         <i class="iconfont icon-dianzan1" v-else></i>
-        <span>{{ dictionaryData.zan_number }}</span>
+        <span class="word-exble-style">{{ dictionaryData.zan_number }}</span>
       </div>
       <div class="zan-collect-container" :class="{ 'active': isCollect }" @click="isCollect = !isCollect">
 
         <i class="iconfont icon-shoucang1" v-if="isCollect"></i>
         <i class="iconfont icon-shoucang" v-else></i>
-        <span>{{ dictionaryData.collect_number }}</span>
+        <span class="word-exble-style">{{ dictionaryData.collect_number }}</span>
       </div>
     </div>
   </div>
@@ -242,7 +242,7 @@ $fontColor: #000;
   &-container:first-of-type {
     margin-right: 30px;
   }
-  
+
   &-container {
     padding: 0px 20px;
     height: 35px;
@@ -268,5 +268,9 @@ $fontColor: #000;
 .word-strong {
   font-weight: bold;
   font-size: 16px;
+}
+
+.word-exble-style {
+  font-size: 15px;
 }
 </style>

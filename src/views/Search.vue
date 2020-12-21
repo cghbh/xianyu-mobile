@@ -213,6 +213,7 @@ export default {
       this.$store.commit('addSearchKeyWords', this.searchValue)
       this.getSearchResultByActive(this.active)
     },
+
     // 询问是否删除搜索历史
     askClearSearchHistory () {
       this.$dialog.confirm({
@@ -227,6 +228,7 @@ export default {
           console.log(e)
         })
     },
+
     userBlur () {
       this.artcileResult = this.userResult = this.poemResult = this.wordResult = []
     },
@@ -261,6 +263,7 @@ export default {
         this.wordResult.length <= 0 ? this.showWordTag = true : this.showWordTag = false
       }
     },
+
     async searchPoems () {
       const result = await getPoemList(this.poemCurrentPage, this.searchValue)
       if (result.errno === 0) {
@@ -268,6 +271,7 @@ export default {
         this.poemResult.length <= 0 ? this.showPoemTag = true : this.showPoemTag = false
       }
     },
+
     async searchArticles () {
       const result = await getArticleList(this.articleCurrentPage, this.searchValue)
       if (result.errno === 0) {
@@ -275,12 +279,14 @@ export default {
         this.articleResult.length <= 0 ? this.showArticleTag = true : this.showArticleTag = false
       }
     },
+
     // 点击搜索记录搜索
     historySearch (item) {
       this.confirmSearch = true
       this.searchValue = item
       this.onSearch()
     },
+
     // 根据切换的active的值搜索不同的内容
     getSearchResultByActive (value) {
       if (value === 0) {
@@ -460,7 +466,7 @@ export default {
 }
 
 .search-results-container {
-  
+
   /deep/ .xianyu-article-item {
     margin-bottom: 5px;
     border-bottom: 1px solid #efefef;

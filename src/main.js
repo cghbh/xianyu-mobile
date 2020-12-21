@@ -5,28 +5,21 @@ import store from './store'
 import VConsole from 'vconsole'
 import moment from 'moment'
 
-import RefreshIcon from './components/PublicComponents/RefreshIcon.js'
 // 顶部返回栏
 import BackTop from './components/BackTop/index.js'
 import DivideArea from './components/PublicComponents/DivideArea.js'
 
-// mint-ui的上拉刷新下拉加载的组件
-import { Loadmore } from 'mint-ui'
-
-
 import './assets/style/reset.css'
 import './vant/index.js'
-import 'lib-flexible/flexible'
+import 'vant/lib/index.css'
+import 'amfe-flexible/index.js'
 import './assets/style/iconfont.css'
-import 'mint-ui/lib/style.css'
 
 // 根据环境来使用vConsole，避免ESlint错误
 var vc = new VConsole() // eslint-disable-line no-unused-vars
 
-Vue.use(RefreshIcon)
 Vue.use(BackTop)
 Vue.use(DivideArea)
-Vue.component(Loadmore.name, Loadmore)
 
 Vue.config.productionTip = false
 

@@ -39,6 +39,7 @@
     "html-webpack-plugin": "^4.5.0",
     "node-sass": "^4.12.0",
     "postcss-plugin-px2rem": "^0.8.1",
+    "postcss-pxtorem": "^5.1.1",
     "sass-loader": "^8.0.2",
     "vconsole": "^3.3.4",
     "vue-template-compiler": "^2.6.11"
