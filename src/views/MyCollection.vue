@@ -14,7 +14,9 @@
       <van-tab title="诗词">
         <collect-poem :poems="poems"></collect-poem>
       </van-tab>
-      <van-tab title="词典"></van-tab>
+      <van-tab title="词典">
+        <collect-word :words="words"></collect-word>
+      </van-tab>
       <van-tab title="动态"></van-tab>
     </van-tabs>
   </div>
@@ -23,7 +25,8 @@
 <script>
 import { userCollectArticle, userCollectPoems, getUserCollectedWordHandle } from '@/api/user.js'
 import CollectArticle from '@/components/CollectArticle/index.vue'
-import CollectPoem from '../components/CollectPoem/index.vue'
+import CollectPoem from '@/components/CollectPoem/index.vue'
+import CollectWord from '@/components/CollectWord/index.vue'
 export default {
   name: 'MyCollection',
   data () {
@@ -77,7 +80,8 @@ export default {
 
   components: {
     CollectArticle,
-    CollectPoem
+    CollectPoem,
+    CollectWord
   }
 }
 </script>

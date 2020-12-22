@@ -21,8 +21,7 @@
             :key="item._id"
             :no-margin-bottom="index === (dictionarys.length - 1)"
             @click="$router.push(`/dictionary-detail/${item._id}`)"
-          >
-          </dictionary-item>
+          />
         </van-list>
       </van-pull-refresh>
     </div>
