@@ -23,6 +23,8 @@
           :is-like="isLogin && userZanedId.includes(item._id)"
           @unlike="userCancelZan(item._id)"
           @like="userZanHandle(item._id)"
+          @uncollect="userCancelCollect(item._id)"
+          @collect="userCollectHandle(item._id)"
         />
       </van-list>
     </van-pull-refresh>
@@ -155,14 +157,43 @@ export default {
     },
 
     async userZanHandle (id) {
-      const result = await likeDynamics(id)
-      if (result.errno === 0 && !this.userZanedId.includes(id)) {
-        this.userZanedId.push(id)
-        const index = this.recommendDynamics.findIndex(item => item._id === id)
-        const newDynamic = JSON.parse(JSON.stringify(this.recommendDynamics[`${index}`]))
-        newDynamic.zan_number++
-        this.$set(this.recommendDynamics, index, newDynamic)
+      if (!this.isLogin) {
+        this.$dialog.confirm({
+          message: '<p style="font-size: 16px;line-height: 25px">此操作需要登录，\n是否跳转到登录页面？</p>',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          confirmButtonColor: '#409fea',
+          cancelButtonText: '取消',
+          cancelButtonColor: '#666'
+        }).then(() => {
+          this.$router.replace({
+            path: '/login',
+            query: {
+              redirect: this.$route.fullPath
+            }
+          })
+        }).catch(err => { console.log(err) })
+      } else {
+        const result = await likeDynamics(id)
+        if (result.errno === 0 && !this.userZanedId.includes(id)) {
+          this.userZanedId.push(id)
+          const index = this.recommendDynamics.findIndex(item => item._id === id)
+          const newDynamic = JSON.parse(JSON.stringify(this.recommendDynamics[`${index}`]))
+          newDynamic.zan_number++
+          this.$set(this.recommendDynamics, index, newDynamic)
+        }
       }
+    },
+
+    // 取消收藏
+    userCancelCollect (id) {
+      console.log(id, 'cancel collect')
+    },
+
+    // 收藏，先判断是否登陆
+    userCollectHandle (id) {
+      console.log(id, 'collect')
     }
   },
 

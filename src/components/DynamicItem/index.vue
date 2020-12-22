@@ -42,8 +42,8 @@
           <span class="dynamic-exble-style">{{ itemValue.comment_number > 999 ? '999+': itemValue.comment_number }}</span>
         </div>
         <div class="collect-icon">
-          <i v-if="false" class="iconfont icon-shoucang1"></i>
-          <i class="iconfont icon-shoucang"></i>
+          <i v-if="isCollect" @click="$emit('uncollect')" class="iconfont icon-shoucang1"></i>
+          <i v-else class="iconfont icon-shoucang" @click="$emit('collect')"></i>
           <span class="dynamic-exble-style">{{ itemValue.collect_number > 999 ? '999+': itemValue.collect_number }}</span>
         </div>
       </div>
@@ -65,6 +65,10 @@ export default {
       default: () => {}
     },
     isLike: {
+      type: Boolean,
+      default: false
+    },
+    isCollect: {
       type: Boolean,
       default: false
     }

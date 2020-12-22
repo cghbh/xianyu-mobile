@@ -219,6 +219,7 @@ export default {
 <style scoped lang="scss">
 .comment-list {
   height: 100px;
+
   &-header {
     display: flex;
     justify-content: space-between;
@@ -232,6 +233,7 @@ export default {
 
     &-sort {
       font-size: 14px;
+
       .sep-line {
         margin: 0 5px;
       }
@@ -239,6 +241,7 @@ export default {
       .hot.active {
         color: #409fea;
       }
+
       .newest.active {
         color: #409fea;
       }
@@ -254,11 +257,13 @@ export default {
     align-items: flex-start;
     padding-bottom: 56px;
     background-color: #fff;
+
     .comment-item {
       width: 100%;
       display: flex;
       margin-bottom: 24px;
       justify-content: space-between;
+
       img {
         width: 40px;
         height: 40px;
@@ -270,6 +275,7 @@ export default {
         display: flex;
         flex-direction: column;
         flex: 1;
+
         .first-user {
           display: flex;
           height: 45px;
@@ -289,6 +295,7 @@ export default {
               color: rgba(0, 0, 0, .7);
               font-weight: 700;
             }
+
             span {
               font-size: 12px;
               color: rgba(0, 0, 0, .45);
@@ -322,6 +329,7 @@ export default {
             margin-bottom: 8px;
             margin-top: 8px;
             line-height: 18px;
+
             h1 {
               font-size: 13px;
               font-weight: 600;
@@ -372,15 +380,16 @@ export default {
     font-size: 16px;
     color: #000;
   }
-  // position: fixed;
-  // left: 50%;
-  // transform: translateX(-50%);
-  // top: 0px;
-  // font-size: 16px;
-  // color: #000;
-  // font-weight: 700;
-  // display: flex;
-  // justify-content: center;
-  // align-items: center;
+}
+
+// 1px边框
+.comment-number::after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 1px;
+  bottom: 0;
+  background-color: #eaeaea;
+  transform: scaleY(.5);
 }
 </style>
