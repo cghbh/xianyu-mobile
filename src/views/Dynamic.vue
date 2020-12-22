@@ -38,16 +38,12 @@ export default {
       // showNoFollow: false,
       // 关注者的动态
       followDynamics: [],
-      // 已登录用户所有点赞过的id
-      loginUserLikeDynamics: [],
       // 推荐内容的刷新状态
       isRecommendLoading: true,
       isLoading: true,
       // 最新内容的刷新状态
       isLatestLoading: true,
-      emptyImg: require('../assets/images/empty-image-default.png'),
-      // 返回记录的滚动的距离
-      scrollTop: 0
+      emptyImg: require('../assets/images/empty-image-default.png')
     }
   },
 

@@ -72,12 +72,15 @@ export default {
 
         p {
           color: #999;
+          font-size: 14px;
+          margin-top: 6px;
         }
       }
 
       &-right {
         span {
           margin-right: 5px;
+          font-size: 14px;
         }
 
         .iconfont.active {
@@ -88,7 +91,7 @@ export default {
 
     &-comment {
       padding: 10px 0 15px 0;
-      font-size: 16px;
+      font-size: 15px;
       color: #333;
       border-bottom: 1px solid #f4f4f4;
       line-height: 24px;

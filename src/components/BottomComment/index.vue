@@ -118,6 +118,7 @@ function isIOS () {
       outline: none;
       border: none;
       padding-left: 10px;
+      font-size: 14px;
     }
 
     input.needicon {
@@ -126,6 +127,7 @@ function isIOS () {
 
     input::placeholder {
       color: #aaa;
+      font-size: 13px;
     }
 
     .icon-container {
@@ -192,6 +194,7 @@ function isIOS () {
     align-items: center;
     color: #fff;
     border-radius: 3px;
+    font-size: 14px;
   }
 }
 </style>

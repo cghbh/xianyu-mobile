@@ -1,32 +1,40 @@
 <template>
   <div class="homepage-item" :class="{ 'first': !isFirst }">
       <div class="homepage-item-user">
-        <van-image width="50" height="50" fit="cover" round :src="itemValue.publisher.avatar_url"/>
+        <xianyu-image 
+          :img="itemValue.publisher.avatar_url"
+          :width="50"
+          :height="50"
+          round
+        />
         <div class="homepage-item-user-name">
           <h1>{{ itemValue.publisher.nickname }}</h1>
           <h3>{{ itemValue.createdAt | timeformat }}</h3>
         </div>
       </div>
+
       <div class="homepage-item-area" @click="goDynamicDetail" ref="homepage-item-area">
         <!-- @click="$router.push(`/dynamic-detail/${itemValue._id}`)" -->
         <p>{{ itemValue.content }}</p>
-        <van-image
-          @click="showPreview(index, itemValue.avatar_url)"
-          width="100"
-          height="100"
-          fit="cover"
-          :only-id="item"
-          v-for="(item, index) in itemValue.avatar_url"
-          :src="item"
-          :key="item">
-        </van-image>
+
+        <div class="img-preview-container">
+          <xianyu-image
+            @click="showPreview(index, itemValue.avatar_url)"
+            v-for="(item, index) in itemValue.avatar_url"
+            :width="100"
+            :height="100"
+            :img="item"
+            :key="item"
+          />
+        </div>
       </div>
+
       <div class="homepage-item-operation">
         <!-- 一像素边框的实现 -->
         <div class="one-px"></div>
         <div class="zan-icon">
-          <i @click="$emit('unlike')" v-if="isLike" class="iconfont icon-dianzan"></i>
-          <i v-else @click="$emit('like')" class="iconfont icon-dianzan1"></i>
+          <i @click="$emit('unlike')" v-show="isLike" class="iconfont icon-dianzan"></i>
+          <i v-show="!isLike" @click="$emit('like')" class="iconfont icon-dianzan1"></i>
           <span class="dynamic-exble-style">{{ itemValue.zan_number > 999 ? '999+': itemValue.zan_number }}</span>
         </div>
         <div class="comment-icon" @click="$router.push(`/dynamic-detail/${itemValue._id}`)">
@@ -44,6 +52,7 @@
 
 <script>
 import { ImagePreview } from 'vant'
+import XianyuImage from '../Image/index'
 export default {
   name: 'HomepageItem',
   props: {
@@ -60,11 +69,24 @@ export default {
       default: false
     }
   },
-  computed: {
-    user_login_id () {
-      return this.$store.state.userInfo._id
+
+  data () {
+    return {
+      img: require('../../assets/images/courage.png')
     }
   },
+
+  computed: {
+    isLogin () {
+      return this.$store.state.token.token
+    },
+
+    // 获取已登陆用户的id，判断当前是否点赞
+    userId () {
+      return this.$store.state.token.userId
+    }
+  },
+
   methods: {
     showPreview (index, urls) {
       ImagePreview({
@@ -76,10 +98,14 @@ export default {
 
     // 点击非图片的区域，跳转到动态的详情页面
     goDynamicDetail (e) {
-      if (![...e.target.classList].includes('van-image__img')) {
+      if (![...e.target.classList].includes('xianyu-image-component-img')) {
         this.$router.push(`/dynamic-detail/${this.itemValue._id}`)
       }
     }
+  },
+
+  components: {
+    XianyuImage
   }
 }
 </script>
@@ -106,11 +132,13 @@ export default {
   .skeleton-bottom {
     padding-bottom: 10px;
   }
+
   &-user {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     margin-bottom: 10px;
+
     img {
       width: 45px;
       height: 45px;
@@ -120,11 +148,13 @@ export default {
 
     &-name {
       margin-left: 5px;
+
       h1 {
         margin-bottom: 8px;
         font-size: 16PX;
         color: rgba(0, 0, 0, .8);
       }
+
       h3 {
         font-size: 12PX;
         color: rgba(0, 0, 0, .4);
@@ -148,6 +178,25 @@ export default {
     padding: 12px 5px;
     margin-top: 10px;
     position: relative;
+
+    .zan-icon,
+    .comment-icon,
+    .collect-icon {
+      flex: 1;
+      display: flex;
+    }
+
+    .zan-icon {
+      justify-content: flex-start;
+    }
+
+    .comment-icon {
+      justify-content: center;
+    }
+
+    .collect-icon {
+      justify-content: flex-end;
+    }
 
     div {
       display: flex;
@@ -192,5 +241,9 @@ export default {
 
 .dynamic-exble-style {
   font-size: 14px;
+}
+
+.img-preview-container {
+  display: flex;
 }
 </style>
