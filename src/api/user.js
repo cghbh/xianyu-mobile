@@ -94,6 +94,21 @@ const userLikeDynamics = (id) => {
   return axios.get(`users/${id}/likeDynamcis`)
 }
 
+// 用户收藏动态
+const userCollectDynamics = (id) => {
+  return axios.get(`/users/collectDynamics/${id}`)
+}
+
+// 用户取消收藏动态
+const userCancelCollectDynamics = (id) => {
+  return axios.request({ method: 'DELETE', url: `/users/cancelCollectDynamics/${id}` })
+}
+
+// 指定id用户下的所有收藏的动态
+const getUserCollectedDynamics = (id) => {
+  return axios.get(`/users/${id}/collectDynamics`)
+}
+
 // 指定用户id收藏过的好文
 const userCollectArticle = (id) => {
   return axios.get(`users/${id}/collectArticles`)
@@ -184,4 +199,4 @@ const getUserCollectedWordHandle = (id) => {
   return axios.get(`/users/${id}/collectWords`)
 }
 
-export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle, userZanWordHandle, userCancelZanWordHandle, userCollectWordHandle, userCancelCollectHandle, getUserZanedWordHandle, getUserCollectedWordHandle }
+export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle, userZanWordHandle, userCancelZanWordHandle, userCollectWordHandle, userCancelCollectHandle, getUserZanedWordHandle, getUserCollectedWordHandle, userCollectDynamics, userCancelCollectDynamics, getUserCollectedDynamics }

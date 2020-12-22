@@ -14,7 +14,6 @@
       </div>
 
       <div class="homepage-item-area" @click="goDynamicDetail" ref="homepage-item-area">
-        <!-- @click="$router.push(`/dynamic-detail/${itemValue._id}`)" -->
         <p>{{ itemValue.content }}</p>
 
         <div class="img-preview-container">

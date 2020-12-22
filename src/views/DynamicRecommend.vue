@@ -21,6 +21,7 @@
           :is-first="index === 0"
           :item-value="item"
           :is-like="isLogin && userZanedId.includes(item._id)"
+          :is-collect="isLogin && userCollectedId.includes(item._id)"
           @unlike="userCancelZan(item._id)"
           @like="userZanHandle(item._id)"
           @uncollect="userCancelCollect(item._id)"
@@ -35,8 +36,8 @@
 <script>
 import { getDynamics } from '@/api/dynamic.js'
 import DynamicItem from '@/components/DynamicItem/index.vue'
-import { debounce } from 'lodash'
-import { userLikeDynamics, unlikeDynamics, likeDynamics } from '@/api/user.js'
+import { debounce } from 'lodash' 
+import { userLikeDynamics, unlikeDynamics, likeDynamics, getUserCollectedDynamics, userCancelCollectDynamics, userCollectDynamics } from '@/api/user.js'
 export default {
   name: 'DynamicRecommend',
   data () {
@@ -58,7 +59,8 @@ export default {
       total: 0,
       scrollTop: 0,
       emptyImg: require('../assets/images/empty-image-default.png'),
-      userZanedId: []
+      userZanedId: [],
+      userCollectedId: []
     }
   },
   computed: {
@@ -79,6 +81,7 @@ export default {
     this.getRecommendDynamics()
     if (this.userId) {
       this.getUserZanDynamics()
+      this.getUserCollectedDynamicsHandle()
     }
     this.$refs['xianyu-dynamic-recommend-r'].addEventListener('scroll', debounce(this.scrollTopHandle, 30))
   },
@@ -104,6 +107,18 @@ export default {
           tempArray.push(item._id)
         })
         this.userZanedId = tempArray
+      }
+    },
+
+    // 获取已登陆用户收藏的动态
+    async getUserCollectedDynamicsHandle () {
+      const result = await getUserCollectedDynamics(this.userId)
+      if (result.errno === 0) {
+        const tempArray = []
+        result.data.forEach(item => {
+          tempArray.push(item._id)
+        })
+        this.userCollectedId = tempArray
       }
     },
 
@@ -146,7 +161,6 @@ export default {
         const zanIdIndex = this.userZanedId.indexOf(id)
         const index = this.recommendDynamics.findIndex(item => item._id === id)
         // 深度拷贝隔离
-        
         if (zanIdIndex > -1) {
           const newDynamic = JSON.parse(JSON.stringify(this.recommendDynamics[`${index}`]))
           newDynamic.zan_number--
@@ -187,13 +201,50 @@ export default {
     },
 
     // 取消收藏
-    userCancelCollect (id) {
-      console.log(id, 'cancel collect')
+    async userCancelCollect (id) {
+      const result = await userCancelCollectDynamics(id)
+      if (result.errno === 0) {
+        const collectIdIndex = this.userCollectedId.indexOf(id)
+        const index = this.recommendDynamics.findIndex(item => item._id === id)
+        // 深度拷贝隔离
+        if (collectIdIndex > -1) {
+          const newDynamic = JSON.parse(JSON.stringify(this.recommendDynamics[`${index}`]))
+          newDynamic.collect_number--
+          this.$set(this.recommendDynamics, index, newDynamic)
+          this.userCollectedId.splice(collectIdIndex, 1)
+        }
+      }
     },
 
     // 收藏，先判断是否登陆
-    userCollectHandle (id) {
-      console.log(id, 'collect')
+    async userCollectHandle (id) {
+      if (!this.isLogin) {
+        this.$dialog.confirm({
+          message: '<p style="font-size: 16px;line-height: 25px">此操作需要登录，\n是否跳转到登录页面？</p>',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          confirmButtonColor: '#409fea',
+          cancelButtonText: '取消',
+          cancelButtonColor: '#666'
+        }).then(() => {
+          this.$router.replace({
+            path: '/login',
+            query: {
+              redirect: this.$route.fullPath
+            }
+          })
+        }).catch(err => { console.log(err) })
+      } else {
+        const result = await userCollectDynamics(id)
+        if (result.errno === 0 && !this.userCollectedId.includes(id)) {
+          this.userCollectedId.push(id)
+          const index = this.recommendDynamics.findIndex(item => item._id === id)
+          const newDynamic = JSON.parse(JSON.stringify(this.recommendDynamics[`${index}`]))
+          newDynamic.collect_number++
+          this.$set(this.recommendDynamics, index, newDynamic)
+        }
+      }
     }
   },
 
