@@ -53,7 +53,6 @@ export default {
   },
   async mounted () {
     const result = await getDynamicDetail(this.$route.params.id)
-    console.log(result, '详细的数据')
     if (result.errno === 0) {
       this.dynamic = result.data
     } else {

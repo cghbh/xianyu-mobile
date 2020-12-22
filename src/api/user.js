@@ -109,6 +109,11 @@ const getUserCollectedDynamics = (id) => {
   return axios.get(`/users/${id}/collectDynamics`)
 }
 
+// 获取指定id用户关注的人的动态
+const getFollowUserDynamcis = (id, currentPage = 1, perPage = 15) => {
+  return axios.get(`/users/${id}/followDynamics?current_page=${currentPage}&perpage=${perPage}`)
+}
+
 // 指定用户id收藏过的好文
 const userCollectArticle = (id) => {
   return axios.get(`users/${id}/collectArticles`)
@@ -199,4 +204,4 @@ const getUserCollectedWordHandle = (id) => {
   return axios.get(`/users/${id}/collectWords`)
 }
 
-export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle, userZanWordHandle, userCancelZanWordHandle, userCollectWordHandle, userCancelCollectHandle, getUserZanedWordHandle, getUserCollectedWordHandle, userCollectDynamics, userCancelCollectDynamics, getUserCollectedDynamics }
+export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle, userZanWordHandle, userCancelZanWordHandle, userCollectWordHandle, userCancelCollectHandle, getUserZanedWordHandle, getUserCollectedWordHandle, userCollectDynamics, userCancelCollectDynamics, getUserCollectedDynamics, getFollowUserDynamcis }
