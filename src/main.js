@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VConsole from 'vconsole'
+// moment换为day.js减小体积
 import moment from 'moment'
 import Copy from 'vue-to-copy'
 
