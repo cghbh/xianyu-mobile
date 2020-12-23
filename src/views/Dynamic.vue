@@ -1,17 +1,26 @@
 <template>
   <div class="xianyu-home-page">
     <van-tabs v-model="active" sticky animated swipeable title-active-color="#409fea" color="#409fea">
+
       <van-tab id="van-tabs-scroll" title="推荐">
         <recomend-dynamics></recomend-dynamics>
       </van-tab>
+
       <van-tab title="最新">
         <latest-dynamics></latest-dynamics>
       </van-tab>
+
       <van-tab title="关注">
         <follow-dynamics></follow-dynamics>
       </van-tab>
+      
     </van-tabs>
-    <i @click="$router.push('/dynamic-publish')" class="iconfont add-word icon-tianxie"></i>
+
+    <i 
+      class="iconfont add-word icon-tianxie"
+      @click="$router.push('/dynamic-publish')"
+    >
+    </i>
   </div>
 
 </template>

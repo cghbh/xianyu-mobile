@@ -16,13 +16,16 @@
         @load="onLoadMoreHandle"
       >
         <dynamic-item
-          @itemlike="itemLikeHandle"
-          @itemunlike="itemUnlikeHandle"
           v-for="(item, index) in followDynamics"
           :key="item._id"
-          :isFirst="index === 0"
+          :is-first="index === 0"
           :itemValue="item"
-          :is-like="false"
+          :is-like="isLogin && userZanedId.includes(item._id)"
+          :is-collect="isLogin && userCollectedId.includes(item._id)"
+          @unlike="userCancelZanHandle(item._id)"
+          @like="userZanHandle(item._id)"
+          @uncollect="userCancelCollect(item._id)"
+          @collect="userCollectHandle(item._id)"
         />
       </van-list>
       
@@ -48,7 +51,7 @@
 </template>
 
 <script>
-import { getFollowUserDynamcis } from '@/api/user.js'
+import { getFollowUserDynamcis, userLikeDynamics, unlikeDynamics, likeDynamics, userCancelCollectDynamics, userCollectDynamics, getUserCollectedDynamics } from '@/api/user.js'
 import DynamicItem from '@/components/DynamicItem/index.vue'
 import { debounce } from 'lodash'
 export default {
@@ -67,13 +70,18 @@ export default {
       perPage: 15,
       currentPage: 1,
       // 用来防止页面数据未加载状态下的闪烁
-      showTag: true
+      showTag: true,
+      // 用户赞过的动态的id
+      userZanedId: [],
+      userCollectedId: []
     }
   },
 
   mounted () {
     if (this.userId) {
       this.getFollowUserDynamcisHandle()
+      this.getUserZanedDynamicsId()
+      this.getUserCollectedDynamicsHandle()
     }
     this.$refs['xianyu-dynamic-my-follow'].addEventListener('scroll', debounce(this.scrollTopHandle, 30))
   },
@@ -113,6 +121,30 @@ export default {
         }
       }
     },
+
+    // 获取指定id用户点赞过的动态id数组
+    async getUserZanedDynamicsId () {
+      const result = await userLikeDynamics(this.userId)
+      if (result.errno === 0) {
+        const tempArray = []
+        result.data.forEach(item => {
+          tempArray.push(item._id)
+        })
+        this.userZanedId = tempArray
+      }
+    },
+
+    // 获取已登陆用户收藏的动态
+    async getUserCollectedDynamicsHandle () {
+      const result = await getUserCollectedDynamics(this.userId)
+      if (result.errno === 0) {
+        const tempArray = []
+        result.data.forEach(item => {
+          tempArray.push(item._id)
+        })
+        this.userCollectedId = tempArray
+      }
+    },
     
     // 下拉刷新
     async pullDownRefresh () {
@@ -144,9 +176,59 @@ export default {
       }
     },
 
-    itemLikeHandle () {},
+    async userZanHandle (id) {
+      const result = await likeDynamics(id)
+      if (result.errno === 0 && !this.userZanedId.includes(id)) {
+        this.userZanedId.push(id)
+        const index = this.followDynamics.findIndex(item => item._id === id)
+        const newDynamic = JSON.parse(JSON.stringify(this.followDynamics[`${index}`]))
+        newDynamic.zan_number++
+        this.$set(this.followDynamics, index, newDynamic)
+      }
+    },
 
-    itemUnlikeHandle () {},
+    // 取消点赞
+    async userCancelZanHandle (id) {
+      const result = await unlikeDynamics(id)
+      if (result.errno === 0) {
+        const zanIdIndex = this.userZanedId.indexOf(id)
+        const index = this.followDynamics.findIndex(item => item._id === id)
+        // 深度拷贝隔离
+        if (zanIdIndex > -1) {
+          const newDynamic = JSON.parse(JSON.stringify(this.followDynamics[`${index}`]))
+          newDynamic.zan_number--
+          this.$set(this.followDynamics, index, newDynamic)
+          this.userZanedId.splice(zanIdIndex, 1)
+        }
+      }
+    },
+
+    // 取消收藏
+    async userCancelCollect (id) {
+      const result = await userCancelCollectDynamics(id)
+      if (result.errno === 0) {
+        const collectIdIndex = this.userCollectedId.indexOf(id)
+        const index = this.followDynamics.findIndex(item => item._id === id)
+        // 深度拷贝隔离
+        if (collectIdIndex > -1) {
+          const newDynamic = JSON.parse(JSON.stringify(this.followDynamics[`${index}`]))
+          newDynamic.collect_number--
+          this.$set(this.followDynamics, index, newDynamic)
+          this.userCollectedId.splice(collectIdIndex, 1)
+        }
+      }
+    },
+
+    async userCollectHandle (id) {
+      const result = await userCollectDynamics(id)
+      if (result.errno === 0 && !this.userCollectedId.includes(id)) {
+        this.userCollectedId.push(id)
+        const index = this.followDynamics.findIndex(item => item._id === id)
+        const newDynamic = JSON.parse(JSON.stringify(this.followDynamics[`${index}`]))
+        newDynamic.collect_number++
+        this.$set(this.followDynamics, index, newDynamic)
+      }
+    },
 
     scrollTopHandle () {
       this.scrollTop = this.$refs['xianyu-dynamic-my-follow'].scrollTop
