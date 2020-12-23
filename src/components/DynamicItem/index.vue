@@ -1,15 +1,30 @@
 <template>
   <div class="homepage-item" :class="{ 'first': isFirst }">
       <div class="homepage-item-user">
-        <xianyu-image 
-          :img="itemValue.publisher.avatar_url"
-          :width="50"
-          :height="50"
-          round
-        />
-        <div class="homepage-item-user-name">
-          <h1>{{ itemValue.publisher.nickname }}</h1>
-          <h3>{{ itemValue.createdAt | timeformat }}</h3>
+        <div class="homepage-item-user-container">
+          <xianyu-image 
+            :img="itemValue.publisher.avatar_url"
+            :width="50"
+            :height="50"
+            round
+          />
+          <div class="homepage-item-user-name">
+            <h1>{{ itemValue.publisher.nickname }}</h1>
+            <h3>{{ itemValue.createdAt | timeformat }}</h3>
+          </div>
+        </div>
+
+        <div class="xianyu-delete-operate">
+          <div class="xianyu-delete-operate-private" v-if="isPrivate">
+            <i class="iconfont icon-22suo"></i>
+            <span>私密</span>
+          </div>
+          <i 
+            v-if="deleteOperate"
+            @click="$emit('operate')" 
+            class="delete-opt iconfont icon-jiantouxia"
+          >
+            </i>
         </div>
       </div>
 
@@ -68,6 +83,16 @@ export default {
       default: false
     },
     isCollect: {
+      type: Boolean,
+      default: false
+    },
+    // 如果是在我的动态里面，则显示删除动态的按钮选择
+    deleteOperate: {
+      type: Boolean,
+      default: false
+    },
+    // 用来个人中心展示是否是隐私动态
+    isPrivate: {
       type: Boolean,
       default: false
     }
@@ -139,8 +164,14 @@ export default {
   &-user {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     margin-bottom: 10px;
+
+    &-container {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
 
     img {
       width: 45px;
@@ -161,6 +192,34 @@ export default {
       h3 {
         font-size: 12PX;
         color: rgba(0, 0, 0, .4);
+      }
+    }
+
+    .xianyu-delete-operate {
+      margin-right: 5px;
+      display: flex;
+      align-items: center;
+
+      &-private {
+        display: flex;
+        align-items: center;
+
+        .iconfont.icon-22suo {
+          margin-right: 5px;
+          font-size: 15px;
+          color: #666;
+        }
+
+        span {
+          font-size: 13px;
+          color: #666;
+          margin-right: 5px;
+        }
+      }
+
+      .delete-opt {
+        color: #666;
+        margin-top: -15px;
       }
     }
   }

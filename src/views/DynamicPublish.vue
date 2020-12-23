@@ -97,9 +97,9 @@ export default {
         this.$toast({ message: data.message, duration: 600 })
         this.inputValue = ''
         this.uploadImg = null
-        this.isPrivate = false
         setTimeout(() => {
           this.$router.push('/dynamic')
+          this.isPrivate = false
         }, 750)
       } else {
         this.$toast({ message: data.message, duration: 800 })

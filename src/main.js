@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import VConsole from 'vconsole'
 import moment from 'moment'
+import Copy from 'vue-to-copy'
 
 // 顶部返回栏
 import BackTop from './components/BackTop/index.js'
@@ -20,6 +21,7 @@ var vc = new VConsole() // eslint-disable-line no-unused-vars
 
 Vue.use(BackTop)
 Vue.use(DivideArea)
+Vue.use(Copy)
 
 Vue.config.productionTip = false
 

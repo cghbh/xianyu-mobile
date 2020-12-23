@@ -21,7 +21,7 @@
     <divide-area></divide-area>
     <div class="xianyu-mine-base">
       <van-cell-group @click="$router.push('/my-publish')">
-        <van-cell title="我发表的" border class="iconfont icon-shuxiebianji">
+        <van-cell title="我的动态" border class="iconfont icon-shuxiebianji">
           <template #right-icon>
             <i class="iconfont right-i-tag icon-right"></i>
           </template>

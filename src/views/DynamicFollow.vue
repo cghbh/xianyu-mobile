@@ -19,7 +19,7 @@
           v-for="(item, index) in followDynamics"
           :key="item._id"
           :is-first="index === 0"
-          :itemValue="item"
+          :item-value="item"
           :is-like="isLogin && userZanedId.includes(item._id)"
           :is-collect="isLogin && userCollectedId.includes(item._id)"
           @unlike="userCancelZanHandle(item._id)"

@@ -38,8 +38,14 @@ const getDynamics = (sort, currentPage = 1, perpage = 20) => {
   return axios.get(`/dynamics?sort=${sort}&current_page=${currentPage}&perpage=${perpage}`)
 }
 
+// 获取动态详情
 const getDynamicDetail = (id) => {
   return axios.get(`/dynamics/${id}`)
 }
 
-export { uploadDynamicImage, dynamicPublish, getDynamics, getDynamicDetail }
+// 删除动态
+const deleteDynamic = (id) => {
+  return axios.request({ method: 'DELETE', url: `/dynamics/${id}` })
+}
+
+export { uploadDynamicImage, dynamicPublish, getDynamics, getDynamicDetail, deleteDynamic }
