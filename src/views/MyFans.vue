@@ -23,8 +23,9 @@
         </van-list>
       </van-pull-refresh>
 
+      <van-empty :image="emptyImg" v-if="!hasFansData && tag" description="还没有一个人关注过你哟......" />
     </div>
-    <van-empty :image="emptyImg" v-if="!hasFansData && tag" description="还没有一个人关注过你哟......" />
+    
   </div>
 </template>
 
@@ -171,16 +172,6 @@ export default {
   components: {
     FollowItem
   }
-  // beforeRouteEnter (to, from, next) {
-  //   // 如果是从mine路由进来的话，需要重新刷新数据
-  //   if (from.path === '/mine') {
-
-  //   }
-  //   console.log(to, '去哪')
-  //   console.log(from, '从哪来')
-  //   console.log(next)
-  //   next()
-  // }
 }
 </script>
 

@@ -91,10 +91,10 @@ const listLikePerson = (id) => {
 
 // 获取已登录用户点赞过的动态
 const userLikeDynamics = (id) => {
-  return axios.get(`users/${id}/likeDynamcis`)
+  return axios.get(`/users/${id}/likeDynamcis`)
 }
 
-// 用户收藏动态
+// 用户收藏动态操作
 const userCollectDynamics = (id) => {
   return axios.get(`/users/collectDynamics/${id}`)
 }
