@@ -219,6 +219,7 @@ export default {
       }
     },
 
+    // 收藏操作
     async userCollectHandle (id) {
       const result = await userCollectDynamics(id)
       if (result.errno === 0 && !this.userCollectedId.includes(id)) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="homepage-item" :class="{ 'first': !isFirst }">
+  <div class="homepage-item" :class="{ 'first': isFirst }">
       <div class="homepage-item-user">
         <xianyu-image 
           :img="itemValue.publisher.avatar_url"
@@ -234,7 +234,7 @@ export default {
 }
 
 .homepage-item.first {
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .homepage-item /deep/ .van-image {
