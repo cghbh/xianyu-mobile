@@ -46,7 +46,7 @@ export default {
   },
 
   beforeDestroy () {
-    this.$refs['xianyu-collect-dynamic-exble'].removeEventListener('scroll', this.scrollTopHandle)
+    this.$refs['xianyu-collect-dynamic-exble'].removeEventListener('scroll', this.scrollTopHandle, true)
   },
 
   activated () {
