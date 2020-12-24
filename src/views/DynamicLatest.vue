@@ -279,5 +279,6 @@ export default {
 .xianyu-dynamic-latest-r {
   height: calc(100vh - 50px);
   overflow-y: auto;
+  background-color: #F0F5FB;
 }
 </style>

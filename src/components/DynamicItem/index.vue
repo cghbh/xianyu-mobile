@@ -1,18 +1,7 @@
 <template>
-  <div class="homepage-item" :class="{ 'first': isFirst }">
+  <!-- <div class="homepage-item" :class="{ 'first': isFirst }">
       <div class="homepage-item-user">
-        <div class="homepage-item-user-container">
-          <xianyu-image 
-            :img="itemValue.publisher.avatar_url"
-            :width="50"
-            :height="50"
-            round
-          />
-          <div class="homepage-item-user-name">
-            <h1>{{ itemValue.publisher.nickname }}</h1>
-            <h3>{{ itemValue.createdAt | timeformat }}</h3>
-          </div>
-        </div>
+        
 
         <div class="xianyu-delete-operate">
           <div class="xianyu-delete-operate-private" v-if="isPrivate">
@@ -28,39 +17,59 @@
         </div>
       </div>
 
-      <div class="homepage-item-area" @click="goDynamicDetail" ref="homepage-item-area">
-        <p>{{ itemValue.content }}</p>
+      
 
-        <div class="img-preview-container">
-          <xianyu-image
-            @click="showPreview(index, itemValue.avatar_url)"
-            v-for="(item, index) in itemValue.avatar_url"
-            :width="100"
-            :height="100"
-            :img="item"
-            :key="item"
-          />
-        </div>
+      
+  </div> -->
+  <!-- color:#F3F5FB -->
+  <div class="dynamic-item">
+    <div class="dynamic-item-user">
+      <div class="dynamic-item-user-container">
+        <xianyu-image 
+        :img="itemValue.publisher.avatar_url"
+        :width="50"
+        :height="50"
+        round
+      />
+      <div class="dynamic-item-user-about">
+        <h1>{{ itemValue.publisher.nickname }}</h1>
+        <h3>{{ itemValue.createdAt | timeformat }}</h3>
       </div>
+      </div>
+      <i class="iconfont icon-gengduo" @click="userOperate"></i>
+    </div>
 
-      <div class="homepage-item-operation">
-        <!-- 一像素边框的实现 -->
-        <div class="one-px"></div>
-        <div class="zan-icon">
-          <i @click="$emit('unlike')" v-show="isLike" class="iconfont icon-dianzan"></i>
-          <i v-show="!isLike" @click="$emit('like')" class="iconfont icon-dianzan1"></i>
-          <span class="dynamic-exble-style">{{ itemValue.zan_number > 999 ? '999+': itemValue.zan_number }}</span>
-        </div>
-        <div class="comment-icon" @click="$router.push(`/dynamic-detail/${itemValue._id}`)">
-          <i class="iconfont icon-pinglun"></i>
-          <span class="dynamic-exble-style">{{ itemValue.comment_number > 999 ? '999+': itemValue.comment_number }}</span>
-        </div>
-        <div class="collect-icon">
-          <i v-if="isCollect" @click="$emit('uncollect')" class="iconfont icon-shoucang1"></i>
-          <i v-else class="iconfont icon-shoucang" @click="$emit('collect')"></i>
-          <span class="dynamic-exble-style">{{ itemValue.collect_number > 999 ? '999+': itemValue.collect_number }}</span>
-        </div>
+    <div class="dynamic-item-area" @click="goDynamicDetail" ref="homepage-item-area">
+      <p>{{ itemValue.content }}</p>
+
+      <div class="img-preview-container">
+        <xianyu-image
+          @click="showPreview(index, itemValue.avatar_url)"
+          v-for="(item, index) in itemValue.avatar_url"
+          :width="100"
+          :height="100"
+          :img="item"
+          :key="item"
+        />
       </div>
+    </div>
+
+    <div class="dynamic-item-operation">
+      <div class="share-icon">
+        <i class="iconfont icon-fenxiang"></i>
+      </div>
+      
+      <div class="comment-icon" @click="$router.push(`/dynamic-detail/${itemValue._id}`)">
+        <i class="iconfont icon-pinglun"></i>
+        <span class="dynamic-exble-style">{{ itemValue.comment_number > 999 ? '999+': itemValue.comment_number }}</span>
+      </div>
+      <div class="zan-icon">
+        <img src="//at.alicdn.com/t/font_2139142_y6mqd5ktj7.css" alt="">
+        <i @click="$emit('unlike')" v-show="isLike" class="iconfont icon-dianzan"></i>
+        <i v-show="!isLike" @click="$emit('like')" class="iconfont icon-dianzan1"></i>
+        <span class="dynamic-exble-style">{{ itemValue.zan_number > 999 ? '999+': itemValue.zan_number }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -69,6 +78,7 @@ import { ImagePreview } from 'vant'
 import XianyuImage from '../Image/index'
 export default {
   name: 'HomepageItem',
+  inject: ['App'],
   props: {
     isFirst: {
       type: Boolean,
@@ -79,10 +89,6 @@ export default {
       default: () => {}
     },
     isLike: {
-      type: Boolean,
-      default: false
-    },
-    isCollect: {
       type: Boolean,
       default: false
     },
@@ -100,8 +106,13 @@ export default {
 
   data () {
     return {
-      img: require('../../assets/images/courage.png')
+      img: require('../../assets/images/courage.png'),
+      showOverlay: false
     }
+  },
+
+  mounted () {
+    console.log(this.App.overlay, 'App')
   },
 
   computed: {
@@ -129,6 +140,12 @@ export default {
       if (![...e.target.classList].includes('xianyu-image-component-img')) {
         this.$router.push(`/dynamic-detail/${this.itemValue._id}`)
       }
+    },
+
+    // 展示更多按钮的操作
+    userOperate () {
+      this.App.showPopup = true
+      this.App.hideUser({ d_id: this.itemValue._id, nickname: this.itemValue.publisher.nickname, content: this.itemValue.content, u_id: this.itemValue.publisher._id })
     }
   },
 
@@ -139,11 +156,53 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.homepage-item {
-  padding: 10px 15px;
-  padding-bottom: 0;
+.dynamic-item {
+  padding: 15px;
   background-color: #fff;
-  border-bottom: 1px solid #f1f1f1;
+  margin: 15px 10px;
+  border-radius: 6px;
+  box-shadow: 0px 0px 5px #eaeaea;
+
+  &-user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+
+    &-container {
+      display: flex;
+      align-items: center;
+
+      h1 {
+        font-size: 17px;
+        color: #000;
+        font-weight: 500;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        margin-bottom: 10px;
+      }
+
+      h3 {
+        font-size: 13px;
+        color: #aaa;
+      }
+    }
+
+    .iconfont.icon-gengduo {
+      position: absolute;
+      font-size: 18px;
+      top: 5px;
+      right: 0;
+      color: #888;
+    }
+  }
+
+  &-area {
+    p {
+      font-size: 17px;
+      margin: 10px 0 15px 0;
+      line-height: 28px;
+    }
+  }
 
   /deep/ .van-skeleton {
     padding: 0;
@@ -237,27 +296,27 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 5px;
+    padding: 0 5px;
     margin-top: 10px;
     position: relative;
 
     .zan-icon,
     .comment-icon,
-    .collect-icon {
+    .share-icon {
       flex: 1;
       display: flex;
     }
 
     .zan-icon {
-      justify-content: flex-start;
+      justify-content: flex-end;
     }
 
     .comment-icon {
       justify-content: center;
     }
 
-    .collect-icon {
-      justify-content: flex-end;
+    .share-icon {
+      justify-content: flex-start;
     }
 
     div {
@@ -292,13 +351,21 @@ export default {
   }
 }
 
-.homepage-item.first {
+.dynamic-item.first {
   margin-top: 8px;
 }
 
-.homepage-item /deep/ .van-image {
+.dynamic-item /deep/ .van-image {
   margin-right: 5px;
   margin-bottom: 3px;
+}
+
+.dynamic-item /deep/ .van-overlay {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999999999;
 }
 
 .dynamic-exble-style {

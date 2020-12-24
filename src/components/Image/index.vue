@@ -6,6 +6,7 @@
         :style="{ width: `${width}px`, height: `${height}px`}" 
         :src="img"
         @click="$emit('click')"
+        alt="头像"
       />
   </div>
 </template>

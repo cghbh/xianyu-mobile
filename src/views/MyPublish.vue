@@ -10,12 +10,6 @@
         :delete-operate="true"
         @operate="operateHandle(item._id)"
       />
-      <!-- :is-like="isLogin && userZanedId.includes(item._id)" -->
-        <!-- :is-collect="isLogin && userCollectedId.includes(item._id)" -->
-        <!-- @unlike="userCancelZanHandle(item._id)" -->
-          <!-- @like="userZanHandle(item._id)" -->
-          <!-- @uncollect="userCancelCollect(item._id)" -->
-          <!-- @collect="userCollectHandle(item._id)" -->
     </div>
     <van-popup v-model="showOperateView" position="bottom">
       <van-cell-group>
@@ -130,6 +124,7 @@ export default {
 
 <style scoped lang="scss">
 .xianyu-publish {
+  background-color: #F0F5FB;
   .color-set {
     /deep/ .van-cell__value {
       color: #e92322;

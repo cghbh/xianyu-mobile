@@ -40,6 +40,7 @@ import {
   Loading,
   DatetimePicker,
   Divider,
+  Overlay,
   Image as VanImage
 } from 'vant'
 
@@ -83,3 +84,4 @@ Vue.use(NavBar)
   .use(Loading)
   .use(DatetimePicker)
   .use(Divider)
+  .use(Overlay)

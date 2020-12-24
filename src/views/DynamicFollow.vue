@@ -244,7 +244,7 @@ export default {
 
 <style scoped lang="scss">
 .xianyu-dynamic-my-follow {
-  background-color: #fff;
+  background-color: #F0F5FB;
   height: calc(100vh - 94px);
   overflow-y: auto;
 }
@@ -254,7 +254,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #fff;
+  background-color: #F0F5FB;
   height: calc(100vh - 94px);
   
   &-tips {
