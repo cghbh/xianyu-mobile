@@ -6,12 +6,25 @@
     <router-view v-if="!$route.meta.keepAlive"></router-view>
     <van-popup v-model="showPopup" get-container="#app" :class="{ 'un-login': !isLogin, 'un-self': isSelf && isLogin }">
       <div class="operate-container">
-        <div class="operate-item need-line-bottom" v-if="isLogin && !isSelf">不感兴趣</div>
-        <div class="operate-item need-line-bottom" v-if="!isSelf && isLogin">屏蔽：{{ operateAboutUserInfo && operateAboutUserInfo.nickname }}</div>
+        <div 
+          class="operate-item need-line-bottom" 
+          v-if="isLogin && !isSelf"
+          @click="notInteresting">不感兴趣</div>
+        <div 
+          class="operate-item need-line-bottom" 
+          v-if="!isSelf && isLogin"
+          @click="hideUserHandle">屏蔽：{{ operateAboutUserInfo && operateAboutUserInfo.nickname }}</div>
         <div class="operate-item need-line-bottom">
           <Copy :content=" operateAboutUserInfo && operateAboutUserInfo.content" @copyCallback="copyCallback">复制</Copy>
         </div>
-        <div class="operate-item">举报</div>
+        <div 
+          class="operate-item need-line-bottom user-delete" 
+          v-if="isLogin && isSelf"
+          @click="deleteDynamic">删除</div>
+        <div 
+          class="operate-item"
+          @click="userReport"
+          v-if="isLogin && !isSelf">举报</div>
       </div>
     </van-popup>
   </div>
@@ -26,7 +39,9 @@ export default {
       needPopup: false,
       showPopup: false,
       // 用户操作的动态附属的详情
-      operateAboutUserInfo: null
+      operateAboutUserInfo: null,
+      // 如果点击弹窗删除的话，xiugaiAPP根组件的值传递到指定的组件内watch判断
+      isDelete: false
     }
   },
   provide () {
@@ -47,9 +62,8 @@ export default {
 
   methods: {
     // 屏蔽用户的所有动态
-    hideUser (user) {
+    operateUser (user) {
       this.operateAboutUserInfo = user
-      console.log(user, '用户')
     },
 
     // 复制文本
@@ -57,6 +71,39 @@ export default {
       this.showPopup = false
       this.$toast('复制成功')
       this.operateAboutUserInfo.content = ''
+    },
+
+    // 删除动态
+    deleteDynamic () {
+      this.showPopup = false
+      this.$dialog.confirm({
+        message: '<p style="font-size: 18px;line-height: 25px">确定删除该动态？</p>',
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: '确定',
+        confirmButtonColor: '#e92322',
+        cancelButtonText: '取消',
+        cancelButtonColor: '#666'
+      }).then(() => {
+        this.isDelete = true
+      }).catch(err => { console.log(err) })
+    },
+
+    notInteresting () {
+      this.showPopup = false
+      this.$toast('此条动态将不再出现')
+    },
+
+    // 屏蔽用户
+    hideUserHandle () {
+      this.showPopup = false
+      this.$toast(`已屏蔽：${this.operateAboutUserInfo.nickname}`)
+    },
+
+    // 举报
+    userReport () {
+      this.showPopup = false
+      this.$toast('举报成功')
     }
   },
 
@@ -88,7 +135,7 @@ export default {
     right: 35px;
     bottom: 0px;
     height: 208px;
-    margin-top: 80px;
+    margin-top: 65px;
     border-radius: 10px;
     transform: none;
   }
@@ -108,7 +155,7 @@ export default {
     right: 35px;
     bottom: 0;
     height: 104px;
-    margin-top: 180px;
+    margin-top: 160px;
     border-radius: 10px;
     transform: none;
   }
@@ -134,6 +181,10 @@ export default {
     bottom: 0;
     background-color: #e1e1e1;
     transform: scaleY(.5);
+  }
+
+  .user-delete {
+    color: #e92322;
   }
 }
 </style>

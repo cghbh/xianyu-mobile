@@ -1,7 +1,6 @@
 <template>
   <div class="xianyu-home-page">
     <van-tabs v-model="active" sticky animated swipeable title-active-color="#409fea" color="#409fea">
-
       <van-tab id="van-tabs-scroll" title="推荐">
         <recomend-dynamics></recomend-dynamics>
       </van-tab>

@@ -277,7 +277,7 @@ export default {
 
 <style scoped lang="scss">
 .xianyu-dynamic-latest-r {
-  height: calc(100vh - 50px);
+  height: calc(100vh - 94px);
   overflow-y: auto;
   background-color: #F0F5FB;
 }

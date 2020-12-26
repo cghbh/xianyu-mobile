@@ -1,5 +1,9 @@
 <template>
-  <div class="xianyu-dynamic-recommend-r" ref="xianyu-dynamic-recommend-r" id="xianyu-dynamic-recommend-r">
+  <div 
+    class="xianyu-dynamic-recommend-r" 
+    ref="xianyu-dynamic-recommend-r" 
+    id="xianyu-dynamic-recommend-r">
+    <dynamic-skeleton v-if="skeletonLoading"></dynamic-skeleton>
     <van-pull-refresh
       v-model="pullDown"
       @refresh="onPullDownRefresh"
@@ -7,25 +11,25 @@
       loosing-text="别老拽着,快放开我"
       loading-text="正在刷新中"
       success-text="刷新成功">
-      <van-list
-        v-model="loadMore"
-        :finished="loadMoreFinished"
-        :immediate-check="false"
-        loading-text="正在飞奔中......"
-        finished-text="别刷了,真的没有啦......"
-        @load="onLoadMoreHandle"
-      >
-        <dynamic-item
-          v-for="(item, index) in recommendDynamics"
-          :key="item._id + Math.random()"
-          :is-first="index === 0"
-          :item-value="item"
-          :is-like="isLogin && userZanedId.includes(item._id)"
-          @unlike="userCancelZan(item._id)"
-          @like="userZanHandle(item._id)"
-        />
-      </van-list>
-    </van-pull-refresh>
+        <van-list
+          v-model="loadMore"
+          :finished="loadMoreFinished"
+          :immediate-check="false"
+          loading-text="正在飞奔中......"
+          finished-text="别刷了,真的没有啦......"
+          @load="onLoadMoreHandle"
+        >
+          <dynamic-item
+            v-for="(item, index) in recommendDynamics"
+            :key="item._id + Math.random()"
+            :is-first="index === 0"
+            :item-value="item"
+            :is-like="isLogin && userZanedId.includes(item._id)"
+            @unlike="userCancelZan(item._id)"
+            @like="userZanHandle(item._id)"
+          />
+        </van-list>
+      </van-pull-refresh>
     <van-empty v-cloak v-show="showNoRecommend && !showDynamicsTag" description="什么内容都没有哟" />
   </div>
 </template>
@@ -35,6 +39,8 @@ import { getDynamics } from '@/api/dynamic.js'
 import DynamicItem from '@/components/DynamicItem/index.vue'
 import { debounce } from 'lodash' 
 import { userLikeDynamics, unlikeDynamics, likeDynamics } from '@/api/user.js'
+import DynamicSkeleton from '../components/Skeleton/DynamicSkeleton'
+// import MiteSkeleton from '../components/Skeleton/item.vue'
 export default {
   name: 'DynamicRecommend',
   data () {
@@ -56,9 +62,12 @@ export default {
       total: 0,
       scrollTop: 0,
       emptyImg: require('../assets/images/empty-image-default.png'),
-      userZanedId: []
+      userZanedId: [],
+      // 控制骨架屏的显示与隐藏
+      skeletonLoading: true
     }
   },
+  
   computed: {
     showNoRecommend () {
       return this.recommendDynamics.length <= 0
@@ -73,16 +82,22 @@ export default {
       return this.$store.state.token.token
     }
   },
+
   mounted () {
     this.getRecommendDynamics()
     if (this.userId) {
       this.getUserZanDynamics()
     }
-    this.$refs['xianyu-dynamic-recommend-r'].addEventListener('scroll', debounce(this.scrollTopHandle, 30))
+    this.$refs['xianyu-dynamic-recommend-r'] && this.$refs['xianyu-dynamic-recommend-r'].addEventListener('scroll', debounce(this.scrollTopHandle, 30))
   },
   activated () {
-    this.$refs['xianyu-dynamic-recommend-r'].scrollTop = this.scrollTop
+    this.$refs['xianyu-dynamic-recommend-r'] && (this.$refs['xianyu-dynamic-recommend-r'].scrollTop = this.scrollTop)
   },
+
+  beforeDestroy () {
+    this.$refs['xianyu-dynamic-recommend-r'] && this.$refs['xianyu-dynamic-recommend-r'].removeEventListener('scroll', this.scrollTopHandle, true)
+  },
+
   methods: {
     async getRecommendDynamics () {
       const result = await getDynamics(0, this.currentPage, this.perPage)
@@ -90,6 +105,7 @@ export default {
         this.recommendDynamics = result.data
         this.total = result.total
         this.recommendDynamics.length > 0 ? (this.showDynamicsTag = true) : (this.showDynamicsTag = false)
+        this.skeletonLoading = false
       }
     },
 
@@ -185,15 +201,29 @@ export default {
   },
 
   components: {
-    DynamicItem
+    DynamicItem,
+    DynamicSkeleton
   }
 }
 </script>
 
 <style scoped lang="scss">
+.wrapper-skeleton {
+  /deep/ .van-skeleton__content {
+    padding-top: 30px;
+
+    .van-skeleton__row {
+      height: 30px;
+    }
+
+    .van-skeleton__row:last-of-type{
+      width: 100%!important;
+    }
+  }
+}
 .xianyu-dynamic-recommend-r {
-  height: calc(100vh - 50px);
   overflow-y: auto;
   background-color: #F0F5FB;
+  // height: calc(100vh - 94px);
 }
 </style>

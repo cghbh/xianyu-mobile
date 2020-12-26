@@ -106,13 +106,8 @@ export default {
 
   data () {
     return {
-      img: require('../../assets/images/courage.png'),
-      showOverlay: false
+      img: require('../../assets/images/courage.png')
     }
-  },
-
-  mounted () {
-    console.log(this.App.overlay, 'App')
   },
 
   computed: {
@@ -145,7 +140,7 @@ export default {
     // 展示更多按钮的操作
     userOperate () {
       this.App.showPopup = true
-      this.App.hideUser({ d_id: this.itemValue._id, nickname: this.itemValue.publisher.nickname, content: this.itemValue.content, u_id: this.itemValue.publisher._id })
+      this.App.operateUser({ d_id: this.itemValue._id, nickname: this.itemValue.publisher.nickname, content: this.itemValue.content, u_id: this.itemValue.publisher._id })
     }
   },
 
