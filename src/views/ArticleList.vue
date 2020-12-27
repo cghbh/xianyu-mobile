@@ -139,7 +139,7 @@ export default {
 .article-skeleton-container {
   padding: 0 12px;
   /deep/ .skeleton-recomend-left-content {
-    height: 81px!important;
+    height: 90px!important;
   }
 }
 </style>
