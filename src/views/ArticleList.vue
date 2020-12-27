@@ -2,10 +2,14 @@
   <div class="xianyu-article-list">
     <back-top title="好文列表"></back-top>
     <div class="pull-refresh-container" ref="pull-refresh-article-container" id="pull-refresh-article-container">
+      <div class="article-skeleton-container" v-if="showSkeleton">
+        <article-skeleton v-for="item in 4" :key="item + Math.random()"></article-skeleton>
+      </div>
       <van-pull-refresh
         loosing-text="别老拽着,快放开我"
         loading-text="正在刷新中"
         success-text="刷新成功"
+        v-else
         v-model="pullRefresh"
         @refresh="onPullRefresh">
         <van-list
@@ -28,6 +32,7 @@
 
 <script>
 import ArticleItem from '@/components/ArticleItem/index.vue'
+import ArticleSkeleton from '../components/Skeleton/ArticleSkeleton'
 import { getArticleList } from '@/api/article.js'
 import { debounce } from 'lodash'
 export default {
@@ -45,7 +50,8 @@ export default {
       pullUp: false,
       // 上拉加载完成
       pullUpfinished: false,
-      total: 0
+      total: 0,
+      showSkeleton: true
     }
   },
 
@@ -69,7 +75,8 @@ export default {
   },
 
   components: {
-    ArticleItem
+    ArticleItem,
+    ArticleSkeleton
   },
 
   methods: {
@@ -78,6 +85,9 @@ export default {
       if (result.errno === 0) {
         this.articles = result.data
         this.total = result.total
+        setTimeout(() => {
+          this.showSkeleton = false
+        }, 30)
       }
     },
 
@@ -123,6 +133,13 @@ export default {
     bottom: 0;
     background-color: rgba(38, 38, 38, .05);
     overflow-y: auto;
+  }
+}
+
+.article-skeleton-container {
+  padding: 0 12px;
+  /deep/ .skeleton-recomend-left-content {
+    height: 81px!important;
   }
 }
 </style>

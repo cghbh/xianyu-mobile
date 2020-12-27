@@ -24,36 +24,19 @@ const routes = [
         path: 'dynamic',
         name: 'Dynamic',
         component: () => import(/* webpackChunkName: "group-index" */ '../views/Dynamic.vue'),
-        children: [
-          {
-            path: '',
-            component: () => import(/* webpackChunkName: "group-index" */ '../views/DynamicRecommend.vue'),
-            name: 'DynamicRecommend',
-            meta: { requiresAuth: false, keepAlive: true }
-          },
-          {
-            path: 'latest',
-            component: () => import(/* webpackChunkName: "group-index" */ '../views/DynamicLatest.vue'),
-            name: 'DynamicLatest'
-          },
-          {
-            path: 'follow',
-            component: () => import(/* webpackChunkName: "group-index" */ '../views/DynamicFollow.vue'),
-            name: 'DynamicFollow'
-          }
-        ]
+        meta: { requiresAuth: false, keepAlive: true }
       },
       {
         path: 'mine',
         name: 'Mine',
         component: () => import(/* webpackChunkName: "group-index-other" */ '../views/Mine.vue'),
-        meta: { requiresAuth: false }
+        meta: { requiresAuth: false, keepAlive: false }
       },
       {
         path: '/mymessage',
         component: () => import(/* webpackChunkName: "group-index-other" */ '../views/MyMessage.vue'),
         name: 'MyMessage',
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, keepAlive: false }
       },
       {
         path: '',

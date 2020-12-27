@@ -2,7 +2,7 @@
   <div class="xianyu-index">
     <router-view/>
     <van-tabbar route v-model="active" active-color="#409fea" inactive-color="#000">
-      <van-tabbar-item v-for="item in bottomIcon" :key=item.to :to="item.to">
+      <van-tabbar-item v-for="item in bottomIcon" :key=item.to :to="item.to" replace>
         <span>{{ item.title }}</span>
         <template #icon="props">
           <i :class="[ 'iconfont', props.active ? item.active: item.inactive ]"></i>
@@ -45,6 +45,9 @@ export default {
         }
       ]
     }
+  },
+  activated () {
+    console.log('Index缓存')
   }
 }
 </script>

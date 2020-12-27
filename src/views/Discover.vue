@@ -1,65 +1,71 @@
 <template>
-  <div class="xianyu-discover" ref="discover" id="xianyu-discover">
-    <van-search
-      @click="$router.push('/search')"
-      input-align="center"
-      placeholder="搜索好文/诗词/成语/用户"
-      readonly
-      disabled
-    />
+  <div class="homepage-container">
+    <div class="xianyu-discover" ref="discover" id="xianyu-discover">
+      <home-skeleton v-if="showSkeleton"></home-skeleton>
 
-    <div class="xianyu-discover-touser">
-      <h1>致用户大人</h1>
-      <h2>如何玩转新版闲语</h2>
-    </div>
-    <div class="xianyu-classify">
-      <div class="xianyu-classify-item" @click="$router.push('/article-list')">
-        <i class="iconfont icon-huokewenzhang"></i>
-        <span>好文</span>
-      </div>
-      <div class="xianyu-classify-item" @click="$router.push('/ancient-poetrylist')">
-        <i class="iconfont icon-wenxue"></i>
-        <span>诗词</span>
-      </div>
-      <div class="xianyu-classify-item" @click="$router.push('/dictionary-list')">
-        <i class="iconfont icon-datiqia"></i>
-        <span>词典</span>
-      </div>
-      <div class="xianyu-classify-item" @click="$router.push('/joke')">
-        <i class="iconfont icon-xiaolian"></i>
-        <span>开心一刻</span>
-      </div>
-      <div class="xianyu-classify-item" @click="$router.push('/knowledge-competition')">
-        <i class="iconfont icon-bisai"></i>
-        <span>答题</span>
-      </div>
-    </div>
+      <div v-else class="xianyu-discover-content-container">
+        <van-search
+          @click="$router.push('/search')"
+          input-align="center"
+          placeholder="搜索好文/诗词/成语/用户"
+          readonly
+          disabled
+        />
+        <div class="xianyu-discover-touser">
+          <h1>致用户大人</h1>
+          <h2>如何玩转新版闲语</h2>
+        </div>
+      
+        <div class="xianyu-classify">
+          <div class="xianyu-classify-item" @click="$router.push('/article-list')">
+            <i class="iconfont icon-huokewenzhang"></i>
+            <span>好文</span>
+          </div>
+          <div class="xianyu-classify-item" @click="$router.push('/ancient-poetrylist')">
+            <i class="iconfont icon-wenxue"></i>
+            <span>诗词</span>
+          </div>
+          <div class="xianyu-classify-item" @click="$router.push('/dictionary-list')">
+            <i class="iconfont icon-datiqia"></i>
+            <span>词典</span>
+          </div>
+          <div class="xianyu-classify-item" @click="$router.push('/joke')">
+            <i class="iconfont icon-xiaolian"></i>
+            <span>开心一刻</span>
+          </div>
+          <div class="xianyu-classify-item" @click="$router.push('/knowledge-competition')">
+            <i class="iconfont icon-bisai"></i>
+            <span>答题</span>
+          </div>
+        </div>
 
-    <div class="title-container">
-      <h1 class="xianyu-discover-title-recommend" :class="{ 'active': activeIndex === 1 }" @click="activeIndex = 1">推荐好文</h1>
-      <h1 class="xianyu-discover-title-recommend" :class="{ 'active': activeIndex === 2 }" @click="activeIndex = 2">推荐诗词</h1>
-    </div>
+        <div class="title-container">
+          <h1 class="xianyu-discover-title-recommend" :class="{ 'active': activeIndex === 1 }" @click="activeIndex = 1">推荐好文</h1>
+          <h1 class="xianyu-discover-title-recommend" :class="{ 'active': activeIndex === 2 }" @click="activeIndex = 2">推荐诗词</h1>
+        </div>
 
-    <div class="article-recommend-container" v-if="activeIndex === 1">
-      <article-item
-        v-for="(item, index) in recommendArticles"
-        :article="item"
-        :no-margin-bottom="index === (recommendArticles.length - 1)"
-        @click="$router.push(`/article-detail/${item._id}`)"
-        :key="item._id"
-      >
-      </article-item>
-    </div>
+        <div class="article-recommend-container" v-if="activeIndex === 1">
+          <article-item
+            v-for="(item, index) in recommendArticles"
+            :article="item"
+            :no-margin-bottom="index === (recommendArticles.length - 1)"
+            @click="$router.push(`/article-detail/${item._id}`)"
+            :key="item._id"
+          >
+          </article-item>
+        </div>
 
-    <div class="poem-recommend-container" v-if="activeIndex === 2">
-      <poem-item
-        @click="$router.push('/ancient-poetry/' + item._id)"
-        v-for="(item, index) in recommendPoems"
-        :itemvalue="item"
-        :key="item._id"
-        :no-margin="index === recommendPoems.length - 1 "
-      >
-      </poem-item>
+        <div class="poem-recommend-container" v-if="activeIndex === 2">
+          <poem-item
+            @click="$router.push('/ancient-poetry/' + item._id)"
+            v-for="(item, index) in recommendPoems"
+            :itemvalue="item"
+            :key="item._id"
+            :no-margin="index === recommendPoems.length - 1 "
+          >
+          </poem-item>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -67,6 +73,7 @@
 <script>
 import ArticleItem from '@/components/ArticleItem/index.vue'
 import PoemItem from '@/components/PoemItem/index.vue'
+import HomeSkeleton from '@/components/Skeleton/HomeSkeleton.vue'
 import { getHotArticle } from '@/api/article.js'
 import { recommendPoem } from '@/api/poem.js'
 import { debounce } from 'lodash'
@@ -77,7 +84,8 @@ export default {
       activeIndex: 1,
       recommendArticles: [],
       recommendPoems: [],
-      scrollTop: 0
+      scrollTop: 0,
+      showSkeleton: true
     }
   },
   watch: {
@@ -93,13 +101,14 @@ export default {
     }
   },
   mounted () {
-    this.$refs.discover.addEventListener('scroll', debounce(this.discoverPageScroll, 30))
+    console.log(1)
+    this.$refs.discover && this.$refs.discover.addEventListener('scroll', debounce(this.discoverPageScroll, 30))
   },
   activated () {
-    this.$refs.discover.scrollTop = this.scrollTop
+    this.$refs.discover && (this.$refs.discover.scrollTop = this.scrollTop)
   },
   beforeDestroy () {
-    this.$refs.discover.removeEventListener('scroll', this.discoverPageScroll, true)
+    this.$refs.discover && this.$refs.discover.removeEventListener('scroll', this.discoverPageScroll, true)
   },
   methods: {
     // 推荐好文
@@ -107,6 +116,9 @@ export default {
       const result = await getHotArticle()
       if (result.errno === 0) {
         this.recommendArticles = result.data
+        setTimeout(() => {
+          this.showSkeleton = false
+        }, 30)
       }
     },
     async getrecommendPoem () {
@@ -116,13 +128,15 @@ export default {
       }
     },
     discoverPageScroll () {
+      console.log(1)
       const scrollTop = this.$refs.discover.scrollTop
       this.scrollTop = scrollTop
     }
   },
   components: {
     ArticleItem,
-    PoemItem
+    PoemItem,
+    HomeSkeleton
   }
 }
 </script>

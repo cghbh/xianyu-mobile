@@ -224,6 +224,6 @@ export default {
 .xianyu-dynamic-recommend-r {
   overflow-y: auto;
   background-color: #F0F5FB;
-  // height: calc(100vh - 94px);
+  height: calc(100vh - 94px);
 }
 </style>

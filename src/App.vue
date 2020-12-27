@@ -4,6 +4,7 @@
        <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
     <router-view v-if="!$route.meta.keepAlive"></router-view>
+    
     <van-popup v-model="showPopup" get-container="#app" :class="{ 'un-login': !isLogin, 'un-self': isSelf && isLogin }">
       <div class="operate-container">
         <div 
