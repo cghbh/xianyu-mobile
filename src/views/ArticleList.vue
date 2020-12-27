@@ -3,7 +3,7 @@
     <back-top title="好文列表"></back-top>
     <div class="pull-refresh-container" ref="pull-refresh-article-container" id="pull-refresh-article-container">
       <div class="article-skeleton-container" v-if="showSkeleton">
-        <article-skeleton v-for="item in 4" :key="item + Math.random()"></article-skeleton>
+        <article-skeleton v-for="item in 5" :key="item + Math.random()"></article-skeleton>
       </div>
       <van-pull-refresh
         loosing-text="别老拽着,快放开我"
@@ -137,9 +137,15 @@ export default {
 }
 
 .article-skeleton-container {
-  padding: 0 12px;
+  position: fixed;
+  top: 46px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 12px 12px 0px 12px ;
+  overflow: hidden;
   /deep/ .skeleton-recomend-left-content {
-    height: 90px!important;
+    height: 70px!important;
   }
 }
 </style>
