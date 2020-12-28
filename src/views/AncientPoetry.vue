@@ -1,7 +1,10 @@
 <template>
   <div class="ancient-poetry">
     <back-top title="诗词"></back-top>
-    <div class="poem-total-container">
+    <div v-if="showSkeleton" class="poem-detail-skeleton">
+      <poem-skeleton></poem-skeleton>
+    </div>
+    <div v-else class="poem-total-container">
       <div class="ancient-poetry-container" style="min-height: 300px;font-size: 14px; text-align: center;line-height: 32px;padding-top: 15px; color: #555;">
         <h1 style="font-size: 18px;font-weight: bold;">{{ poemObj.poem_title }}</h1>
         <p style="font-size: 15px; color: #666; margin: 8px 0;">{{ poemObj.poem_author }}</p>
@@ -30,6 +33,7 @@
 <script>
 import { getPoemById } from '@/api/poem.js'
 import { loadUserInfo, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCancelCollectPoemHandle, userCollectPoemHandle } from '@/api/user.js'
+import PoemSkeleton from '@/components/Skeleton/PoemDetailSkeleton.vue'
 export default {
   name: 'AncientPoetry',
   data () {
@@ -45,7 +49,8 @@ export default {
       collectPoemsId: [],
       userId: null,
       zanNumber: 0,
-      collectNumber: 0
+      collectNumber: 0,
+      showSkeleton: true
     }
   },
 
@@ -92,6 +97,9 @@ export default {
           this.poemObj = result.data
           this.collectNumber = result.data.collect_number
           this.zanNumber = result.data.zan_number
+          setTimeout(() => {
+            this.showSkeleton = false
+          }, 30)
         }
       } catch (err) {
         this.$toast('请求的数据不存在')
@@ -217,11 +225,22 @@ export default {
         }
       }
     }
+  },
+  components: {
+    PoemSkeleton
   }
 }
 </script>
 
 <style scoped lang="scss">
+.poem-detail-skeleton {
+  position: fixed;
+  top: 46px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
 .back-container {
   display: flex;
   justify-content: flex-start;

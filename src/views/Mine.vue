@@ -28,14 +28,6 @@
         </van-cell>
       </van-cell-group>
 
-      <van-cell-group @click="$router.push('/mylike')">
-        <van-cell title="我的点赞" border class="iconfont icon-dianzan1">
-          <template #right-icon>
-            <i class="iconfont right-i-tag icon-right"></i>
-          </template>
-        </van-cell>
-      </van-cell-group>
-
       <van-cell-group @click="$router.push('/mycollection')">
         <van-cell title="我的收藏" border class="iconfont icon-shoucang">
           <template #right-icon>

@@ -3,7 +3,11 @@
   <div class="xianyu-fellowing" v-cloak>
     <back-top title="我的关注"></back-top>
     <div class="xianyu-fellowing-container" ref="xianyu-fellowing-container" id="xianyu-fellowing-container">
-      <van-pull-refresh v-model="pullDown" @refresh="onPullDownRefresh" v-if="hasFellowData">
+      <div class="xianyu-follow-skeleton" v-if="showSkeleton">
+        <skeleton-item v-for="item in 9" :key="item + Math.random()"></skeleton-item>
+      </div>
+
+      <van-pull-refresh v-if="hasFellowData && !showSkeleton" v-model="pullDown" @refresh="onPullDownRefresh">
         <van-list
           v-model="loadMore"
           :finished="loadMoreFinished"
@@ -28,6 +32,7 @@
 
 <script>
 import FollowItem from '@/components/FollowItem/index.vue'
+import SkeletonItem from '@/components/Skeleton/FollowSkeleton.vue'
 import { userFollows, loadUserInfo, userCancelFollow } from '@/api/user.js'
 // 滚动性能节流处理
 import { debounce } from 'lodash'
@@ -56,7 +61,8 @@ export default {
       perPage: 20,
       // 记录缓存页面返回的高度
       scrollTop: 0,
-      emptyImg: require('../assets/images/empty-image-default.png')
+      emptyImg: require('../assets/images/empty-image-default.png'),
+      showSkeleton: true
     }
   },
   mounted () {
@@ -117,6 +123,9 @@ export default {
       if (result.errno === 0) {
         this.followingList = result.data
         this.total = result.total
+        setTimeout(() => {
+          this.showSkeleton = false
+        }, 30)
       }
     },
 
@@ -168,12 +177,21 @@ export default {
     }
   },
   components: {
-    FollowItem
+    FollowItem,
+    SkeletonItem
   }
 }
 </script>
 
 <style scoped lang="scss">
+.xianyu-follow-skeleton {
+  position: fixed;
+  top: 46px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
 [v-cloak]{
   display: none;
 }
