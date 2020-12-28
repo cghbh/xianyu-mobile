@@ -3,11 +3,15 @@
     <back-top title="诗词列表"></back-top>
     
     <div class="ancient-list-container" id="ancient-list-container" ref="ancient-list-container">
+      <div v-if="showSkeleton" class="xianyu-poem-skeleton">
+        <poem-skeleton></poem-skeleton>
+      </div>
       <van-pull-refresh
         loosing-text="别老拽着,快放开我"
         loading-text="正在刷新中"
         success-text="刷新成功"
         v-model="pullDown"
+        v-else
         @refresh="pullDownRefresh">
         <div class="poem-list-container">
           <van-list
@@ -36,6 +40,7 @@
 import { getPoemList } from '@/api/poem.js'
 import { debounce } from 'lodash'
 import PoemItem from '@/components/PoemItem/index.vue'
+import PoemSkeleton from '@/components/Skeleton/PoemListSkeleton.vue'
 export default {
   name: 'AncientPoetryList',
   data () {
@@ -52,7 +57,8 @@ export default {
       total: 0,
       perPage: 20,
       // 记录滚动的距离
-      listScrollTop: 0
+      listScrollTop: 0,
+      showSkeleton: true
     }
   },
 
@@ -81,6 +87,9 @@ export default {
       if (result.errno === 0) {
         this.poemList = result.data
         this.total = result.total
+        setTimeout(() => {
+          this.showSkeleton = false
+        }, 30)
       }
     },
     // 下拉刷新
@@ -116,12 +125,21 @@ export default {
   },
 
   components: {
-    PoemItem
+    PoemItem,
+    PoemSkeleton
   }
 }
 </script>
 
 <style scoped lang="scss">
+.xianyu-poem-skeleton {
+  position: fixed;
+  top: 46px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
 .ancient-list-container {
   background-color: rgba(38, 38, 38, .05);
   touch-action: manipulation;

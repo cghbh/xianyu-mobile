@@ -1,6 +1,6 @@
 <template>
   <van-sticky>
-    <van-nav-bar :title="title" sticky :left-arrow="back" @click-left="$router.go(-1)">
+    <van-nav-bar :title="title" sticky :left-arrow="back" @click-left="to ? $router.push(`${to}`): $router.go(-1)">
       <template #left v-if="back">
         <div class="back-container">
           <i :class="[ 'iconfont iconfont-back-top-xianyu', iconType === 1 ? 'icon-left': 'icon-guanbi']"></i>
@@ -28,7 +28,13 @@ export default {
     iconType: {
       type: Number,
       default: 1
+    },
+    to: {
+      type: String
     }
+  },
+  mounted () {
+    console.log(this.to)
   }
 }
 </script>

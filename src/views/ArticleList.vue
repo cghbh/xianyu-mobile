@@ -1,6 +1,6 @@
 <template>
   <div class="xianyu-article-list">
-    <back-top title="好文列表"></back-top>
+    <back-top title="好文列表" to="/"></back-top>
     <div class="pull-refresh-container" ref="pull-refresh-article-container" id="pull-refresh-article-container">
       <div class="article-skeleton-container" v-if="showSkeleton">
         <article-skeleton v-for="item in 5" :key="item + Math.random()"></article-skeleton>
@@ -145,7 +145,7 @@ export default {
   padding: 12px 12px 0px 12px ;
   overflow: hidden;
   /deep/ .skeleton-recomend-left-content {
-    height: 70px!important;
+    height: 80px!important;
   }
 }
 </style>

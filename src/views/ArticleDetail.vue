@@ -1,7 +1,14 @@
 <template>
   <div class="good-article">
-    <back-top title="好文"></back-top>
-    <div class="good-article-content">
+    <back-top title="好文" to="/article-list"></back-top>
+
+    <!-- 骨架屏 -->
+    <div class="xianyu-article-detail-skeleton" v-if="showSkeleton">
+      <article-skeleton></article-skeleton>
+    </div>
+
+    <!-- 正常的上拉加载更多和下拉刷新 -->
+    <div v-else class="good-article-content">
       <h1 style="text-align: left;padding-left: ;">{{ article.article_title }}</h1>
       <h3 style="text-align: left;">文 / {{ article.article_author }}</h3>
       <div class="good-article-content-avatar">
@@ -27,6 +34,7 @@
 </template>
 
 <script>
+import ArticleSkeleton from '@/components/Skeleton/ArticleDetailSkeleton.vue'
 import { getArticleById } from '@/api/article.js'
 import { loadUserInfo, userCollectArticle, userCancelCollectArticleHandle, userCollectArticleHandle, useZanArticle, userCancelZanArticleHandle, userZanArticleHandle } from '@/api/user.js'
 export default {
@@ -43,7 +51,8 @@ export default {
       // 文章的收藏量
       collectNumber: 0,
       // 点赞量
-      zanNumber: 0
+      zanNumber: 0,
+      showSkeleton: true
     }
   },
 
@@ -92,6 +101,9 @@ export default {
           this.article = result.data
           this.collectNumber = result.data.collect_number
           this.zanNumber = result.data.zan_number
+          setTimeout(() => {
+            this.showSkeleton = false
+          }, 30)
         }
       } catch (err) {
         this.$toast('请求的数据不存在')
@@ -232,11 +244,22 @@ export default {
         }
       }
     }
+  },
+  components: {
+    ArticleSkeleton
   }
 }
 </script>
 
 <style scoped lang="scss">
+.xianyu-article-detail-skeleton {
+  position: fixed;
+  top: 46px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+}
 .back-container {
   display: flex;
   justify-content: flex-start;

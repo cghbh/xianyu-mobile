@@ -71,12 +71,6 @@ const routes = [
     meta: { requiresAuth: true, keepAlive: true }
   },
   {
-    path: '/addchannel',
-    component: () => import('../views/AddChannel.vue'),
-    name: 'AddChannel',
-    meta: { requiresAuth: false }
-  },
-  {
     path: '/knowledge-competition',
     component: () => import('../views/KnowledgeCompetition.vue'),
     name: 'KnowledgeCompetition',
