@@ -2,7 +2,10 @@
   <div class="xianyu-fans">
     <back-top title="我的粉丝"></back-top>
     <div class="xianyu-fans-container" id="xianyu-fans-container" ref="xianyu-fans-container">
-      <van-pull-refresh v-model="pullDown" @refresh="onPullDownRefresh" v-if="hasFansData">
+      <div class="xianyu-fans-skeleton" v-if="showSkeleton">
+        <poem-skeleton v-for="item in 9" :key="item + Math.random()"></poem-skeleton>
+      </div>
+      <van-pull-refresh v-model="pullDown" @refresh="onPullDownRefresh" v-if="hasFansData && !showSkeleton">
         <van-list
           v-model="loadMore"
           :finished="loadMoreFinished"
@@ -32,6 +35,7 @@
 <script>
 import { loadUserInfo, getMyFans, userFollows, userCancelFollow, userFollow } from '@/api/user.js'
 import FollowItem from '@/components/FansItem/index.vue'
+import PoemSkeleton from '@/components/Skeleton/FollowSkeleton.vue'
 import { debounce } from 'lodash'
 export default {
   name: 'MyFans',
@@ -50,7 +54,8 @@ export default {
       currentPage: 1,
       total: 0,
       perPage: 20,
-      scrollTop: 0
+      scrollTop: 0,
+      showSkeleton: true
     }
   },
   computed: {
@@ -75,8 +80,13 @@ export default {
   },
   mounted () {
     this.loadUserInfoHandle()
-    document.getElementById('xianyu-fans-container').addEventListener('scroll', debounce(this.scrollTopHandle, 30))
+    this.$refs['xianyu-fans-container'].addEventListener('scroll', debounce(this.scrollTopHandle, 30))
   },
+
+  beforeDestroy () {
+    this.$refs['xianyu-fans-container'].removeEventListener('scroll', this.scrollTopHandle, true)
+  },
+
   activated () {
     this.$refs['xianyu-fans-container'].scrollTop = this.scrollTop
   },
@@ -96,6 +106,9 @@ export default {
         this.tag = true
         this.fansList = result.data
         this.total = result.total
+        setTimeout(() => {
+          this.showSkeleton = false
+        }, 30)
       }
     },
 
@@ -127,7 +140,6 @@ export default {
 
     // 用户关注操作，debounce节流
     userFollowHandle: debounce(async function (id) {
-      console.log(id, '关注的id')
       const result = await userFollow(id)
       if (result.errno === 0) {
         // 如果关注列表有的话不需要push
@@ -170,12 +182,22 @@ export default {
     }
   },
   components: {
-    FollowItem
+    FollowItem,
+    PoemSkeleton
   }
 }
 </script>
 
 <style scoped lang="scss">
+.xianyu-fans-skeleton {
+  position: fixed;
+  top: 46px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
 .xianyu-fans-container {
   position: fixed;
   background-color: #fff;
