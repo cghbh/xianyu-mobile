@@ -64,7 +64,7 @@ export default {
       })
     } else if (isIOS()) {
       window.addEventListener('focusin', () => {
-        this.keyboardUp()
+        // this.keyboardUp()
         // 键盘弹出事件处理
       })
       window.addEventListener('focusout', () => {

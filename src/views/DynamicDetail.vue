@@ -1,31 +1,36 @@
 <template>
   <div class="dynamic-detail">
     <back-top title="动态详情"></back-top>
-    <div class="dynamic-detail-user">
-      <div class="dynamic-detail-user-container">
-        <van-image width="50" height="50" fit="cover" round :src="dynamic.publisher && dynamic.publisher.avatar_url"/>
-        <div class="dynamic-detail-user-name">
-          <h1>{{ dynamic.publisher && dynamic.publisher.nickname }}</h1>
-          <h3>{{ dynamic && dynamic.createdAt | timeformat }}</h3>
+    <div class="xianyu-dynamic-detail-skeleton" v-if="showSkeleton">
+      <dynamic-skeleton></dynamic-skeleton>
+    </div>
+    <div v-else class="xianyu-dynamic-detail-container">
+      <div class="dynamic-detail-user">
+        <div class="dynamic-detail-user-container">
+          <van-image width="50" height="50" fit="cover" round :src="dynamic.publisher && dynamic.publisher.avatar_url"/>
+          <div class="dynamic-detail-user-name">
+            <h1>{{ dynamic.publisher && dynamic.publisher.nickname }}</h1>
+            <h3>{{ dynamic && dynamic.createdAt | timeformat }}</h3>
+          </div>
         </div>
       </div>
+      <div class="dynamic-detail-content">
+        <p>{{ dynamic.content }}</p>
+        <van-image
+          @click="showPreview(index)"
+          width="100"
+          height="100"
+          fit="cover"
+          lazy-load
+          v-for="(item, index) in dynamic.avatar_url"
+          :src="item"
+          :key="item">
+        </van-image>
+      </div>
+      <divide-area :height="10"></divide-area>
+      <comment-list></comment-list>
+      <bottom-comment></bottom-comment>
     </div>
-    <div class="dynamic-detail-content">
-      <p>{{ dynamic.content }}</p>
-      <van-image
-        @click="showPreview(index)"
-        width="100"
-        height="100"
-        fit="cover"
-        lazy-load
-        v-for="(item, index) in dynamic.avatar_url"
-        :src="item"
-        :key="item">
-      </van-image>
-    </div>
-    <divide-area :height="10"></divide-area>
-    <comment-list></comment-list>
-    <bottom-comment></bottom-comment>
   </div>
 </template>
 
@@ -34,6 +39,7 @@ import { ImagePreview } from 'vant'
 import BottomComment from '../components/BottomComment/index.vue'
 import CommentList from '../components/BottomComment/comment.vue'
 import DivideArea from '../components/PublicComponents/DivideArea.vue'
+import DynamicSkeleton from '@/components/Skeleton/DynamicDetailSkeleton.vue'
 import { getDynamicDetail } from '@/api/dynamic.js'
 import { userFollow, getMyFans } from '@/api/user.js'
 export default {
@@ -42,7 +48,8 @@ export default {
     return {
       dynamic: {},
       // 当前动态作者的所有粉丝id
-      fansId: []
+      fansId: [],
+      showSkeleton: true
     }
   },
   computed: {
@@ -55,6 +62,9 @@ export default {
     const result = await getDynamicDetail(this.$route.params.id)
     if (result.errno === 0) {
       this.dynamic = result.data
+      setTimeout(() => {
+        this.showSkeleton = false
+      }, 50)
     } else {
       this.$toast({ message: '数据获取失败', duration: 800 })
     }
@@ -98,12 +108,21 @@ export default {
   components: {
     BottomComment,
     CommentList,
-    DivideArea
+    DivideArea,
+    DynamicSkeleton
   }
 }
 </script>
 
 <style scoped lang="scss">
+.xianyu-dynamic-detail-skeleton {
+  position: fixed;
+  top: 46px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
 .dynamic-detail {
   background-color: #fff;
   height: 100%;
