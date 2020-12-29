@@ -1,16 +1,16 @@
 <template>
   <div class="comment-sub-item" :style="{ 'margin-bottom': marginbottom + 'px' }">
-    <img src="../../assets/images/courage.png">
+    <img :src="comment.commentator && comment.commentator.avatar_url">
     <div class="item-container">
       <div class="item-container-user">
         <div class="item-container-user-left">
-          <h1>{{ comment.user }}</h1>
+          <h1>{{ comment.commentator && comment.commentator.nickname }}</h1>
           <p>{{ comment.created }}</p>
         </div>
         <div class="item-container-user-right">
-          <span>{{ comment.zan }}</span>
-          <i class="iconfont icon-dianzan active" v-if="true"></i>
-          <i class="iconfont icon-dianzan1" v-if="false"></i>
+          <span>{{ comment.zan_number }}</span>
+          <i class="iconfont icon-dianzan active" v-if="false"></i>
+          <i class="iconfont icon-dianzan1" v-if="true"></i>
         </div>
       </div>
       <div class="item-container-comment" :class="{ 'borderbottom': borderbottom }">{{ comment.content }}</div>
@@ -35,6 +35,10 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+
+  mounted () {
+    console.log(typeof this.comment, 'c')
   }
 }
 </script>
@@ -90,8 +94,8 @@ export default {
     }
 
     &-comment {
-      padding: 10px 0 15px 0;
-      font-size: 15px;
+      padding: 10px 0 10px 0;
+      font-size: 16px;
       color: #333;
       border-bottom: 1px solid #f4f4f4;
       line-height: 24px;

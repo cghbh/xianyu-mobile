@@ -48,4 +48,16 @@ const deleteDynamic = (id) => {
   return axios.request({ method: 'DELETE', url: `/dynamics/${id}` })
 }
 
-export { uploadDynamicImage, dynamicPublish, getDynamics, getDynamicDetail, deleteDynamic }
+// 获取动态的评论，包括一级评论和二级评论
+const getDynamicComments = (id) => {
+  return axios.get(`/dynamics/${id}/comments`)
+}
+
+const addComments = (id, content = '', rootCommentId, replyTo) => {
+  return axios.post(`/dynamics/${id}/comments?content=${content}`, {
+    content,
+    root_comment_id: rootCommentId,
+    reply_to: replyTo
+  })
+}
+export { uploadDynamicImage, dynamicPublish, getDynamics, getDynamicDetail, deleteDynamic, getDynamicComments, addComments }

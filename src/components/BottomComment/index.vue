@@ -2,22 +2,11 @@
   <div class="bottom-comment" id="bottom-content">
     <div class="operate-container" v-if="!showInput">
       <input @click="showInputHandle" readonly placeholder="记得要文明评论哟" type="text" :class="{ 'needicon': needicon }">
-      <div class="icon-container" v-if="needicon">
-        <div class="zan">
-          <i class="iconfont icon-dianzan1" v-if="!isZan" @click="isZan = true"></i>
-          <i class="iconfont icon-dianzan" :class="{ 'isZan': isZan }" v-else @click="isZan = false"></i>
-          <span>{{ isZan ? 1 : '赞'}}</span>
-        </div>
-        <div class="collect">
-          <i class="iconfont icon-shoucang" v-if="!isCollect" @click="isCollect = true"></i>
-          <i class="iconfont icon-shoucang1" :class="{ 'isZan': isCollect }" v-else @click="isCollect = false"></i>
-          <span>{{ isCollect ? 1 : '收藏'}}</span>
-        </div>
-      </div>
     </div>
     <div id="edit" class="edit-container" v-if="showInput" ref="edit">
-      <div class="content-editable" v-focus placeholder="发表原创文字,沉淀灵感,留住思考" contenteditable="true" @input="divInput" :value="inputValue" ></div>
-      <div class="submit">发送</div>
+      <!-- <div class="content-editable" v-focus placeholder="发表原创文字,沉淀灵感,留住思考" contenteditable="true" v-model="inputValue" ></div> -->
+      <input class="content-editable" autofocus="autofocus" ref="input" :placeholder="placeholder ? '回复' + placeholder : '发表原创文字，沉淀灵感，留住思考'" v-focus type="text" v-model="inputValue">
+      <div class="submit" @click="$emit('send')">发送</div>
     </div>
   </div>
 </template>
@@ -29,11 +18,18 @@ export default {
     needicon: {
       type: Boolean,
       default: true
+    },
+    // 上级组件v-model传递过来的，因为v-model可以拆分为@input和:value=的格式
+    value: {
+      type: String
+    },
+    placeholder: {
+      type: String
     }
   },
   data () {
     return {
-      inputValue: '',
+      // inputValue: '',
       showInput: false,
       // 是否点赞
       isZan: false,
@@ -41,38 +37,66 @@ export default {
       isCollect: false
     }
   },
+
+  computed: {
+    inputValue: {
+      get () {
+        return this.value
+      },
+      set (value) {
+        this.$emit('input', value)
+        console.log(value)
+      }
+    }
+  },
   methods: {
     divInput (e) {
-      this.value = e.target.innerText
+      console.log(1)
+      this.$emit('input', e.target.value)
+      // this.inputValue = e.target.innerText
     },
     showInputHandle () {
       this.showInput = true
-    }
-  },
-  mounted () {
-    // 事件监听明天要求实现卸载和函数封装的功能
-    if (isAndroid()) {
-      const innerHeight = window.innerHeight
-      window.addEventListener('resize', () => {
-        const newInnerHeight = window.innerHeight
-        if (innerHeight > newInnerHeight) {
+    },
+
+    isAndroid () {
+      const ua = typeof window === 'object' ? window.navigator.userAgent : ''
+      return /Android/i.test(ua)
+    },
+
+    isIOS () {
+      const ua = typeof window === 'object' ? window.navigator.userAgent : ''
+      return /iPhone|iPod|iPad/i.test(ua)
+    },
+    keyBoard () {
+      // 事件监听明天要求实现卸载和函数封装的功能
+      if (this.isAndroid()) {
+        const innerHeight = window.innerHeight
+        window.addEventListener('resize', () => {
+          const newInnerHeight = window.innerHeight
+          if (innerHeight > newInnerHeight) {
+            // 键盘弹出事件处理
+          } else {
+            // 键盘收起事件处理
+          }
+        })
+      } else if (this.isIOS()) {
+        window.addEventListener('focusin', () => {
           // 键盘弹出事件处理
-        } else {
+          this.showInput = true
+        })
+        window.addEventListener('focusout', () => {
           // 键盘收起事件处理
           this.showInput = false
-        }
-      })
-    } else if (isIOS()) {
-      window.addEventListener('focusin', () => {
-        // this.keyboardUp()
-        // 键盘弹出事件处理
-      })
-      window.addEventListener('focusout', () => {
-        // 键盘收起事件处理
-        this.showInput = false
-      })
+        })
+      }
     }
   },
+
+  mounted () {
+    this.keyBoard()
+  },
+
   directives: {
     // 自动获取输入的焦点
     focus: {
@@ -81,16 +105,6 @@ export default {
       }
     }
   }
-}
-
-function isAndroid () {
-  const ua = typeof window === 'object' ? window.navigator.userAgent : ''
-  return /Android/i.test(ua)
-}
-
-function isIOS () {
-  const ua = typeof window === 'object' ? window.navigator.userAgent : ''
-  return /iPhone|iPod|iPad/i.test(ua)
 }
 </script>
 
@@ -132,15 +146,14 @@ function isIOS () {
 
     .icon-container {
       display: flex;
-      min-width: 90px;
+      min-width: 48px;
       justify-content: space-around;
 
       .zan {
         margin-right: 5px;
       }
 
-      .zan,
-      .collect {
+      .zan {
         display: flex;
         align-items: center;
 
@@ -175,7 +188,7 @@ function isIOS () {
   .content-editable {
     flex: 1;
     outline: none;
-    font-size: 15px;
+    font-size: 14px;
     background-color: #fff;
     min-height: 30px;
     line-height: 20px;
@@ -183,6 +196,8 @@ function isIOS () {
     padding: 5px 0 5px 5px;
     box-sizing: border-box;
     border-radius: 4px;
+    outline: none;
+    border: none;
   }
 
   .submit {

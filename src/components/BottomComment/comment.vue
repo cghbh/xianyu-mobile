@@ -10,48 +10,55 @@
         </div>
       </div>
     </van-sticky>
-    <div class="comment-list-container">
-      <div class="comment-item" v-for="(item1, index1) in mock" :key="index1">
-        <img src="../../assets/images/courage.png">
+    <div class="comment-list-container" v-if="comments.length > 0">
+      <div class="comment-item" v-for="(item1, index1) in comments" :key="index1">
+        <img :src="item1.commentator && item1.commentator.avatar_url">
         <div class="comment-item-content">
           <div class="first-user">
             <div class="first-user-left">
-              <h1>{{ item1.user }}</h1>
-              <span>{{item1.created }}</span>
+              <h1>{{ item1.commentator && item1.commentator.nickname }}</h1>
+              <span>{{ item1.createdAt | timeformat }}</span>
             </div>
             <div class="first-user-right">
-              <span>100</span>
+              <span>{{ item1.zan_number }}</span>
               <i class="iconfont icon-dianzan1"></i>
               <i class="iconfont icon-dianzan" v-if="false"></i>
             </div>
           </div>
-          <div class="first-user-comment" @click="showPopupHandle(index1)">{{ item1.content }}</div>
-          <div class="user-repeat" @click="showPopupHandle(index1)">
-            <div class="user-repeat-item" v-for="(item2, index2) in item1.sub.slice(0, 3)" :key="index2">
-              <h1>{{ item2.user }}：</h1>
+
+          <!-- 向一级评论回复内容 -->
+          <div class="first-user-comment" @click="$emit('reply', { user_id: item1.commentator._id, nickname: item1.commentator.nickname, comment_id: item1._id })">{{ item1.content }}</div>
+          <div class="user-repeat" v-if="item1.second_comment.length > 0" @click="showPopupHandle(item1)">
+            <div class="user-repeat-item" v-for="(item2, index2) in item1.second_comment.slice(0, 3)" :key="index2">
+              <h1>{{ item2.commentator && item2.commentator.nickname }}：</h1>
               <span>{{ item2.content }}</span>
             </div>
-            <div class="see-more" v-if="item1.sub.length >= 2">查看全部{{ item1.sub.length }}条回复</div>
+            <div class="see-more" v-if="item1.second_comment.length > 3">查看全部{{ item1.second_comment.length }}条回复</div>
           </div>
         </div>
       </div>
     </div>
-    <van-popup :value="showPopup" position="bottom" :style="{ height: '100%' }" :overlay="false" >
 
+    <div class="no-comments" v-if="comments.length <= 0 && showNoComments">
+      <i class="iconfont icon-pinglun"></i>
+      <span class="no-comments-tips">快来添加第一条评论吧</span>
+    </div>
+
+    <van-popup :value="showPopup" position="bottom" :style="{ height: '100%' }" :overlay="false" >
       <div class="comment-extra">
         <van-sticky>
           <div class="comment-number">
-            <i class="iconfont icon-guanbi" @click="closePopup"></i>
-            <span>{{ activeComment.sub.length > 0 ? `${activeComment.sub.length}条回复` : '暂无回复'}}</span>
+            <i class="iconfont icon-guanbi" @click="closePopup()"></i>
+            <span>{{ secondComments.length > 0 ? `${secondComments.length}条回复` : '暂无回复'}}</span>
           </div>
         </van-sticky>
-        <comment-subitem :borderbottom="true" :comment="activeComment"></comment-subitem>
+        <comment-subitem :borderbottom="true" :comment="fisrtComment"></comment-subitem>
         <divide-area></divide-area>
         <comment-subitem
-          v-for="(item2, index2) in activeComment.sub"
+          v-for="(item2, index2) in secondComments"
           :key="index2"
           :comment="item2"
-          :marginbottom="index2 === activeComment.sub.length - 1 ? 44 : 0">
+          :marginbottom="index2 === secondComments.length - 1 ? 44 : 0">
         </comment-subitem>
         <bottom-comment :needicon="false"></bottom-comment>
       </div>
@@ -65,138 +72,30 @@ import DivideArea from '../PublicComponents/DivideArea.vue'
 import BottomComment from './index.vue'
 export default {
   name: 'CommentList',
+  props: {
+    comments: {
+      type: Array,
+      default: () => [],
+      required: true
+    },
+    showNoComments: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   data () {
     return {
       isHot: true,
       showPopup: false,
-      activeIndex: null,
-      mock: [
-        {
-          user: '程序员人猿泰山',
-          content: '二线城市你还想怎么样',
-          created: '2020-09-09',
-          zan: 100,
-          sub: [
-            {
-              user: '慕容复',
-              content: '一定还有更好的答案可以解决问题',
-              created: '2020-09-10',
-              zan: 7
-            },
-            {
-              user: '娃哈哈',
-              content: '一定还有更好的答案可以解决问题',
-              created: '2020-09-10',
-              zan: 9
-            },
-            {
-              user: '海瑞海刚峰',
-              content: '一定还有更好的答案可以解决问题',
-              created: '2020-09-11 11:29:10',
-              zan: 2
-            },
-            {
-              user: '小杰瑞',
-              content: '离下班还有不到两个小时的时间，但是代码还有很多的东西没有完成，捉急哟......',
-              created: '2020-10-128 16:15:10',
-              zan: 2
-            }
-          ]
-        },
-        {
-          user: '凯尔萨斯',
-          content: '来自猩猩的故事-一个程序员的成长经历',
-          created: '2020-03-09',
-          zan: 100,
-          sub: [
-            {
-              user: '海通证券员工',
-              content: '一定还有更好的答案可以解决问题',
-              created: '2020-09-10',
-              zan: 7
-            }
-          ]
-        },
-        {
-          user: '张大胆',
-          content: '你的最大的有点和缺点是什么，能够说一说吗？',
-          created: '2020-09-09',
-          zan: 100,
-          sub: [
-            {
-              user: '慕容复',
-              content: '一定还有更好的答案可以解决问题',
-              created: '2020-09-10',
-              zan: 7
-            },
-            {
-              user: '娃哈哈',
-              content: '一定还有更好的答案可以解决问题',
-              created: '2020-09-10',
-              zan: 9
-            },
-            {
-              user: '娃哈哈',
-              content: '一定还有更好的答案可以解决问题',
-              created: '2020-09-10',
-              zan: 9
-            },
-            {
-              user: '娃哈哈',
-              content: '一定还有更好的答案可以解决问题',
-              created: '2020-09-10',
-              zan: 9
-            },
-            {
-              user: '娃哈哈',
-              content: '一定还有更好的答案可以解决问题',
-              created: '2020-09-10',
-              zan: 9
-            },
-            {
-              user: '海瑞海刚峰',
-              content: '一定还有更好的答案可以解决问题',
-              created: '2020-09-11 11:29:10',
-              zan: 2
-            },
-            {
-              user: '小杰瑞',
-              content: '离下班还有不到两个小时的时间，但是代码还有很多的东西没有完成，捉急哟......',
-              created: '2020-10-128 16:15:10',
-              zan: 2
-            },
-            {
-              user: '小杰瑞',
-              content: '离下班还有不到两个小时的时间，但是代码还有很多的东西没有完成，捉急哟......',
-              created: '2020-10-128 16:15:10',
-              zan: 2
-            },
-            {
-              user: '小杰瑞',
-              content: '离下班还有不到两个小时的时间，但是代码还有很多的东西没有完成，捉急哟......',
-              created: '2020-10-128 16:15:10',
-              zan: 2
-            },
-            {
-              user: '小杰瑞',
-              content: '离下班还有不到两个小时的时间，但是代码还有很多的东西没有完成，捉急哟......',
-              created: '2020-10-128 16:15:10',
-              zan: 2
-            },
-            {
-              user: '小杰瑞',
-              content: '离下班还有不到两个小时的时间，但是代码还有很多的东西没有完成，捉急哟......',
-              created: '2020-10-128 16:15:10',
-              zan: 2
-            }
-          ]
-        }
-      ]
+      secondComments: [],
+      fisrtComment: {}
     }
   },
+
   computed: {
     activeComment () {
-      return this.mock[this.activeIndex ? this.activeIndex : 0]
+      return 1
     }
   },
   methods: {
@@ -204,8 +103,10 @@ export default {
       this.showPopup = false
     },
     showPopupHandle (value) {
+      // console.log(value, 'b')
+      this.fisrtComment = value
       this.showPopup = true
-      this.activeIndex = value
+      this.secondComments = value.second_comment
     }
   },
   components: {
@@ -289,9 +190,12 @@ export default {
           }
 
           &-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             h1 {
               font-size: 14px;
-              margin-bottom: 5px;
+              margin-bottom: 8px;
               color: rgba(0, 0, 0, .7);
               font-weight: 700;
             }
@@ -322,23 +226,24 @@ export default {
         .user-repeat {
           margin-top: 8px;
           padding: 4px 12px;
+          padding-top: 8px;
           background-color: #F8F8FA;
           border-radius: 4px;
 
           &-item {
-            margin-bottom: 8px;
-            margin-top: 8px;
-            line-height: 18px;
+            margin-bottom: 12px;
+            margin-top: 0px;
+            line-height: 10px;
 
             h1 {
-              font-size: 13px;
+              font-size: 14px;
               font-weight: 600;
               color: rgba(0, 0, 0, 1);
               display: inline-block;
             }
 
             span {
-              font-size: 13px;
+              font-size: 14px;
               color: rgba(0, 0, 0, .6);
               word-wrap: break-word;
             }
@@ -347,7 +252,8 @@ export default {
           .see-more {
             font-size: 13px;
             color: #409fea;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            margin-top: 5px;
           }
         }
       }
@@ -382,7 +288,7 @@ export default {
   }
 }
 
-// 1px边框
+ /* 1px边框 */
 .comment-number::after {
   position: absolute;
   content: "";
@@ -391,5 +297,23 @@ export default {
   bottom: 0;
   background-color: #eaeaea;
   transform: scaleY(.5);
+}
+
+.no-comments {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .icon-pinglun {
+    font-size: 50px;
+    margin-top: 50px;
+    color: #bbb;
+  }
+
+  &-tips {
+    font-size: 16px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    color: #999;
+  }
 }
 </style>

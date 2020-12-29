@@ -27,9 +27,20 @@
           :key="item">
         </van-image>
       </div>
-      <divide-area :height="10"></divide-area>
-      <comment-list></comment-list>
-      <bottom-comment></bottom-comment>
+
+      <divide-area :height="10"/>
+
+      <comment-list 
+        @reply="replyHandle" 
+        :comments="comments"
+        :show-no-comments="showNoComments"
+      />
+      <bottom-comment 
+        ref="inputArea" 
+        v-model="inputValue" 
+        :placeholder="reply.nickname" 
+        @send="addCommentsHandle"
+      />
     </div>
   </div>
 </template>
@@ -40,7 +51,7 @@ import BottomComment from '../components/BottomComment/index.vue'
 import CommentList from '../components/BottomComment/comment.vue'
 import DivideArea from '../components/PublicComponents/DivideArea.vue'
 import DynamicSkeleton from '@/components/Skeleton/DynamicDetailSkeleton.vue'
-import { getDynamicDetail } from '@/api/dynamic.js'
+import { getDynamicDetail, getDynamicComments, addComments } from '@/api/dynamic.js'
 import { userFollow, getMyFans } from '@/api/user.js'
 export default {
   name: 'DynamicDetail',
@@ -49,19 +60,27 @@ export default {
       dynamic: {},
       // 当前动态作者的所有粉丝id
       fansId: [],
-      showSkeleton: true
+      showSkeleton: true,
+      comments: [],
+      inputValue: '',
+      reply: {},
+      showNoComments: false
     }
   },
   computed: {
     // 用户是否登录
     isLogin () {
       return this.$store.state.token.token
+    },
+    userId () {
+      return this.$store.state.token.userId
     }
   },
   async mounted () {
     const result = await getDynamicDetail(this.$route.params.id)
     if (result.errno === 0) {
       this.dynamic = result.data
+      this.getDynamicCommentsHandle()
       setTimeout(() => {
         this.showSkeleton = false
       }, 50)
@@ -70,6 +89,32 @@ export default {
     }
   },
   methods: {
+    // 获取所有的评论
+    async getDynamicCommentsHandle () {
+      const result = await getDynamicComments(this.$route.params.id)
+      if (result.errno === 0) {
+        this.comments = result.data
+        if (this.comments.length <= 0) {
+          this.showNoComments = true
+        }
+      }
+      console.log(result, '评论')
+    },
+
+    // 添加评论
+    async addCommentsHandle () {
+      if (this.inputValue.trim().length <= 0) {
+        return this.$toast('评论内容不能为空！')
+      }
+      const result = await addComments(this.$route.params.id, this.inputValue, this.reply.comment_id, this.reply.user_id)
+      if (result.errno === 0) {
+        this.getDynamicCommentsHandle()
+        this.inputValue = ''
+        this.reply = {}
+        this.$toast('评论成功')
+      }
+    },
+
     async focus () {
       // 先判断用户是否登录
       if (!this.user_login_token) {
@@ -97,12 +142,18 @@ export default {
         this.$toast('已添加关注')
       }
     },
+
     showPreview (index) {
       ImagePreview({
         images: this.dynamic.avatar_url,
         startPosition: index,
         closeable: true
       })
+    },
+
+    replyHandle (value) {
+      this.reply = value
+      this.$refs.inputArea.showInput = true
     }
   },
   components: {
