@@ -7,10 +7,22 @@
           <h1>{{ comment.commentator && comment.commentator.nickname }}</h1>
           <p>{{ comment.created }}</p>
         </div>
+        
+        <!-- 点赞区域 -->
         <div class="item-container-user-right">
           <span>{{ comment.zan_number }}</span>
-          <i class="iconfont icon-dianzan active" v-if="false"></i>
-          <i class="iconfont icon-dianzan1" v-if="true"></i>
+          <i 
+            class="iconfont icon-dianzan active" 
+            v-if="isLogin && zanId.includes(comment._id)"
+            @click="unlikeHandle"
+          >
+          </i>
+          <i 
+            class="iconfont icon-dianzan1" 
+            v-else
+            @click="likeHandle"
+          >
+          </i>
         </div>
       </div>
       <div class="item-container-comment" :class="{ 'borderbottom': borderbottom }">{{ comment.content }}</div>
@@ -34,11 +46,40 @@ export default {
     borderbottom: {
       type: Boolean,
       default: false
+    },
+    zanId: {
+      type: Array,
+      default: () => []
+    },
+    // 是否是根评论
+    root: {
+      type: Boolean
     }
   },
 
-  mounted () {
-    console.log(typeof this.comment, 'c')
+  computed: {
+    isLogin () {
+      return this.$store.state.token.token
+    }
+  },
+
+  methods: {
+    // 区分是二级评论还是根评论
+    likeHandle () {
+      if (this.root) {
+        this.$emit('rootLike')
+      } else {
+        this.$emit('secondLike')
+      }
+    },
+
+    unlikeHandle () {
+      if (this.root) {
+        this.$emit('rootUnlike')
+      } else {
+        this.$emit('secondUnlike')
+      }
+    }
   }
 }
 </script>

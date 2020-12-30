@@ -19,10 +19,22 @@
               <h1>{{ item1.commentator && item1.commentator.nickname }}</h1>
               <span>{{ item1.createdAt | timeformat }}</span>
             </div>
+            
+            <!-- 点赞操作 -->
             <div class="first-user-right">
               <span>{{ item1.zan_number }}</span>
-              <i class="iconfont icon-dianzan1"></i>
-              <i class="iconfont icon-dianzan" v-if="false"></i>
+              <i 
+                v-if="isLogin && zanId.includes(item1._id)" 
+                @click="$emit('unlike', item1._id)" 
+                class="iconfont icon-dianzan active"
+              >
+              </i>
+              <i 
+                @click="$emit('like', item1._id)" 
+                class="iconfont icon-dianzan1" 
+                v-else
+              >
+              </i>
             </div>
           </div>
 
@@ -52,15 +64,26 @@
             <span>{{ secondComments.length > 0 ? `${secondComments.length}条回复` : '暂无回复'}}</span>
           </div>
         </van-sticky>
-        <comment-subitem :borderbottom="true" :comment="fisrtComment"></comment-subitem>
-        <divide-area></divide-area>
+        <comment-subitem 
+          :borderbottom="true" 
+          :comment="fisrtComment"
+          :zan-id="zanId"
+          :root="true"
+          @rootLike="$emit('like', fisrtComment._id)"
+          @rootUnlike="$emit('unlike', fisrtComment._id)"
+        />
+        <divide-area/>
         <comment-subitem
           v-for="(item2, index2) in secondComments"
           :key="index2"
           :comment="item2"
-          :marginbottom="index2 === secondComments.length - 1 ? 44 : 0">
-        </comment-subitem>
-        <bottom-comment :needicon="false"></bottom-comment>
+          :root="false"
+          :zan-id="zanId"
+          :marginbottom="index2 === secondComments.length - 1 ? 44 : 0"
+          @secondLike="$emit('secondLikes', { firstId: fisrtComment._id, second_id: item2._id })"
+          @secondUnlike="$emit('secondUnlikes', { firstId: fisrtComment._id, second_id: item2._id })"
+        />
+        <bottom-comment :needicon="false"/>
       </div>
     </van-popup>
   </div>
@@ -81,6 +104,10 @@ export default {
     showNoComments: {
       type: Boolean,
       default: false
+    },
+    zanId: {
+      type: Array,
+      default: () => []
     }
   },
 
@@ -94,8 +121,8 @@ export default {
   },
 
   computed: {
-    activeComment () {
-      return 1
+    isLogin () {
+      return this.$store.state.token.token
     }
   },
   methods: {
@@ -103,7 +130,6 @@ export default {
       this.showPopup = false
     },
     showPopupHandle (value) {
-      // console.log(value, 'b')
       this.fisrtComment = value
       this.showPopup = true
       this.secondComments = value.second_comment

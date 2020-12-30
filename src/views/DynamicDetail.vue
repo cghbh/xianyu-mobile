@@ -31,10 +31,16 @@
       <divide-area :height="10"/>
 
       <comment-list 
-        @reply="replyHandle" 
         :comments="comments"
         :show-no-comments="showNoComments"
+        :zan-id="userZanCommentId"
+        @reply="replyHandle"
+        @like="userLikeCommentsHandle"
+        @unlike="userUnlikeCommentsHandle"
+        @secondLikes="secondLikeHandle"
+        @secondUnlikes="secondUnlikeHandle"
       />
+
       <bottom-comment 
         ref="inputArea" 
         v-model="inputValue" 
@@ -52,7 +58,7 @@ import CommentList from '../components/BottomComment/comment.vue'
 import DivideArea from '../components/PublicComponents/DivideArea.vue'
 import DynamicSkeleton from '@/components/Skeleton/DynamicDetailSkeleton.vue'
 import { getDynamicDetail, getDynamicComments, addComments } from '@/api/dynamic.js'
-import { userFollow, getMyFans } from '@/api/user.js'
+import { userFollow, getMyFans, getUserDynamicComments, userZanComment, userCancelZanComment } from '@/api/user.js'
 export default {
   name: 'DynamicDetail',
   data () {
@@ -64,7 +70,9 @@ export default {
       comments: [],
       inputValue: '',
       reply: {},
-      showNoComments: false
+      showNoComments: false,
+      // 已登录用户点赞过的评论的id数组
+      userZanCommentId: []
     }
   },
   computed: {
@@ -77,6 +85,9 @@ export default {
     }
   },
   async mounted () {
+    if (this.userId) {
+      this.getUserDynamicCommentsHandle()
+    }
     const result = await getDynamicDetail(this.$route.params.id)
     if (result.errno === 0) {
       this.dynamic = result.data
@@ -98,7 +109,14 @@ export default {
           this.showNoComments = true
         }
       }
-      console.log(result, '评论')
+    },
+
+    // 如果用户登录过的话，获取所有点赞过的评论
+    async getUserDynamicCommentsHandle () {
+      const result = await getUserDynamicComments(this.userId)
+      if (result.errno === 0) {
+        this.userZanCommentId = result.data
+      }
     },
 
     // 添加评论
@@ -151,9 +169,112 @@ export default {
       })
     },
 
+    // 回复显示输入框
     replyHandle (value) {
       this.reply = value
       this.$refs.inputArea.showInput = true
+    },
+
+    // 一级评论点赞
+    async userLikeCommentsHandle (id) {
+      // 未登录，携带当前的路由跳转到登录的页面
+      if (!this.isLogin) {
+        this.$dialog.confirm({
+          message: '<p style="font-size: 16px;line-height: 25px">此操作需要登录，\n是否跳转到登录页面？</p>',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          confirmButtonColor: '#409fea',
+          cancelButtonText: '取消',
+          cancelButtonColor: '#666'
+        }).then(() => {
+          this.$router.replace({
+            path: '/login',
+            query: {
+              redirect: this.$route.fullPath
+            }
+          })
+        }).catch(err => { console.log(err) })
+      } else {
+        const result = await userZanComment(this.$route.params.id, '', id)
+        if (result.errno === 0) {
+          const index = this.comments.findIndex(item => item._id === result.comment._id)
+          if (index > -1 && !this.userZanCommentId.includes(id)) {
+            this.comments[index].zan_number = result.comment.zan_number
+            this.userZanCommentId.push(id)
+          }
+        }
+      }
+    },
+
+    // 一级评论取消点赞
+    async userUnlikeCommentsHandle (id) {
+      const result = await userCancelZanComment(this.$route.params.id, '', id)
+      if (result.errno === 0) {
+        // 找出取消点赞的评论是那一条，修改点赞的数量
+        const index = this.comments.findIndex(item => item._id === result.comment._id)
+        // 找出用户赞过的id数组中的索引值
+        const idIndex = this.userZanCommentId.indexOf(id)
+        if (idIndex > -1 && index > -1) {
+          this.comments[index].zan_number = result.comment.zan_number
+          this.userZanCommentId.splice(idIndex, 1)
+        }
+      }
+    },
+
+    // 二级评论点赞
+    async secondLikeHandle (value) {
+      if (!this.isLogin) {
+        this.$dialog.confirm({
+          message: '<p style="font-size: 16px;line-height: 25px">此操作需要登录，\n是否跳转到登录页面？</p>',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          confirmButtonColor: '#409fea',
+          cancelButtonText: '取消',
+          cancelButtonColor: '#666'
+        }).then(() => {
+          this.$router.replace({
+            path: '/login',
+            query: {
+              redirect: this.$route.fullPath
+            }
+          })
+        }).catch(err => { console.log(err) })
+      } else {
+        const rootId = value.firstId
+        const secondId = value.second_id
+        const result = await userZanComment(this.$route.params.id, secondId, rootId)
+        if (result.errno === 0) {
+          const firstIndex = this.comments.findIndex(item => item._id === rootId)
+          const rootComments = this.comments[firstIndex]
+          const secondComments = rootComments.second_comment
+          const secondIndex = secondComments.findIndex(item => item._id === secondId)
+          this.comments[firstIndex].second_comment[secondIndex].zan_number = result.comment.zan_number
+          if (!this.userZanCommentId.includes(secondId)) {
+            this.userZanCommentId.push(secondId)
+          }
+        }
+      }
+    },
+
+    // 二级评论取消点赞
+    async secondUnlikeHandle (value) {
+      const rootId = value.firstId
+      const secondId = value.second_id
+      const result = await userCancelZanComment(this.$route.params.id, secondId, rootId)
+      if (result.errno === 0) {
+        const firstIndex = this.comments.findIndex(item => item._id === rootId)
+        const rootComments = this.comments[firstIndex]
+        const secondComments = rootComments.second_comment
+        const secondIndex = secondComments.findIndex(item => item._id === secondId)
+        // 找出用户赞过的id删除
+        const userZanIndex = this.userZanCommentId.indexOf(secondId)
+        if (userZanIndex > -1) {
+          this.comments[firstIndex].second_comment[secondIndex].zan_number = result.comment.zan_number
+          this.userZanCommentId.splice(userZanIndex, 1)
+        }
+      }
     }
   },
   components: {

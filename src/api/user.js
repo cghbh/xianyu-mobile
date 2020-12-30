@@ -209,4 +209,19 @@ const getUserCollectedWordHandle = (id) => {
   return axios.get(`/users/${id}/collectWords`)
 }
 
-export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle, userZanWordHandle, userCancelZanWordHandle, userCollectWordHandle, userCancelCollectHandle, getUserZanedWordHandle, getUserCollectedWordHandle, userCollectDynamics, userCancelCollectDynamics, getUserCollectedDynamics, getFollowUserDynamcis, getOwnPublishedDynamics }
+// 点赞评论
+const userZanComment = (dynamicId, secondId = '', rootCommentId) => {
+  return axios.request({ method: 'PATCH', url: `/dynamics/${dynamicId}/comments?root_comment_id=${rootCommentId}&${secondId ? 'second_id=' + secondId : ''}` })
+}
+
+// 评论取消点赞
+const userCancelZanComment = (dynamicId, secondId = '', rootCommentId) => {
+  return axios.request({ method: 'DELETE', url: `/dynamics/${dynamicId}/comments?root_comment_id=${rootCommentId}&second_id=${secondId}` })
+}
+
+// 获取用户点赞过的评论的id数组
+const getUserDynamicComments = (id) => {
+  return axios.get(`/users/${id}/getZanCommentsId`)
+}
+
+export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle, userZanWordHandle, userCancelZanWordHandle, userCollectWordHandle, userCancelCollectHandle, getUserZanedWordHandle, getUserCollectedWordHandle, userCollectDynamics, userCancelCollectDynamics, getUserCollectedDynamics, getFollowUserDynamcis, getOwnPublishedDynamics, getUserDynamicComments, userZanComment, userCancelZanComment }
