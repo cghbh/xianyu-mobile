@@ -25,7 +25,13 @@
           </i>
         </div>
       </div>
-      <div class="item-container-comment" :class="{ 'borderbottom': borderbottom }">{{ comment.content }}</div>
+      <div 
+        class="item-container-comment" 
+        :class="{ 'borderbottom': borderbottom }"
+        @click="replyHandle"
+      >
+        {{ comment.content }}
+      </div>
     </div>
   </div>
 </template>
@@ -54,6 +60,9 @@ export default {
     // 是否是根评论
     root: {
       type: Boolean
+    },
+    rootId: {
+      type: String
     }
   },
 
@@ -79,6 +88,10 @@ export default {
       } else {
         this.$emit('secondUnlike')
       }
+    },
+
+    replyHandle () {
+      this.$emit('secondReply', this.comment.commentator._id, this.comment.commentator.nickname, this.rootId)
     }
   }
 }

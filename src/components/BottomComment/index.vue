@@ -29,7 +29,6 @@ export default {
   },
   data () {
     return {
-      // inputValue: '',
       showInput: false,
       // 是否点赞
       isZan: false,
@@ -45,16 +44,14 @@ export default {
       },
       set (value) {
         this.$emit('input', value)
-        console.log(value)
       }
     }
   },
   methods: {
     divInput (e) {
-      console.log(1)
       this.$emit('input', e.target.value)
-      // this.inputValue = e.target.innerText
     },
+    
     showInputHandle () {
       this.showInput = true
     },
@@ -94,7 +91,7 @@ export default {
   },
 
   mounted () {
-    this.keyBoard()
+    // this.keyBoard()
   },
 
   directives: {

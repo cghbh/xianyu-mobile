@@ -68,22 +68,34 @@
           :borderbottom="true" 
           :comment="fisrtComment"
           :zan-id="zanId"
+          :root-id="fisrtComment._id"
           :root="true"
           @rootLike="$emit('like', fisrtComment._id)"
           @rootUnlike="$emit('unlike', fisrtComment._id)"
+          @secondReply="secondReplyHandle"
         />
+
         <divide-area/>
+
         <comment-subitem
           v-for="(item2, index2) in secondComments"
           :key="index2"
           :comment="item2"
           :root="false"
+          :root-id="fisrtComment._id"
           :zan-id="zanId"
           :marginbottom="index2 === secondComments.length - 1 ? 44 : 0"
           @secondLike="$emit('secondLikes', { firstId: fisrtComment._id, second_id: item2._id })"
           @secondUnlike="$emit('secondUnlikes', { firstId: fisrtComment._id, second_id: item2._id })"
+          @secondReply="secondReplyHandle"
         />
-        <bottom-comment :needicon="false"/>
+        <bottom-comment 
+          ref="secondReply"
+          :needicon="false"
+          :placeholder="placeholder"
+          v-model="inputValue"
+          @send="secondSendHandle"
+        />
       </div>
     </van-popup>
   </div>
@@ -113,6 +125,12 @@ export default {
     isHot: {
       type: Boolean,
       default: true
+    },
+    value: {
+      type: String
+    },
+    placeholder: {
+      type: String
     }
   },
 
@@ -124,9 +142,29 @@ export default {
     }
   },
 
+  watch: {
+    comments: {
+      handler (newVal) {
+        const firstCommentIndex = newVal.findIndex(item => item._id === this.fisrtComment._id)
+        if (firstCommentIndex > -1) {
+          this.secondComments = newVal[firstCommentIndex].second_comment
+        }
+      },
+      deep: true
+    }
+  },
+
   computed: {
     isLogin () {
       return this.$store.state.token.token
+    },
+    inputValue: {
+      get () {
+        return this.value
+      },
+      set (value) {
+        this.$emit('input', value)
+      }
     }
   },
   methods: {
@@ -147,6 +185,16 @@ export default {
     // 最新
     latestHandle () {
       this.$emit('hot', false)
+    },
+
+    // 二级嵌套评论，不点击任何一个，则是对根评论的直接回复
+    secondSendHandle () {
+      this.$emit('secondSend', { rootId: this.fisrtComment._id, nickname: this.fisrtComment.commentator.nickname, replyTo: this.fisrtComment.commentator._id })
+    },
+
+    // 点击哪一条评论，知道回复的是谁，以及对应的用户id和评论的id
+    secondReplyHandle (replyTo, nickname, rootId) {
+      this.$emit('secondReplys', { replyTo, nickname, rootId })
     }
   },
   components: {
