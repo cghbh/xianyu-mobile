@@ -11,10 +11,13 @@
           readonly
           disabled
         />
-        <div class="xianyu-discover-touser">
+        <div style="padding: 0 15px; border-radius: 10px;overflow: hidden;height: 180px">
+          <img style="width:100%; height: 100%; border-radius: 6px; object-fit: cover;" src="../assets/images/15985939805f489bbc70c3b.jpg" alt="">
+        </div>
+        <!-- <div class="xianyu-discover-touser" v-if="false">
           <h1>致用户大人</h1>
           <h2>如何玩转新版闲语</h2>
-        </div>
+        </div> -->
       
         <div class="xianyu-classify">
           <div class="xianyu-classify-item" @click="$router.push('/article-list')">
