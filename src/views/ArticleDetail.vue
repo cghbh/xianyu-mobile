@@ -1,6 +1,6 @@
 <template>
   <div class="good-article">
-    <back-top title="好文" to="/article-list"></back-top>
+    <back-top title="好文"></back-top>
 
     <!-- 骨架屏 -->
     <div class="xianyu-article-detail-skeleton" v-if="showSkeleton">
