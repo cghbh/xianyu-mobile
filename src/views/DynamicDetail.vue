@@ -34,11 +34,13 @@
         :comments="comments"
         :show-no-comments="showNoComments"
         :zan-id="userZanCommentId"
+        :is-hot="isHot"
         @reply="replyHandle"
         @like="userLikeCommentsHandle"
         @unlike="userUnlikeCommentsHandle"
         @secondLikes="secondLikeHandle"
         @secondUnlikes="secondUnlikeHandle"
+        @hot="getCommentSwicth"
       />
 
       <bottom-comment 
@@ -72,9 +74,11 @@ export default {
       reply: {},
       showNoComments: false,
       // 已登录用户点赞过的评论的id数组
-      userZanCommentId: []
+      userZanCommentId: [],
+      isHot: true
     }
   },
+
   computed: {
     // 用户是否登录
     isLogin () {
@@ -82,6 +86,15 @@ export default {
     },
     userId () {
       return this.$store.state.token.userId
+    }
+  },
+  watch: {
+    isHot (newVal) {
+      if (newVal) {
+        this.getDynamicCommentsHandle('1')
+      } else {
+        this.getDynamicCommentsHandle('0')
+      }
     }
   },
   async mounted () {
@@ -99,10 +112,11 @@ export default {
       this.$toast({ message: '数据获取失败', duration: 800 })
     }
   },
+
   methods: {
     // 获取所有的评论
-    async getDynamicCommentsHandle () {
-      const result = await getDynamicComments(this.$route.params.id)
+    async getDynamicCommentsHandle (sort) {
+      const result = await getDynamicComments(this.$route.params.id, sort)
       if (result.errno === 0) {
         this.comments = result.data
         if (this.comments.length <= 0) {
@@ -133,6 +147,7 @@ export default {
       }
     },
 
+    // 关注用户的操作
     async focus () {
       // 先判断用户是否登录
       if (!this.user_login_token) {
@@ -161,6 +176,7 @@ export default {
       }
     },
 
+    // 如果有图片的话，展示图片的预览
     showPreview (index) {
       ImagePreview({
         images: this.dynamic.avatar_url,
@@ -275,6 +291,11 @@ export default {
           this.userZanCommentId.splice(userZanIndex, 1)
         }
       }
+    },
+
+    // 切换最新和最热的消息
+    getCommentSwicth (value) {
+      this.isHot = value
     }
   },
   components: {

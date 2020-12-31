@@ -49,8 +49,8 @@ const deleteDynamic = (id) => {
 }
 
 // 获取动态的评论，包括一级评论和二级评论
-const getDynamicComments = (id) => {
-  return axios.get(`/dynamics/${id}/comments`)
+const getDynamicComments = (id, sort = '1') => {
+  return axios.get(`/dynamics/${id}/comments?sort=${sort}`)
 }
 
 const addComments = (id, content = '', rootCommentId, replyTo) => {

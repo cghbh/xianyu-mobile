@@ -4,9 +4,9 @@
       <div class="comment-list-header">
         <div class="comment-list-header-title">评论</div>
         <div class="comment-list-header-sort">
-          <span class="hot" :class="{ 'active': isHot }" @click="isHot = true">热门</span>
+          <span class="hot" :class="{ 'active': isHot }" @click="hotHandle">热门</span>
           <span class="sep-line">/</span>
-          <span class="newest" :class="{ 'active': !isHot }" @click="isHot = false">最新</span>
+          <span class="newest" :class="{ 'active': !isHot }" @click="latestHandle">最新</span>
         </div>
       </div>
     </van-sticky>
@@ -108,12 +108,16 @@ export default {
     zanId: {
       type: Array,
       default: () => []
+    },
+    // 最新和最热的切换，默认展示最热
+    isHot: {
+      type: Boolean,
+      default: true
     }
   },
 
   data () {
     return {
-      isHot: true,
       showPopup: false,
       secondComments: [],
       fisrtComment: {}
@@ -133,6 +137,16 @@ export default {
       this.fisrtComment = value
       this.showPopup = true
       this.secondComments = value.second_comment
+    },
+
+    // 最热
+    hotHandle () {
+      this.$emit('hot', true)
+    },
+
+    // 最新
+    latestHandle () {
+      this.$emit('hot', false)
     }
   },
   components: {
