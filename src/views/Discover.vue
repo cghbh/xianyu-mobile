@@ -11,7 +11,7 @@
           readonly
           disabled
         />
-        <div style="padding: 0 15px; border-radius: 10px;overflow: hidden;height: 180px">
+        <div style="padding: 0 15px; margin-top: 15px; border-radius: 10px;overflow: hidden;height: 180px">
           <img style="width:100%; height: 100%; border-radius: 6px; object-fit: cover;" src="../assets/images/15985939805f489bbc70c3b.jpg" alt="">
         </div>
         <!-- <div class="xianyu-discover-touser" v-if="false">
