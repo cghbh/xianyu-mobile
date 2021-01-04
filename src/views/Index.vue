@@ -35,10 +35,10 @@ export default {
           title: '动态'
         },
         {
-          to: '/mymessage',
-          active: 'icon-xiaoxi1',
-          inactive: 'icon-xiaoxi1',
-          title: '消息'
+          to: '/knowledge-competition',
+          active: 'icon-bisai',
+          inactive: 'icon-bisai',
+          title: '竞赛'
         },
         {
           to: '/mine',

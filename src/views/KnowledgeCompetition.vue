@@ -121,7 +121,7 @@ export default {
       })
         .then(() => {})
         .catch(() => {
-          this.$router.go(-1)
+          this.$router.push('/')
         })
     },
     async getSubjectsHandle () {

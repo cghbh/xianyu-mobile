@@ -29,6 +29,11 @@
       </van-cell-group>
 
       <van-cell-group @click="$router.push('/mycollection')">
+        <!-- <van-cell title="赞过的动态" border class="iconfont icon-shoucang">
+          <template #right-icon>
+            <i class="iconfont right-i-tag icon-right"></i>
+          </template>
+        </van-cell> -->
         <van-cell title="我的收藏" border class="iconfont icon-shoucang">
           <template #right-icon>
             <i class="iconfont right-i-tag icon-right"></i>

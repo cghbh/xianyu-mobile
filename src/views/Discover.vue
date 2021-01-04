@@ -12,7 +12,7 @@
           disabled
         />
         <div style="padding: 0 15px; margin-top: 15px; border-radius: 10px;overflow: hidden;height: 180px">
-          <img style="width:100%; height: 100%; border-radius: 6px; object-fit: cover;" src="../assets/images/15985939805f489bbc70c3b.jpg" alt="">
+          <img style="width:100%; height: 100%; border-radius: 6px; object-fit: cover;" src="../assets/images/new-year.jpg" alt="">
         </div>
         <!-- <div class="xianyu-discover-touser" v-if="false">
           <h1>致用户大人</h1>
@@ -35,10 +35,6 @@
           <div class="xianyu-classify-item" @click="$router.push('/joke')">
             <i class="iconfont icon-xiaolian"></i>
             <span>开心一刻</span>
-          </div>
-          <div class="xianyu-classify-item" @click="$router.push('/knowledge-competition')">
-            <i class="iconfont icon-bisai"></i>
-            <span>答题</span>
           </div>
         </div>
 
@@ -212,7 +208,7 @@ export default {
 .xianyu-classify {
   display: flex;
   justify-content: space-between;
-  padding: 30px 15px;
+  padding: 30px 20px;
 
   &-item {
     display: flex;
@@ -220,8 +216,8 @@ export default {
     align-items: center;
 
     .iconfont {
-      width: 45px;
-      height: 45px;
+      width: 54px;
+      height: 54px;
       color: #fff;
       display: flex;
       font-size: 18px;

@@ -6,12 +6,12 @@
       </skeleton>
 
       <skeleton theme="opacity" bg-color="#dcdbdc">
-        <tb-skeleton class="skeleton-user-tips" width="100%" height="150px" shape="rect"></tb-skeleton>
+        <tb-skeleton class="skeleton-user-tips" width="100%" height="180px" shape="rect"></tb-skeleton>
       </skeleton>
 
       <skeleton class="skeleton-classify" theme="opacity" bg-color="#dcdbdc">
-        <skeleton class="skeleton-classify-item" theme="opacity" bg-color="#dcdbdc" v-for="item in 5" :key="item + Math.random()">
-          <tb-skeleton class="skeleton-classify-item-top" width="45px" height="45px" shape="circle"></tb-skeleton>
+        <skeleton class="skeleton-classify-item" theme="opacity" bg-color="#dcdbdc" v-for="item in 4" :key="item + Math.random()">
+          <tb-skeleton class="skeleton-classify-item-top" width="54px" height="54px" shape="circle"></tb-skeleton>
           <tb-skeleton class="skeleton-classify-item-bottom" width="40px" height="12px" shape="rect"></tb-skeleton>
         </skeleton>
       </skeleton>
