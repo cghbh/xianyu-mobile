@@ -1,37 +1,43 @@
 <template>
   <div class="xianyu-dictionary">
     <back-top title="成语词典"></back-top>
-    <div class="xianyu-dictionary-container" v-cloak>
-      <div class="dictionary-item" v-for="(item, index) in dictionaryData.dic" :key="index.toString() + Math.random()">
-        <div class="pinyin">{{ item.pinyin }}</div>
-        <div class="hanzi">
-          <div class="left-line"></div>
-          <div class="right-line"></div>
-          <div class="top-line"></div>
-          <div class="bottom-line"></div>
-          <div class="col-line"></div>
-          <div class="row-line"></div>
-          <div class="word-conatiner">{{ item.hanzi }}</div>
+    <div v-if="showSkeleton" class="xianyu-word-detail-skeleton">
+      <detail-skeleton></detail-skeleton>
+    </div>
+    
+    <div v-else class="xianyu-wrapper-container">
+      <div class="xianyu-dictionary-container" v-cloak>
+        <div class="dictionary-item" v-for="(item, index) in dictionaryData.dic" :key="index.toString() + Math.random()">
+          <div class="pinyin">{{ item.pinyin }}</div>
+          <div class="hanzi">
+            <div class="left-line"></div>
+            <div class="right-line"></div>
+            <div class="top-line"></div>
+            <div class="bottom-line"></div>
+            <div class="col-line"></div>
+            <div class="row-line"></div>
+            <div class="word-conatiner">{{ item.hanzi }}</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="word-meaning">
-      <div class="meaning-container"><strong class="word-strong">释义：</strong>{{ dictionaryData.meaning }}</div>
-      <div class="source"><strong class="word-strong">出处：</strong>{{ dictionaryData.source }}</div>
-      <div class="story" v-if="dictionaryData.story && dictionaryData.story.trim().length > 0"><strong class="word-strong">成语故事：</strong>{{ dictionaryData.story }}</div>
-    </div>
-    <div class="zan-collect">
-      <div class="zan-collect-container" :class="{ 'active': zanState }" @click="userZanOrCancel">
-
-        <i class="iconfont icon-dianzan" v-if="zanState"></i>
-        <i class="iconfont icon-dianzan1" v-else></i>
-        <span class="word-exble-style">{{ zanNumber }}</span>
+      <div class="word-meaning">
+        <div class="meaning-container"><strong class="word-strong">释义：</strong>{{ dictionaryData.meaning }}</div>
+        <div class="source"><strong class="word-strong">出处：</strong>{{ dictionaryData.source }}</div>
+        <div class="story" v-if="dictionaryData.story && dictionaryData.story.trim().length > 0"><strong class="word-strong">成语故事：</strong>{{ dictionaryData.story }}</div>
       </div>
-      <div class="zan-collect-container" :class="{ 'active': collectState }" @click="userCollectOrCancel">
+      <div class="zan-collect">
+        <div class="zan-collect-container" :class="{ 'active': zanState }" @click="userZanOrCancel">
 
-        <i class="iconfont icon-shoucang1" v-if="collectState"></i>
-        <i class="iconfont icon-shoucang" v-else></i>
-        <span class="word-exble-style">{{ collectNumber }}</span>
+          <i class="iconfont icon-dianzan" v-if="zanState"></i>
+          <i class="iconfont icon-dianzan1" v-else></i>
+          <span class="word-exble-style">{{ zanNumber }}</span>
+        </div>
+        <div class="zan-collect-container" :class="{ 'active': collectState }" @click="userCollectOrCancel">
+
+          <i class="iconfont icon-shoucang1" v-if="collectState"></i>
+          <i class="iconfont icon-shoucang" v-else></i>
+          <span class="word-exble-style">{{ collectNumber }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -40,7 +46,7 @@
 <script>
 import { getDictionaryById } from '@/api/dictionary.js'
 import { loadUserInfo, getUserZanedWordHandle, getUserCollectedWordHandle, userCancelCollectHandle, userCollectWordHandle, userCancelZanWordHandle, userZanWordHandle } from '@/api/user.js'
-
+import DetailSkeleton from '../components/Skeleton/DictionaryDetailSkeleton.vue'
 export default {
   name: 'Dictionary',
   data () {
@@ -52,7 +58,8 @@ export default {
       // 用户收藏过的成语的id
       userCollectWordsId: [],
       zanNumber: 0,
-      collectNumber: 0
+      collectNumber: 0,
+      showSkeleton: true
     }
   },
 
@@ -116,6 +123,9 @@ export default {
             collect_number: result.data.collect_number,
             story: result.data.word_story
           }
+          setTimeout(() => {
+            this.showSkeleton = false
+          }, 30)
         }
       } catch (err) {
         console.log(err, '错误捕获')
@@ -246,6 +256,10 @@ export default {
         }
       }
     }
+  },
+
+  components: {
+    DetailSkeleton
   }
 }
 </script>
@@ -436,5 +450,14 @@ $fontColor: #000;
 
 .word-exble-style {
   font-size: 15px;
+}
+
+.xianyu-word-detail-skeleton {
+  position: fixed;
+  top: 46px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
 }
 </style>

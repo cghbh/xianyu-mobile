@@ -6,19 +6,19 @@
         width="100%"
         height="20px"
         shape="rect"
-      ></tb-skeleton>
+      />
       <tb-skeleton
         class="skeleton-recomend-left-author"
         width="40%"
         height="13px"
         shape="rect"
-      ></tb-skeleton>
+      />
       <tb-skeleton
         class="skeleton-recomend-left-content"
         width="100%"
         height="72px"
         shape="rect"
-      ></tb-skeleton>
+      />
     </skeleton>
     <skeleton
       class="skeleton-recomend-right"
@@ -30,7 +30,7 @@
         width="100px"
         height="100px"
         shape="rect"
-      ></tb-skeleton>
+      />
     </skeleton>
   </skeleton>
 </template>
