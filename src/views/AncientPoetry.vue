@@ -10,7 +10,7 @@
         <p style="font-size: 15px; color: #666; margin: 8px 0;">{{ poemObj.poem_author }}</p>
         <div class="poem-content" v-html="poemObj.poem_content"></div>
       </div>
-      <van-divider :style="{ color: '#666', borderColor: '#666', padding: '0 16px', fontSize: '16px', margin: '40px 0' }">诗词释义</van-divider>
+      <van-divider :style="{ color: '#666', borderColor: '#666', padding: '0 16px', fontSize: '16px', margin: '40px 0' }">诗词赏析</van-divider>
       <div class="poem-meaning" v-html="poemObj.poem_appreciation"></div>
       <div class="zan-collect">
         <div class="zan-collect-container" :class="{ 'active': zanState }" @click="userZanOrCancelHandle">

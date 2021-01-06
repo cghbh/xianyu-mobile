@@ -3,8 +3,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VConsole from 'vconsole'
-// moment换为day.js减小体积
-import moment from 'moment'
+
+// 格式化时间，体积远小于moment
+import dayjs from 'dayjs'
 import Copy from 'vue-to-copy'
 
 // 顶部返回栏
@@ -34,7 +35,7 @@ Vue.config.productionTip = false
 
 // 全局的filter过滤器
 Vue.filter('timeformat', (value) => {
-  const newTime = moment(value).format('YYYY-MM-DD HH:mm')
+  const newTime = dayjs(value).format('YYYY-MM-DD HH:mm')
   return newTime
 })
 
