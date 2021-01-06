@@ -2,8 +2,12 @@
   <div class="xianyu-dictionary-detail">
     <back-top title="成语列表"></back-top>
     <div class="xianyu-dictionary-detail-container" id="dictionary-list-container" ref="dictionary-list-container">
+      <div v-if="showSkeleton" class="xianyu-word-list-skeleton">
+        <list-skeleton/>
+      </div>
+      
       <!-- 下拉刷新 -->
-      <van-pull-refresh v-model="pullDown" @refresh="onPullDownRefresh">
+      <van-pull-refresh v-else v-model="pullDown" @refresh="onPullDownRefresh">
 
         <!-- 列表组件，上拉加载更多 -->
         <van-list
@@ -30,6 +34,7 @@
 
 <script>
 import DictionaryItem from '@/components/DictionaryItem/index.vue'
+import ListSkeleton from '@/components/Skeleton/DictionaryListSkeleton.vue'
 import { getDictionaryList } from '@/api/dictionary.js'
 import { debounce } from 'lodash'
 export default {
@@ -48,19 +53,20 @@ export default {
       // 上拉加载结束
       loadMoreFinished: false,
       // 列表的滚动的高度
-      dictionaryListScrollTop: 0
+      dictionaryListScrollTop: 0,
+      showSkeleton: true
     }
   },
-  components: {
-    DictionaryItem
-  },
+
   mounted () {
     this.getDictionaryListHandle()
-    this.$refs.['dictionary-list-container'].addEventListener('scroll', debounce(this.scrollHandle, 30))
+    this.$refs['dictionary-list-container'].addEventListener('scroll', debounce(this.scrollHandle, 30))
   },
+
   activated () {
     this.$refs['dictionary-list-container'].scrollTop = this.dictionaryListScrollTop
   },
+
   computed: {
     totalPage () {
       return Math.ceil(this.total / this.perPage)
@@ -72,6 +78,9 @@ export default {
         if (res.errno === 0) {
           this.dictionarys = res.data
           this.total = res.total
+          setTimeout(() => {
+            this.showSkeleton = false
+          }, 30)
         }
       }).catch(() => {})
     },
@@ -103,6 +112,10 @@ export default {
     scrollHandle () {
       this.dictionaryListScrollTop = this.$refs['dictionary-list-container'].scrollTop
     }
+  },
+  components: {
+    DictionaryItem,
+    ListSkeleton
   }
 }
 </script>
@@ -110,11 +123,21 @@ export default {
 <style scoped lang="scss">
 .xianyu-dictionary-detail-container {
   position: fixed;
-  top: 48px;
+  top: 46px;
   bottom: 0;
   left: 0;
   right: 0;
   background-color: rgba(38, 38, 38, .05);
   overflow-y: auto;
+}
+
+.xianyu-word-list-skeleton {
+  position: fixed;
+  top: 46px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  overflow-y: hidden;
 }
 </style>

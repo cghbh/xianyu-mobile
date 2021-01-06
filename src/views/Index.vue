@@ -56,15 +56,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
- .xianyu-index {
-   height: 100%;
-   position: relative;
+.xianyu-index {
+  height: 100%;
+  position: relative;
 
-   /deep/ .van-tabbar-item__icon .iconfont {
-     font-size: 20px;
-   }
-   /deep/ .van-tabbar-item__text {
-     font-size: 14px;
-   }
+  /deep/ .van-tabbar-item__icon .iconfont {
+    font-size: 20px;
+  }
+  /deep/ .van-tabbar-item__text {
+    font-size: 14px;
+  }
  }
 </style>
