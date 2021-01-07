@@ -17,11 +17,17 @@
 
     <van-popup v-model="showPopup" :class="{ 'unlogin': !isLogin, 'login-self': isSelf, 'follow': isPopupFollow }">
       <div class="dynamic-operate">
-        <div class="dynamic-operate-item" v-if="isLogin && !isSelf && !isPopupFollow">不感兴趣</div>
+        <div 
+          class="dynamic-operate-item" 
+          v-if="isLogin && !isSelf && !isPopupFollow"
+          @click="noInterestingHandle">不感兴趣</div>
         <div class="van-hairline--bottom" v-if="isLogin"></div>
-        <div class="dynamic-operate-item" v-if="isLogin && !isSelf && !isPopupFollow">屏蔽：{{ operateDynamic.nickname }}</div>
+        <div 
+          class="dynamic-operate-item" 
+          v-if="isLogin && !isSelf && !isPopupFollow"
+          @click="shieldHandle">屏蔽：{{ operateDynamic.nickname }}</div>
         <div class="van-hairline--bottom" v-if="isLogin"></div>
-        <div class="dynamic-operate-item" v-if="isLogin && !isSelf">举报</div>
+        <div class="dynamic-operate-item" @click="reportHandle" v-if="isLogin && !isSelf">举报</div>
         <div class="van-hairline--bottom" v-if="isLogin"></div>
         <div class="dynamic-operate-item copy-operate">
           <Copy
@@ -132,6 +138,24 @@ export default {
       this.showPopup = false
       this.$toast('复制成功')
       this.operateDynamic.content = ''
+    },
+
+    // 举报操作
+    reportHandle () {
+      this.showPopup = false
+      this.$toast('举报成功')
+    },
+
+    // 屏蔽操作
+    shieldHandle () {
+      this.$toast('屏蔽成功')
+      this.showPopup = false
+    },
+
+    // 不感兴趣
+    noInterestingHandle () {
+      this.$toast('此动态将不再出现')
+      this.showPopup = false
     }
   }
 }
