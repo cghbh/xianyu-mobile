@@ -27,6 +27,7 @@
             :is-like="isLogin && userZanedId.includes(item._id)"
             @unlike="userCancelZan(item._id)"
             @like="userZanHandle(item._id)"
+            @operate="recommendOperate"
           />
         </van-list>
       </van-pull-refresh>
@@ -197,6 +198,11 @@ export default {
           this.$set(this.recommendDynamics, index, newDynamic)
         }
       }
+    },
+
+    // 推荐内容的操作
+    recommendOperate (value) {
+      this.$emit('recommend', value)
     }
   },
 

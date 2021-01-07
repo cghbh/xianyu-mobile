@@ -26,6 +26,7 @@
             @like="userZanHandle(item._id)"
             @uncollect="userCancelCollect(item._id)"
             @collect="userCollectHandle(item._id)"
+            @operate="latestOperate"
           />
         </van-list>
       </div>
@@ -267,6 +268,11 @@ export default {
           this.$set(this.latestDynamics, index, newDynamic)
         }
       }
+    },
+
+    // 最新动态的操作
+    latestOperate (value) {
+      this.$emit('latest', value)
     }
   },
   components: {

@@ -1,27 +1,4 @@
 <template>
-  <!-- <div class="homepage-item" :class="{ 'first': isFirst }">
-      <div class="homepage-item-user">
-        
-
-        <div class="xianyu-delete-operate">
-          <div class="xianyu-delete-operate-private" v-if="isPrivate">
-            <i class="iconfont icon-22suo"></i>
-            <span>私密</span>
-          </div>
-          <i 
-            v-if="deleteOperate"
-            @click="$emit('operate')" 
-            class="delete-opt iconfont icon-jiantouxia"
-          >
-            </i>
-        </div>
-      </div>
-
-      
-
-      
-  </div> -->
-  <!-- color:#F3F5FB -->
   <div class="dynamic-item">
     <div class="dynamic-item-user">
       <div class="dynamic-item-user-container">
@@ -40,7 +17,7 @@
     </div>
 
     <div class="dynamic-item-area" @click="goDynamicDetail" ref="homepage-item-area">
-      <p>{{ itemValue.content }}</p>
+      <p v-html="itemValue.content"></p>
 
       <div class="img-preview-container">
         <xianyu-image
@@ -139,8 +116,7 @@ export default {
 
     // 展示更多按钮的操作
     userOperate () {
-      this.App.showPopup = true
-      this.App.operateUser({ d_id: this.itemValue._id, nickname: this.itemValue.publisher.nickname, content: this.itemValue.content, u_id: this.itemValue.publisher._id })
+      this.$emit('operate', { d_id: this.itemValue._id, nickname: this.itemValue.publisher.nickname, content: this.itemValue.content, u_id: this.itemValue.publisher._id })
     }
   },
 

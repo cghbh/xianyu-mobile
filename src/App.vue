@@ -5,7 +5,7 @@
     </keep-alive>
     <router-view v-if="!$route.meta.keepAlive"></router-view>
     
-    <van-popup v-model="showPopup" get-container="#app" :class="{ 'un-login': !isLogin, 'un-self': isSelf && isLogin }">
+    <!-- <van-popup v-model="showPopup" get-container="#app" :class="{ 'un-login': !isLogin, 'un-self': isSelf && isLogin }">
       <div class="operate-container">
         <div 
           class="operate-item need-line-bottom" 
@@ -27,7 +27,7 @@
           @click="userReport"
           v-if="isLogin && !isSelf">举报</div>
       </div>
-    </van-popup>
+    </van-popup> -->
   </div>
 </template>
 
@@ -130,62 +130,5 @@ export default {
 <style lang="scss">
 #app {
   height: 100%;
-
-  /deep/ .van-popup--center {
-    left: 35px;
-    right: 35px;
-    bottom: 0px;
-    height: 208px;
-    margin-top: 65px;
-    border-radius: 10px;
-    transform: none;
-  }
-
-  /deep/ .van-popup--center.un-login {
-    left: 35px;
-    right: 35px;
-    bottom: 0;
-    height: 104px;
-    margin-top: 180px;
-    border-radius: 10px;
-    transform: none;
-  }
-
-  /deep/ .van-popup--center.un-self {
-    left: 35px;
-    right: 35px;
-    bottom: 0;
-    height: 104px;
-    margin-top: 160px;
-    border-radius: 10px;
-    transform: none;
-  }
-}
-
-.operate-container {
-
-  .operate-item {
-    height: 52px;
-    line-height: 52px;
-    text-align: center;
-    position: relative;
-    font-size: 16PX;
-    color: #409fea;
-  }
-
-  .operate-item.need-line-bottom::before {
-    position: absolute;
-    content: "";
-    left: 12px;
-    right: 12px;
-    height: 1PX;
-    bottom: 0;
-    background-color: #e1e1e1;
-    transform: scaleY(.5);
-  }
-
-  .user-delete {
-    color: #e92322;
-  }
 }
 </style>

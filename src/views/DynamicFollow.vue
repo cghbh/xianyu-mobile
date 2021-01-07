@@ -26,6 +26,7 @@
           @like="userZanHandle(item._id)"
           @uncollect="userCancelCollect(item._id)"
           @collect="userCollectHandle(item._id)"
+          @operate="followOperate"
         />
       </van-list>
       
@@ -233,6 +234,11 @@ export default {
 
     scrollTopHandle () {
       this.scrollTop = this.$refs['xianyu-dynamic-my-follow'].scrollTop
+    },
+
+    // 我的关注的操作
+    followOperate (value) {
+      this.$emit('follow', value)
     }
   },
 

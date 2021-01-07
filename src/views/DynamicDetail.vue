@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class="dynamic-detail-content">
-        <p>{{ dynamic.content }}</p>
+        <p v-html="dynamic.content"></p>
         <van-image
           @click="showPreview(index)"
           width="100"

@@ -2,18 +2,38 @@
   <div class="xianyu-home-page">
     <van-tabs v-model="active" sticky animated swipeable title-active-color="#409fea" color="#409fea">
       <van-tab id="van-tabs-scroll" title="推荐">
-        <recomend-dynamics></recomend-dynamics>
+        <recomend-dynamics @recommend="recommendOperate"></recomend-dynamics>
       </van-tab>
 
       <van-tab title="最新">
-        <latest-dynamics></latest-dynamics>
+        <latest-dynamics @latest="latestOperate"></latest-dynamics>
       </van-tab>
 
       <van-tab title="关注">
-        <follow-dynamics></follow-dynamics>
+        <follow-dynamics @follow="followOperate"></follow-dynamics>
       </van-tab>
       
     </van-tabs>
+
+    <van-popup v-model="showPopup" :class="{ 'unlogin': !isLogin, 'login-self': isSelf, 'follow': isPopupFollow }">
+      <div class="dynamic-operate">
+        <div class="dynamic-operate-item" v-if="isLogin && !isSelf && !isPopupFollow">不感兴趣</div>
+        <div class="van-hairline--bottom" v-if="isLogin"></div>
+        <div class="dynamic-operate-item" v-if="isLogin && !isSelf && !isPopupFollow">屏蔽：{{ operateDynamic.nickname }}</div>
+        <div class="van-hairline--bottom" v-if="isLogin"></div>
+        <div class="dynamic-operate-item" v-if="isLogin && !isSelf">举报</div>
+        <div class="van-hairline--bottom" v-if="isLogin"></div>
+        <div class="dynamic-operate-item copy-operate">
+          <Copy
+            :content="operateDynamic.content && operateDynamic.content.replace(/<br>/g, '\n')" 
+            @copyCallback="copyCallback">
+            复制
+          </Copy>
+        </div>
+        <div class="van-hairline--bottom" v-if="isLogin && isSelf"></div>
+        <div class="dynamic-operate-item delete-operate" v-if="isLogin && isSelf">删除</div>
+      </div>
+    </van-popup>
 
     <i 
       class="iconfont add-word icon-tianxie"
@@ -51,7 +71,28 @@ export default {
       isLoading: true,
       // 最新内容的刷新状态
       isLatestLoading: true,
-      emptyImg: require('../assets/images/empty-image-default.png')
+      showPopup: false,
+      emptyImg: require('../assets/images/empty-image-default.png'),
+      // 操作的是哪一条动态
+      operateDynamic: {},
+      // 如果是我的关注的内容，不需要屏蔽和不感兴趣的功能
+      isPopupFollow: false
+    }
+  },
+
+  computed: {
+    // 判断是否是自己，如果是自己，则只有删除和复制，如果未登录的话，只有复制功能，如果登录看到的不是自己的动态，则有屏蔽功能和不想看到这条动态的功能，如果是自己关注的人，则只有复制和举报的功能
+    isSelf () {
+      return this.operateDynamic.u_id === this.userId
+    },
+
+    // 是否登录
+    isLogin () {
+      return this.$store.state.token.token
+    },
+
+    userId () {
+      return this.$store.state.token.userId
     }
   },
 
@@ -59,6 +100,39 @@ export default {
     RecomendDynamics,
     FollowDynamics,
     LatestDynamics
+  },
+
+  methods: {
+    // 最新动态的操作
+    latestOperate (value) {
+      this.showPopup = true
+      this.isPopupFollow = false
+      this.operateDynamic = value
+      console.log('latest', value)
+    },
+
+    // 推荐内容的操作
+    recommendOperate (value) {
+      this.showPopup = true
+      this.isPopupFollow = false
+      this.operateDynamic = value
+      console.log('recommend', value)
+    },
+
+    // 我的关注的操作
+    followOperate (value) {
+      this.showPopup = true
+      this.isPopupFollow = true
+      this.operateDynamic = value
+      console.log('follow', value)
+    },
+
+    // 复制文本
+    copyCallback () {
+      this.showPopup = false
+      this.$toast('复制成功')
+      this.operateDynamic.content = ''
+    }
   }
 }
 </script>
@@ -109,5 +183,57 @@ export default {
   background-color: #409fea;
   border-radius: 50%;
   padding: 10px;
+}
+
+.xianyu-home-page {
+  /deep/ .van-popup {
+    height: 224px;
+    width: 280px;
+    margin-top: 128px;
+    border-radius: 10px;
+  }
+
+  /deep/ .van-popup.unlogin {
+    height: 56px;
+    margin-top: 200px;
+  }
+
+  // 已登录的判断是否是自己
+  /deep/ .van-popup.login-self {
+    height: 112px;
+    margin-top: 180px;
+  }
+
+  /deep/ .van-popup.follow {
+    height: 112px;
+    margin-top: 180px;
+  }
+
+  /deep/ .van-popup--center {
+    bottom: 0!important;
+  }
+
+  /deep/ .van-hairline--bottom {
+    margin: 0 15px;
+  }
+}
+
+.dynamic-operate {
+  &-item {
+    height: 56px;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    color: rgba(0, 0, 0, .75);
+    align-items: center;
+  }
+
+  &-item.delete-operate {
+    color: #e92322;
+  }
+
+  &-item.copy-operate {
+    color: #409fea;
+  }
 }
 </style>
