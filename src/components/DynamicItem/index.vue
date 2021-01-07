@@ -166,14 +166,6 @@ export default {
     }
   }
 
-  &-area {
-    p {
-      font-size: 17px;
-      margin: 10px 0 15px 0;
-      line-height: 28px;
-    }
-  }
-
   /deep/ .van-skeleton {
     padding: 0;
   }
@@ -255,8 +247,8 @@ export default {
 
   &-area {
     p {
-      font-size: 15PX;
-      line-height: 25px;
+      font-size: 16PX;
+      line-height: 28px;
       margin-bottom: 15px;
       color: rgba(0, 0, 0, .9);
     }

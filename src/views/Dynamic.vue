@@ -20,25 +20,33 @@
       :class="{ 'unlogin': !isLogin, 'login-self': isSelf, 'follow': isPopupFollow }">
       <div class="dynamic-operate">
         <div 
-          class="dynamic-operate-item" 
+          class="dynamic-operate-item no-interesting" 
           v-if="isLogin && !isSelf && !isPopupFollow"
-          @click="noInterestingHandle">不感兴趣</div>
-        <div class="van-hairline--bottom" v-if="isLogin"></div>
+          @click="noInterestingHandle">
+          <div class="line"></div>
+          不感兴趣
+        </div>
         <div 
-          class="dynamic-operate-item" 
+          class="dynamic-operate-item user-shield" 
           v-if="isLogin && !isSelf && !isPopupFollow"
-          @click="shieldHandle">屏蔽：{{ operateDynamic.nickname }}</div>
-        <div class="van-hairline--bottom" v-if="isLogin"></div>
-        <div class="dynamic-operate-item" @click="reportHandle" v-if="isLogin && !isSelf">举报</div>
-        <div class="van-hairline--bottom" v-if="isLogin"></div>
+          @click="shieldHandle">
+          <div class="line"></div>
+          屏蔽：{{ operateDynamic.nickname }}
+        </div>
+
+        <div class="dynamic-operate-item user-report" @click="reportHandle" v-if="isLogin && !isSelf">
+          <div class="line"></div>
+          举报
+        </div>
+
         <div class="dynamic-operate-item copy-operate">
+          <div class="line"></div>
           <Copy
             :content="operateDynamic.content && operateDynamic.content.replace(/<br>/g, '\n')" 
             @copyCallback="copyCallback">
             复制
           </Copy>
         </div>
-        <div class="van-hairline--bottom" v-if="isLogin && isSelf"></div>
         <div 
           class="dynamic-operate-item delete-operate" 
           v-if="isLogin && isSelf"
@@ -259,7 +267,7 @@ export default {
     height: 224px;
     width: 280px;
     margin-top: 128px;
-    border-radius: 10px;
+    border-radius: 12px;
   }
 
   /deep/ .van-popup.unlogin {
@@ -281,10 +289,6 @@ export default {
   /deep/ .van-popup--center {
     bottom: 0!important;
   }
-
-  /deep/ .van-hairline--bottom {
-    margin: 0 15px;
-  }
 }
 
 .dynamic-operate {
@@ -295,6 +299,7 @@ export default {
     justify-content: center;
     color: rgba(0, 0, 0, .75);
     align-items: center;
+    position: relative;
   }
 
   &-item.delete-operate {
@@ -303,6 +308,19 @@ export default {
 
   &-item.copy-operate {
     color: #409fea;
+  }
+
+  .no-interesting .line,
+  .user-shield .line,
+  .user-report .line,
+  .copy-operate .line {
+    position: absolute;
+    left: 15px;
+    right: 15px;
+    height: 1px;
+    bottom: 0;
+    background-color: #f3f3f3;
+    transform: scaleY(1);
   }
 }
 </style>
