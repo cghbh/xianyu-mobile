@@ -15,7 +15,17 @@ export default new Vuex.Store({
     // 存储已读的段子，如果已登录则推送到服务端
     readJokes: [],
     // 缓存的页面
-    cachedPages: []
+    cachedPages: [],
+    // 推荐的动态
+    recommendDynamics: {
+      data: [],
+      total: 0
+    },
+    // 最新的动态
+    latestDynamics: {
+      data: [],
+      total: 0
+    }
   },
   mutations: {
     // 用户登陆，缓存token和userid备用
@@ -56,6 +66,22 @@ export default new Vuex.Store({
       const index = state.cachedPages.indexOf(page)
       if (index > -1) {
         state.cachedPages.splice(index, 1)
+      }
+    },
+
+    // 修改最新的动态数据
+    modifyLatestDynamics (state, value) {
+      state.latestDynamics.data = value.data
+      if (value.total) {
+        state.latestDynamics.total = value.total
+      }
+    },
+
+    // 修改推荐的动态数据
+    modifyRecommendDynamics (state, value) {
+      state.recommendDynamics.data = value.data
+      if (value.total) {
+        state.recommendDynamics.total = value.total
       }
     }
   },

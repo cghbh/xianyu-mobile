@@ -55,7 +55,6 @@ import { ImagePreview } from 'vant'
 import XianyuImage from '../Image/index'
 export default {
   name: 'HomepageItem',
-  inject: ['App'],
   props: {
     isFirst: {
       type: Boolean,

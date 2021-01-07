@@ -44,12 +44,12 @@ export default {
   name: 'DynamicLatest',
   data () {
     return {
-      latestDynamics: [],
+      // latestDynamics: [],
       // 下拉刷新
       pullDown: false,
       currentPage: 1,
       // 总的页数
-      total: 0,
+      // total: 0,
       // 每页展示的数据
       perPage: 20,
       // 避免初始情况下数据加载出现没有数据的空白展示页
@@ -107,6 +107,14 @@ export default {
     // 用户的登陆状态
     isLogin () {
       return this.$store.state.token.token
+    },
+
+    latestDynamics () {
+      return this.$store.state.latestDynamics.data
+    },
+
+    total () {
+      return this.$store.state.latestDynamics.total
     }
   },
   methods: {
@@ -114,8 +122,7 @@ export default {
     async getLatestDynamics () {
       const result = await getDynamics(1, this.currentPage)
       if (result.errno === 0) {
-        this.latestDynamics = result.data
-        this.total = result.total
+        this.$store.commit('modifyLatestDynamics', { data: result.data, total: result.total })
         if (this.latestDynamics.length <= 0) {
           this.showTag = true
         }
@@ -156,8 +163,7 @@ export default {
       this.currentPage = 1
       const result = await getDynamics(1, this.currentPage)
       if (result.errno === 0) {
-        this.latestDynamics = result.data
-        this.total = result.total
+        this.$store.commit('modifyLatestDynamics', { data: result.data, total: result.total })
         this.pullDown = false
         this.$toast({ message: '刷新成功', duration: 800 })
       }
@@ -171,7 +177,7 @@ export default {
       }
       const result = await getDynamics(1, ++this.currentPage)
       if (result.errno === 0) {
-        this.latestDynamics = [...this.latestDynamics, ...result.data]
+        this.$store.commit('modifyLatestDynamics', { data: [...this.latestDynamics, ...result.data], total: result.total })
         this.loadMore = false
       }
     },

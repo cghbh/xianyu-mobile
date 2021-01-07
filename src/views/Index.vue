@@ -48,9 +48,6 @@ export default {
         }
       ]
     }
-  },
-  activated () {
-    console.log('Index缓存')
   }
 }
 </script>

@@ -52,11 +52,6 @@ export default {
       uploadImg: null
     }
   },
-  watch: {
-    inputValue (value) {
-      console.log(value, 'value')
-    }
-  },
 
   methods: {
     divInput (e) {
@@ -100,6 +95,20 @@ export default {
       }
       const data = await dynamicPublish({ content: this.inputValue.replace(/\n/g, '<br>'), avatar_url: imgArray, is_private: this.isPrivate })
       if (data.errno === 0) {
+        console.log(data, '这是发布的动态')
+        // 发布成功，将这条动态push到latest动态的最前面，如果关注的人有的话，推送到关注的动态的最前面
+        const newLatestDynamics = JSON.parse(JSON.stringify(this.$store.state.latestDynamics))
+        const newRecommendDynamics = JSON.parse(JSON.stringify(this.$store.state.recommendDynamics))
+        let latestTotal = newLatestDynamics.total
+        let recommendTotal = newRecommendDynamics.total
+        const newLatestData = newLatestDynamics.data
+        const newRecommendData = newRecommendDynamics.data
+        latestTotal += 1
+        recommendTotal += 1
+        newLatestData.unshift(data.data)
+        newRecommendData.push(data.data)
+        this.$store.commit('modifyLatestDynamics', { data: newLatestData, total: latestTotal })
+        this.$store.commit('modifyRecommendDynamics', { data: newRecommendData, total: recommendTotal })
         this.$toast({ message: data.message, duration: 600 })
         this.inputValue = ''
         this.uploadImg = null

@@ -48,7 +48,6 @@ export default {
     return {
       // 下拉刷新的状态
       pullDown: false,
-      recommendDynamics: [],
       // 是否点赞的状态
       isLike: true,
       // 避免出现没有数据的空状态闪烁
@@ -59,8 +58,6 @@ export default {
       loadMore: false,
       // 上拉加载完成状态
       loadMoreFinished: false,
-      // 总的数据条数
-      total: 0,
       scrollTop: 0,
       emptyImg: require('../assets/images/empty-image-default.png'),
       userZanedId: [],
@@ -81,6 +78,16 @@ export default {
     },
     isLogin () {
       return this.$store.state.token.token
+    },
+
+    // 推荐的动态
+    recommendDynamics () {
+      return this.$store.state.recommendDynamics.data
+    },
+
+    // 总的数据条数
+    total () {
+      return this.$store.state.recommendDynamics.total
     }
   },
 
@@ -103,8 +110,7 @@ export default {
     async getRecommendDynamics () {
       const result = await getDynamics(0, this.currentPage, this.perPage)
       if (result.errno === 0) {
-        this.recommendDynamics = result.data
-        this.total = result.total
+        this.$store.commit('modifyRecommendDynamics', { data: result.data, total: result.total })
         this.recommendDynamics.length > 0 ? (this.showDynamicsTag = true) : (this.showDynamicsTag = false)
         this.skeletonLoading = false
       }
@@ -129,9 +135,8 @@ export default {
       this.loadMoreFinished = false
       const result = await getDynamics(0, this.currentPage, this.perPage)
       if (result.errno === 0) {
-        this.recommendDynamics = result.data
+        this.$store.commit('modifyRecommendDynamics', { data: result.data, total: result.total })
         this.pullDown = false
-        this.total = result.total
         this.recommendDynamics.length > 0 ? (this.showDynamicsTag = true) : (this.showDynamicsTag = false)
         this.$toast('刷新成功')
       }
@@ -145,7 +150,7 @@ export default {
       }
       const result = await getDynamics(0, ++this.currentPage, this.perPage)
       if (result.errno === 0) {
-        this.recommendDynamics = [...this.recommendDynamics, ...result.data]
+        this.$store.commit('modifyRecommendDynamics', { data: [...this.recommendDynamics, ...result.data], total: result.total })
         this.loadMore = false
       }
     },

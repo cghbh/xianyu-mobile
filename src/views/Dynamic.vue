@@ -2,20 +2,22 @@
   <div class="xianyu-home-page">
     <van-tabs v-model="active" sticky animated swipeable title-active-color="#409fea" color="#409fea">
       <van-tab id="van-tabs-scroll" title="推荐">
-        <recomend-dynamics @recommend="recommendOperate"></recomend-dynamics>
+        <recomend-dynamics ref="recommend" @recommend="recommendOperate"></recomend-dynamics>
       </van-tab>
 
       <van-tab title="最新">
-        <latest-dynamics @latest="latestOperate"></latest-dynamics>
+        <latest-dynamics ref="latest" @latest="latestOperate"></latest-dynamics>
       </van-tab>
 
       <van-tab title="关注">
-        <follow-dynamics @follow="followOperate"></follow-dynamics>
+        <follow-dynamics ref="follow" @follow="followOperate"></follow-dynamics>
       </van-tab>
       
     </van-tabs>
 
-    <van-popup v-model="showPopup" :class="{ 'unlogin': !isLogin, 'login-self': isSelf, 'follow': isPopupFollow }">
+    <van-popup 
+      v-model="showPopup" 
+      :class="{ 'unlogin': !isLogin, 'login-self': isSelf, 'follow': isPopupFollow }">
       <div class="dynamic-operate">
         <div 
           class="dynamic-operate-item" 
@@ -37,7 +39,12 @@
           </Copy>
         </div>
         <div class="van-hairline--bottom" v-if="isLogin && isSelf"></div>
-        <div class="dynamic-operate-item delete-operate" v-if="isLogin && isSelf">删除</div>
+        <div 
+          class="dynamic-operate-item delete-operate" 
+          v-if="isLogin && isSelf"
+          @click="deleteHandle">
+          删除
+        </div>
       </div>
     </van-popup>
 
@@ -54,6 +61,7 @@
 import RecomendDynamics from './DynamicRecommend.vue'
 import FollowDynamics from './DynamicFollow.vue'
 import LatestDynamics from './DynamicLatest.vue'
+import { deleteDynamic } from '../api/dynamic.js'
 export default {
   name: 'Dynamic',
   data () {
@@ -114,7 +122,6 @@ export default {
       this.showPopup = true
       this.isPopupFollow = false
       this.operateDynamic = value
-      console.log('latest', value)
     },
 
     // 推荐内容的操作
@@ -122,7 +129,6 @@ export default {
       this.showPopup = true
       this.isPopupFollow = false
       this.operateDynamic = value
-      console.log('recommend', value)
     },
 
     // 我的关注的操作
@@ -130,7 +136,6 @@ export default {
       this.showPopup = true
       this.isPopupFollow = true
       this.operateDynamic = value
-      console.log('follow', value)
     },
 
     // 复制文本
@@ -156,6 +161,46 @@ export default {
     noInterestingHandle () {
       this.$toast('此动态将不再出现')
       this.showPopup = false
+    },
+
+    // 删除操作
+    deleteHandle () {
+      this.showPopup = false
+      this.$dialog.confirm({
+        width: '315px',
+        confirmButtonColor: '#666',
+        cancelButtonColor: '#e92322',
+        confirmButtonText: '取消',
+        cancelButtonText: '确定',
+        allowHtml: true,
+        message: '<h1 style="color: #555; line-height: 24px;font-size:16px">确定要删除这条动态吗？</h1>'
+      })
+        .then(() => {})
+        .catch(async () => {
+          // 确定删除动态
+          const result = await deleteDynamic(this.operateDynamic.d_id)
+          if (result.errno === 0) {
+            const newLatestDynamics = JSON.parse(JSON.stringify(this.$store.state.latestDynamics))
+            const newRecommendDynamics = JSON.parse(JSON.stringify(this.$store.state.recommendDynamics))
+            let latestTotal = newLatestDynamics.total
+            let recommendTotal = newRecommendDynamics.total
+            const newLatestData = newLatestDynamics.data
+            const newRecommendData = newRecommendDynamics.data
+            const latestIndex = newLatestData.findIndex(item => item._id === this.operateDynamic.d_id)
+            const recommendIndex = newRecommendData.findIndex(item => item._id === this.operateDynamic.d_id)
+            if (latestIndex > -1) {
+              newLatestData.splice(latestIndex, 1)
+            }
+            if (recommendIndex > -1) {
+              newRecommendData.splice(recommendIndex, 1)
+            }
+            latestTotal -= 1
+            recommendTotal -= 1
+            this.$store.commit('modifyLatestDynamics', { data: newLatestData, total: latestTotal })
+            this.$store.commit('modifyRecommendDynamics', { data: newRecommendData, total: recommendTotal })
+            this.$toast('删除成功')
+          }
+        })
     }
   }
 }
