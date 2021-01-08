@@ -164,7 +164,7 @@ const routes = [
     path: '/userinfo-edit',
     component: () => import('../views/UserInfoEdit.vue'),
     name: 'UserInfoEdit',
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: true }
   },
   {
     path: '/setting',
