@@ -33,12 +33,6 @@ const routes = [
         meta: { requiresAuth: false, keepAlive: false }
       },
       {
-        path: '/mymessage',
-        component: () => import(/* webpackChunkName: "group-index-other" */ '../views/MyMessage.vue'),
-        name: 'MyMessage',
-        meta: { requiresAuth: true, keepAlive: false }
-      },
-      {
         path: '',
         component: () => import(/* webpackChunkName: "group-index-other" */ '../views/Discover.vue'),
         name: 'Discover',
@@ -74,12 +68,6 @@ const routes = [
     path: '/knowledge-competition',
     component: () => import('../views/KnowledgeCompetition.vue'),
     name: 'KnowledgeCompetition',
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/modify-information',
-    component: () => import('../views/ModifyInformation.vue'),
-    name: 'ModifyInformation',
     meta: { requiresAuth: true }
   },
   {
@@ -161,10 +149,10 @@ const routes = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/my-detail',
+    path: '/my-detail/:userId',
     component: () => import('../views/MyDetail.vue'),
     name: 'MyDetail',
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, keepAlive: true }
   },
   {
     path: '/feedback',
@@ -179,21 +167,9 @@ const routes = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/bind-telephone',
-    component: () => import('../views/BindTelephone.vue'),
-    name: 'BindTelephone',
-    meta: { requiresAuth: true }
-  },
-  {
     path: '/setting',
     component: () => import('../views/Setting.vue'),
     name: 'Setting',
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/replace-telephone',
-    component: () => import('../views/ReplaceTelephone.vue'),
-    name: 'ReplaceTelephone',
     meta: { requiresAuth: true }
   },
   {

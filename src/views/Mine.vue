@@ -3,7 +3,11 @@
     <div class="xianyu-mine-header">
       <div class="xianyu-mine-header-container">
         <div class="xianyu-header-top">
-          <div class="xianyu-header-top-left-logined" v-if="token">
+          <div 
+            class="xianyu-header-top-left-logined" 
+            v-if="token"
+            @click="$router.push(`/my-detail/${userId}`)"
+          >
             <van-image width="56" height="56" round fit="cover" :src="userInfo.avatar_url" />
           </div>
           <div class="xianyu-header-top-left" @click="$router.push('/login')" v-else>

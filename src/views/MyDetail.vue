@@ -7,51 +7,81 @@
       </div>
       <div class="edit-user" ref="edit">编辑资料</div>
     </div>
-    <div class="user-detail-img" id="img">
-      <!-- <img src="../assets/images/095314-150898279496ba.jpg" alt=""> -->
+    <div 
+      class="user-detail-img" 
+      id="img"
+    >
+      <van-image 
+        width="100%" 
+        height="180" 
+        fit="cover"
+        :src="userInfo.background" />
     </div>
 
     <!-- 用户信息展示 -->
     <div class="user-detail-info">
       <div class="user-detail-info-avatar">
-        <img src="../assets/images/courage.png">
+        <img :src="userInfo.avatar_url">
       </div>
       <div class="user-detail-info-set">
-        <button v-if="true">编辑资料</button>
-        <button v-else>关注</button>
+        <button v-if="isSelf" @click="$router.push('/userinfo-edit')">编辑资料</button>
+        <button class="un-follow" v-if="!isSelf && !loginUserFollowId.includes(routeId)">关注</button>
+        <button class="follow" v-if="!isSelf && loginUserFollowId.includes(routeId)">已关注</button>
       </div>
-      <h1 class="user-detail-name">名称</h1>
-      <p class="personal_sign">我的人参我自己煮宰！</p>
+      <h1 class="user-detail-name">{{ userInfo.nickname }}</h1>
+      <p class="personal_sign">{{ userInfo.personal_sign }}</p>
       <div class="number">
-        <span><b>0</b>粉丝</span>
-        <span><b>0</b>关注</span>
-        <span><b>0</b>获赞</span>
+        <span><b>{{ fans }}</b>粉丝</span>
+        <span><b>{{ follow }}</b>关注</span>
+        <span><b>{{ zanNumber }}</b>获赞</span>
       </div>
     </div>
     <divide-area></divide-area>
 
     <!-- 用户的动态与收藏部分 -->
-    <div class="user-dynamic">
+    <!-- <div class="user-dynamic">
       <van-sticky offset-top="49">
         <van-tabs v-model="activeName" animated swipeable>
           <van-tab title="动态" name="a"><div style="height: 1000px;background-color: skyblue;">1</div></van-tab>
           <van-tab title="收藏" name="b"><div style="height: 1000px;background-color: skyblue;">2</div></van-tab>
         </van-tabs>
       </van-sticky>
-
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import DivideArea from '../components/PublicComponents/DivideArea.vue'
+import { getUserInfoById, userFollows } from '@/api/user.js'
 export default {
   name: 'UserDetail',
   data () {
     return {
-      activeName: 'a'
+      activeName: 'a',
+      userInfo: [],
+      // 已登录用户关注的用户的id
+      loginUserFollowId: [],
+      // 获赞数
+      zanNumber: 0,
+      // 关注数
+      follow: 0,
+      // 粉丝数
+      fans: 0
     }
   },
+
+  watch: {
+    routeId (newVal) {
+      if (newVal) {
+        if (this.isSelf) {
+          this.getUserInfo(this.userId)
+        } else {
+          this.getUserInfo(newVal)
+        }
+      }
+    }
+  },
+
   methods: {
     // 屏幕滚动事件的监听操作
     screenScroll () {
@@ -76,14 +106,63 @@ export default {
         this.$refs.edit.style.opacity = 0
         this.$refs.header.style.backgroundColor = 'transparent'
       }
+    },
+
+    // 获取用户的信息
+    async getUserInfo (id) {
+      const result = await getUserInfoById(id)
+      if (result.errno === 0) {
+        this.userInfo = result.data
+        this.zanNumber = result.zan_number
+        this.fans = result.fans
+        this.follow = result.following
+      }
+    },
+
+    async getUserFollows () {
+      const result = await userFollows(this.userId)
+      if (result.errno === 0) {
+        const tempArray = []
+        result.data.forEach(item => tempArray.push(item._id))
+        this.loginUserFollowId = tempArray
+      }
     }
   },
+
+  computed: {
+    // 路由传递过来的个人信息的id
+    routeId () {
+      return this.$route.params.userId
+    },
+
+    // 已登录用户的个人的id
+    userId () {
+      return this.$store.state.token.userId
+    },
+
+    // 判断页面的内容是否是自己
+    isSelf () {
+      return this.routeId === this.userId
+    }
+  },
+
   mounted () {
+    if (this.isSelf) {
+      this.getUserInfo(this.userId)
+    } else {
+      this.getUserInfo(this.routeId)
+    }
+
+    if (this.userId) {
+      this.getUserFollows()
+    }
     window.addEventListener('scroll', this.screenScroll)
   },
+
   beforeDestroy () {
     window.removeEventListener('scroll', this.screenScroll)
   },
+
   components: {
     DivideArea
   }
@@ -130,11 +209,7 @@ export default {
 
   &-img {
     width: 100%;
-
-    img {
-      width: 100%;
-      display: block;
-    }
+    max-height: 180px;
   }
 
   .user-detail-name {
@@ -147,7 +222,7 @@ export default {
   .personal_sign {
     padding-left: 28px;
     margin-top: 15px;
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .number {
@@ -195,14 +270,25 @@ export default {
       padding-right: 20px;
 
       button {
-        padding: 0px 10px;
-        height: 32px;
-        font-size: 14px;
+        width: 70px;
+        height: 28px;
+        font-size: 13px;
+        border-radius: 5px;
         background-color: #fff;
-        border: 1px solid #666;
-        border-radius: 32px;
-        line-height: 32px;
-        color: #666;
+        border: 1px solid #409fea;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #409fea;
+      }
+
+      button.un-follow {
+        color: #409fea;
+      }
+
+      button.follow {
+        color: #fff;
+        background-color: #409fea;
       }
     }
   }

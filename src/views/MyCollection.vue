@@ -8,17 +8,6 @@
       sticky 
       color="#409fea"
       offset-top="46">
-      <!-- <van-tab title="动态">
-        <collect-dynamic 
-          :dynamics="dynamics"
-          :zan-id="userZanedId"
-          :collected-id="userCollectedId"
-          @unlike="userCancelZanHandle"
-          @like="userZanHandle"
-          @uncollect="userCancelCollect"
-          @collect="userCollectHandle"
-        />
-      </van-tab> -->
       <van-tab title="好文">
         <collect-article :articles="articles"/>
       </van-tab>

@@ -106,6 +106,7 @@
 <script>
 import areaList from '@/assets/city/area.js'
 import EdituserEdit from '@/components/EditUserItem/index.vue'
+import { getUserInfoById } from '@/api/user.js'
 export default {
   name: 'UserInfoEdit',
   data () {
@@ -133,9 +134,25 @@ export default {
       this.showSexEdit = false
     }
   },
+
+  computed: {
+    userId () {
+      return this.$store.state.token.userId
+    }
+  },
+
+  mounted () {
+    this.getUserInfoHandle()
+  },
+
   methods: {
     showSexEditHandle () {
       this.showSexEdit = true
+    },
+
+    async getUserInfoHandle () {
+      const result = await getUserInfoById(this.userId)
+      console.log(result, '个人信息')
     }
   },
   components: {

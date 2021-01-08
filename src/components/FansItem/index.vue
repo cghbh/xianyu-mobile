@@ -105,7 +105,7 @@ export default {
   &-right {
     width: 80px;
     height: 28px;
-    border-radius: 4px;
+    border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;

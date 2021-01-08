@@ -7,6 +7,7 @@
         :width="50"
         :height="50"
         round
+        @click="$router.push(`/my-detail/${itemValue.publisher._id}`)"
       />
       <div class="dynamic-item-user-about">
         <h1>{{ itemValue.publisher.nickname }}</h1>

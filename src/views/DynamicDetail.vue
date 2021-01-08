@@ -13,6 +13,7 @@
             fit="cover" 
             round 
             :src="dynamic.publisher && dynamic.publisher.avatar_url"
+            @click="$router.push(`/my-detail/${dynamic.publisher._id}`)"
           />
           <div class="dynamic-detail-user-name">
             <h1>{{ dynamic.publisher && dynamic.publisher.nickname }}</h1>

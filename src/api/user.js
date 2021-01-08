@@ -19,6 +19,11 @@ const loadUserInfo = () => {
   return axios.post('/users')
 }
 
+// 根据用户id获取用户的详细信息
+const getUserInfoById = (id) => {
+  return axios.get(`/users/${id}?fileds=personal_sign;nickname;avatar_url;background;email;birth;location;following`)
+}
+
 // 获取注册短信验证码
 const getTelephoneCodeReg = (data) => {
   return axios.post('/regcode', data)
@@ -224,4 +229,4 @@ const getUserDynamicComments = (id) => {
   return axios.get(`/users/${id}/getZanCommentsId`)
 }
 
-export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle, userZanWordHandle, userCancelZanWordHandle, userCollectWordHandle, userCancelCollectHandle, getUserZanedWordHandle, getUserCollectedWordHandle, userCollectDynamics, userCancelCollectDynamics, getUserCollectedDynamics, getFollowUserDynamcis, getOwnPublishedDynamics, getUserDynamicComments, userZanComment, userCancelZanComment }
+export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, getUserInfoById, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle, userZanWordHandle, userCancelZanWordHandle, userCollectWordHandle, userCancelCollectHandle, getUserZanedWordHandle, getUserCollectedWordHandle, userCollectDynamics, userCancelCollectDynamics, getUserCollectedDynamics, getFollowUserDynamcis, getOwnPublishedDynamics, getUserDynamicComments, userZanComment, userCancelZanComment }
