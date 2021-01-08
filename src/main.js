@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import VConsole from 'vconsole'
+// import VConsole from 'vconsole'
 
 // 格式化时间，体积远小于moment
 import dayjs from 'dayjs'
@@ -24,7 +24,7 @@ import './assets/style/iconfont.css'
 import 'tb-skeleton/dist/skeleton.css'
 
 // 根据环境来使用vConsole，避免ESlint错误
-var vc = new VConsole() // eslint-disable-line no-unused-vars
+// var vc = new VConsole() // eslint-disable-line no-unused-vars
 
 Vue.use(BackTop)
 Vue.use(DivideArea)
