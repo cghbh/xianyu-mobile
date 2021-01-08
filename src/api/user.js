@@ -20,8 +20,8 @@ const loadUserInfo = () => {
 }
 
 // 根据用户id获取用户的详细信息
-const getUserInfoById = (id) => {
-  return axios.get(`/users/${id}?fileds=personal_sign;nickname;avatar_url;background;email;birth;location;following`)
+const getUserInfoById = (id, isPrivate) => {
+  return axios.get(`/users/${id}?fileds=personal_sign;nickname;avatar_url;background;email;birth;location;following&is_private=${isPrivate}`)
 }
 
 // 获取注册短信验证码

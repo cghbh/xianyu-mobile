@@ -3,9 +3,9 @@
     <div class="user-detail-header" ref="header">
       <div class="user-detail-header-left">
         <i ref="i" class="iconfont icon-left" @click="$router.go(-1)"></i>
-        <span ref="user" class="user-name">咸鱼一条</span>
+        <span ref="user" class="user-name">{{ userInfo.nickname }}</span>
       </div>
-      <div class="edit-user" ref="edit">编辑资料</div>
+      <div class="edit-user" ref="edit" v-show="isSelf" @click="$router.push('/userinfo-edit')">编辑资料</div>
     </div>
     <div 
       class="user-detail-img" 
@@ -36,22 +36,19 @@
         <span><b>{{ zanNumber }}</b>获赞</span>
       </div>
     </div>
-    <divide-area></divide-area>
 
-    <!-- 用户的动态与收藏部分 -->
-    <!-- <div class="user-dynamic">
-      <van-sticky offset-top="49">
-        <van-tabs v-model="activeName" animated swipeable>
-          <van-tab title="动态" name="a"><div style="height: 1000px;background-color: skyblue;">1</div></van-tab>
-          <van-tab title="收藏" name="b"><div style="height: 1000px;background-color: skyblue;">2</div></van-tab>
-        </van-tabs>
-      </van-sticky>
-    </div> -->
+    <div class="user-dynamic-container">
+      <dynamic-item
+        v-for="item in dynamics"
+        :item-value="item"
+        :key="item._id"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import DivideArea from '../components/PublicComponents/DivideArea.vue'
+import DynamicItem from '@/components/DynamicItem/index.vue'
 import { getUserInfoById, userFollows } from '@/api/user.js'
 export default {
   name: 'UserDetail',
@@ -66,7 +63,8 @@ export default {
       // 关注数
       follow: 0,
       // 粉丝数
-      fans: 0
+      fans: 0,
+      dynamics: []
     }
   },
 
@@ -91,6 +89,11 @@ export default {
       // 滚动的高度
       const height = document.body.scrollTop || document.documentElement.scrollTop
       if (height > imgHeight) {
+        this.$refs.header.style.backgroundColor = `rgba(255, 255, 255, ${height / imgHeight})`
+        this.$refs.user.style.opacity = height / imgHeight
+        this.$refs.edit.style.opacity = height / imgHeight
+        this.$refs.i.style.filter = 'invert(100%)'
+        this.$refs.i.style.opacity = height / imgHeight
       } else if (height > 10 && height <= imgHeight) {
         this.$refs.header.style.backgroundColor = `rgba(255, 255, 255, ${height / imgHeight})`
         this.$refs.user.style.opacity = height / imgHeight
@@ -110,12 +113,13 @@ export default {
 
     // 获取用户的信息
     async getUserInfo (id) {
-      const result = await getUserInfoById(id)
+      const result = await getUserInfoById(id, this.isPrivate)
       if (result.errno === 0) {
         this.userInfo = result.data
         this.zanNumber = result.zan_number
         this.fans = result.fans
         this.follow = result.following
+        this.dynamics = result.dynamics
       }
     },
 
@@ -143,6 +147,11 @@ export default {
     // 判断页面的内容是否是自己
     isSelf () {
       return this.routeId === this.userId
+    },
+
+    // 如果不是自己访问的个人主页，隐私动态不予展示
+    isPrivate () {
+      return this.isSelf ? '1' : '0'
     }
   },
 
@@ -164,7 +173,7 @@ export default {
   },
 
   components: {
-    DivideArea
+    DynamicItem
   }
 }
 </script>
@@ -292,5 +301,11 @@ export default {
       }
     }
   }
+}
+
+.user-dynamic-container {
+  background-color: #F0F5FB;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 </style>

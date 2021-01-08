@@ -152,7 +152,7 @@ const routes = [
     path: '/my-detail/:userId',
     component: () => import('../views/MyDetail.vue'),
     name: 'MyDetail',
-    meta: { requiresAuth: true, keepAlive: true }
+    meta: { requiresAuth: false, keepAlive: true }
   },
   {
     path: '/feedback',

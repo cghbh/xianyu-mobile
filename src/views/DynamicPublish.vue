@@ -107,8 +107,11 @@ export default {
         recommendTotal += 1
         newLatestData.unshift(data.data)
         newRecommendData.push(data.data)
-        this.$store.commit('modifyLatestDynamics', { data: newLatestData, total: latestTotal })
-        this.$store.commit('modifyRecommendDynamics', { data: newRecommendData, total: recommendTotal })
+        if (!this.isPrivate) {
+          this.$store.commit('modifyLatestDynamics', { data: newLatestData, total: latestTotal })
+          this.$store.commit('modifyRecommendDynamics', { data: newRecommendData, total: recommendTotal })
+        }
+        
         this.$toast({ message: data.message, duration: 600 })
         this.inputValue = ''
         this.uploadImg = null

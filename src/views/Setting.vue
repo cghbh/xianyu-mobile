@@ -21,12 +21,17 @@ export default {
       this.$dialog.confirm({
         width: '315px',
         confirmButtonColor: '#e92322',
+        cancelButtonColor: '#555',
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         allowHtml: true,
         message: '<h1 style="color: #555; line-height: 24px;font-size:16px">确定要退出登录吗？</h1>'
       })
-        .then(() => {})
+        .then(() => {
+          this.$store.commit('setUserLoginState', { token: null, userId: null })
+          this.$toast('退出成功')
+          this.$router.push('/mine')
+        })
         .catch(() => {})
     }
   }
