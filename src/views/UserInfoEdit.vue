@@ -1,31 +1,59 @@
 <template>
   <div class="xianyu-userinfo-edit">
     <back-top title="我的资料"></back-top>
+    <div class="xianyu-userinfo-avatar">
+      <span>头像</span>
+      <img src="https://xianyu-uploads.oss-cn-beijing.aliyuncs.com/upload_a1dd9fc0f81927e4bfad11eeb9beac0a.jpg" alt="头像">
+    </div>
+
+    <divide-area></divide-area>
+
+    <div class="xianyu-userinfo-bg">
+      <span>背景墙</span>
+      <img src="https://xianyu-uploads.oss-cn-beijing.aliyuncs.com/upload_db2b2600a6320a64bb3ac21d3c58201a.jpg" alt="背景墙">
+    </div>
+
+    <divide-area></divide-area>
 
     <van-cell-group>
-      <van-cell class="xianyu-upload-avatar" title="头像" value="内容" />
+      <van-cell 
+        @click="showNickname" 
+        class="xianyu-user-edit-vant" 
+        is-link 
+        title="昵称" 
+        :value="userInfo.nickname" />
+      <van-cell 
+        @click.native="showSexEditHandle" 
+        class="xianyu-user-edit-vant" 
+        is-link 
+        title="性别" 
+        :value="userInfo.gender && userInfo.gender === 'male' ? '男' : '女'" />
+      <van-cell 
+        @click="showBirthModel" 
+        class="xianyu-user-edit-vant" 
+        is-link title="生日" 
+        :value="userInfo.birth"/>
+      <van-cell 
+        @click="showEmailModel" 
+        class="xianyu-user-edit-vant" 
+        is-link 
+        title="邮箱" 
+        :value="userInfo.email ? userInfo.email : '还没有填写邮箱哟'" />
     </van-cell-group>
 
     <divide-area></divide-area>
 
     <van-cell-group>
-      <van-cell class="xianyu-upload-bgurl" title="背景墙" value="内容" />
-    </van-cell-group>
-
-    <divide-area></divide-area>
-
-    <van-cell-group>
-      <van-cell @click="showNicknameEdit = true" class="xianyu-user-edit-vant" is-link title="昵称" value="愚蠢的兔子" />
-      <van-cell @click="showSexEditHandle" class="xianyu-user-edit-vant" is-link title="性别" value="男" />
-      <van-cell @click="showBirthEdit = true" class="xianyu-user-edit-vant" is-link title="生日" value="1995-08-20"/>
-      <van-cell @click="showEmailEdit = true" class="xianyu-user-edit-vant" is-link title="邮箱" value="914539467@qq.com" />
-    </van-cell-group>
-
-    <divide-area></divide-area>
-
-    <van-cell-group>
-      <van-cell class="xianyu-user-edit-vant" @click="showAddressEdit = true" is-link title="地区" value="湖北省荆州市公安县" />
-      <van-cell class="xianyu-user-edit-vant xianyu-person-sign" @click="showPersonSignEdit = true" is-link title="个性签名" value="我的人参我自己主宰我的人参我自己主宰我的己主宰我的" />
+      <van-cell 
+        class="xianyu-user-edit-vant" 
+        @click="showAddressEdit = true" 
+        is-link title="地区" 
+        :value="userInfo.location" />
+      <van-cell 
+        class="xianyu-user-edit-vant xianyu-person-sign" 
+        @click="showPersonSignModel" 
+        is-link title="个性签名" 
+        :value="userInfo.personal_sign" />
     </van-cell-group>
 
     <divide-area></divide-area>
@@ -38,26 +66,21 @@
         placeholder="请输入10个字以内的昵称"
         :maxlength="10"
         @cancel="showNicknameEdit = false"
-        @confirm="showNicknameEdit = false"></edituser-edit>
+        @confirm="nicknameEdit"></edituser-edit>
     </van-popup>
 
     <!-- 性别编辑 -->
     <van-popup v-model="showSexEdit">
       <van-radio-group v-model="sexRadio" class="xianyu-sex-radio-group">
         <van-cell-group>
-          <van-cell title="男" clickable @click="sexRadio = '男'">
+          <van-cell title="男" clickable @click="sexEdit('男')">
             <template #right-icon>
               <van-radio name="男" />
             </template>
           </van-cell>
-          <van-cell title="女" clickable @click="sexRadio = '女'">
+          <van-cell title="女" clickable @click="sexEdit('女')">
             <template #right-icon>
               <van-radio name="女" />
-            </template>
-          </van-cell>
-          <van-cell title="保密" clickable @click="sexRadio = '保密'">
-            <template #right-icon>
-              <van-radio name="保密" />
             </template>
           </van-cell>
         </van-cell-group>
@@ -72,6 +95,8 @@
         v-model="birth"
         :min-date="minDate"
         :max-date="maxDate"
+        @cancel="showBirthEdit = false"
+        @confirm="userBirthConfirm"
       />
     </van-popup>
 
@@ -82,23 +107,28 @@
         title="邮箱"
         placeholder="请输入邮箱"
         @cancel="showEmailEdit = false"
-        @confirm="showEmailEdit = false"></edituser-edit>
+        @confirm="emailEdit"></edituser-edit>
     </van-popup>
 
     <!-- 地区编辑 -->
     <van-popup v-model="showAddressEdit" position="bottom" overlay-class="edit-address-overlay">
-      <van-area title="标题" :area-list="areaList" value="110101" />
+      <van-area 
+        title="标题" 
+        :area-list="areaList" 
+        :value="address"
+        @cancel="showAddressEdit = false"
+        @confirm="confirmModifyAddress" />
     </van-popup>
 
     <!-- 个性签名 -->
     <van-popup v-model="showPersonSignEdit">
       <edituser-edit
-        v-model="email"
+        v-model="person_sign"
         title="个性签名"
         placeholder="请输入25个字以内的个性签名"
         :maxlength="25"
         @cancel="showPersonSignEdit = false"
-        @confirm="showPersonSignEdit = false"></edituser-edit>
+        @confirm="userModifyPersonalSign"></edituser-edit>
     </van-popup>
   </div>
 </template>
@@ -106,7 +136,8 @@
 <script>
 import areaList from '@/assets/city/area.js'
 import EdituserEdit from '@/components/EditUserItem/index.vue'
-import { getUserInfoById } from '@/api/user.js'
+import dayjs from 'dayjs'
+import { getUserInfoById, modifyUserInfo } from '@/api/user.js'
 export default {
   name: 'UserInfoEdit',
   data () {
@@ -116,17 +147,20 @@ export default {
       nickname: '',
       showSexEdit: false,
       showAddressEdit: false,
+      address: '110101',
       sexRadio: '男',
       showBirthEdit: false,
       // 生日可选最大日期和最小的日期已经当前日期
-      birth: new Date(1995, 7, 1),
+      birth: new Date(1922, 9, 1),
       minDate: new Date(1922, 9, 1),
       maxDate: new Date(2022, 9, 1),
       showEmailEdit: false,
       email: '',
       showPersonSignEdit: false,
       person_sign: '',
-      areaList: areaList
+      areaList: areaList,
+      // 用户的个人信息
+      userInfo: {}
     }
   },
   watch: {
@@ -146,13 +180,122 @@ export default {
   },
 
   methods: {
-    showSexEditHandle () {
-      this.showSexEdit = true
-    },
-
+    // 获取用户信息
     async getUserInfoHandle () {
       const result = await getUserInfoById(this.userId)
-      console.log(result, '个人信息')
+      if (result.errno === 0) {
+        this.userInfo = result.data
+      }
+    },
+
+    // 展示编辑昵称的模块
+    showNickname () {
+      this.showNicknameEdit = true
+      this.nickname = this.userInfo.nickname
+    },
+
+    // 编辑昵称
+    async nicknameEdit () {
+      if (!this.nickname.trim()) {
+        return this.$toast('昵称不能为空内容！')
+      }
+      const result = await modifyUserInfo(this.userId, { nickname: this.nickname })
+      if (result.errno === 0) {
+        this.$toast('昵称修改成功')
+        this.showNicknameEdit = false
+        this.$set(this.userInfo, 'nickname', this.nickname)
+      }
+    },
+
+    // 显示性别编辑框
+    showSexEditHandle () {
+      console.error(1111)
+      this.showSexEdit = true
+      this.userInfo.gender === 'male' ? this.sexRadio = '男' : this.sexRadio = '女'
+    },
+
+    // 性别编辑操作
+    async sexEdit (value) {
+      let sex = ''
+      value === '男' ? (sex = 'male') : (sex = 'famale')
+      const result = await modifyUserInfo(this.userId, { gender: sex })
+      if (result.errno === 0) {
+        this.$toast('性别修改成功')
+        this.showSexEdit = false
+        setTimeout(() => {
+          this.$set(this.userInfo, 'gender', sex)
+        }, 30)
+      }
+    },
+
+    // 展示修改生日的模态框
+    showBirthModel () {
+      const newTime = dayjs(this.userInfo.birth)
+      this.birth = newTime.$d
+      this.showBirthEdit = true
+    },
+
+    // 确定修改生日
+    async userBirthConfirm () {
+      const newTime = dayjs(this.birth).format('YYYY-MM-DD')
+      const result = await modifyUserInfo(this.userId, { birth: newTime })
+      if (result.errno === 0) {
+        this.$toast('生日修改成功')
+        this.showBirthEdit = false
+        this.$set(this.userInfo, 'birth', newTime)
+      }
+    },
+
+    // 显示邮箱编辑模态框
+    showEmailModel () {
+      this.email = this.userInfo.email
+      this.showEmailEdit = true
+    },
+
+    // 编辑邮箱
+    async emailEdit () {
+      const reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+      if (!reg.test(this.email)) {
+        return this.$toast('邮箱的格式不正确，请检查后重试！')
+      }
+      const result = await modifyUserInfo(this.userId, { email: this.email })
+      if (result.errno === 0) {
+        this.$toast('邮箱修改成功')
+        this.showEmailEdit = false
+        this.$set(this.userInfo, 'email', this.email)
+      }
+    },
+
+    // 修改地址
+    async confirmModifyAddress (value) {
+      let location = ''
+      if (value[0].name === value[1].name) {
+        location = value[0].name + value[2].name
+      } else {
+        location = value[0].name + value[1].name + value[2].name
+      }
+      const result = await modifyUserInfo(this.userId, { location })
+      if (result.errno === 0) {
+        this.$toast('地址修改成功')
+        this.showAddressEdit = false
+        this.$set(this.userInfo, 'location', location)
+      }
+    },
+
+    // 展示个性签名的模态框
+    showPersonSignModel () {
+      this.showPersonSignEdit = true
+      this.person_sign = this.userInfo.personal_sign
+    },
+
+    // 修改个性签名
+    async userModifyPersonalSign () {
+      const result = await modifyUserInfo(this.userId, { personal_sign: this.person_sign })
+      if (result.errno === 0) {
+        this.$toast('个性签名修改成功')
+        this.showPersonSignEdit = false
+        this.$set(this.userInfo, 'personal_sign', this.person_sign)
+      }
     }
   },
   components: {
@@ -210,6 +353,20 @@ export default {
   background-color: rgba(0,0,0,.5);
 }
 
+.xianyu-user-edit-vant  {
+  /deep/ .van-cell__title {
+    flex: 1;
+  }
+
+  /deep/ .van-cell__value {
+    flex: 3;
+
+    span {
+      font-size: 15PX;
+    }
+  }
+}
+
 .xianyu-person-sign {
   /deep/ .van-cell__title {
     flex: 1;
@@ -223,6 +380,42 @@ export default {
       width: 100%;
       height: 100%;
     }
+  }
+}
+
+.xianyu-userinfo-avatar {
+  display: flex;
+  padding: 10px 16px;
+  background-color: #fff;
+  justify-content: space-between;
+
+  span {
+    line-height: 45px;
+    font-size: 16px;
+  }
+
+  img {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+  }
+}
+
+.xianyu-userinfo-bg {
+  display: flex;
+  padding: 10px 16px;
+  background-color: #fff;
+  justify-content: space-between;
+
+  span {
+    line-height: 45px;
+    font-size: 16px;
+  }
+
+  img {
+    max-width: 100px;
+    height: 45px;
+    object-fit: cover;
   }
 }
 </style>

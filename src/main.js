@@ -35,7 +35,7 @@ Vue.config.productionTip = false
 
 // 全局的filter过滤器
 Vue.filter('timeformat', (value) => {
-  const newTime = dayjs(value).format('YYYY-MM-DD HH:mm')
+  const newTime = dayjs(value).format('YYYY-MM-DD HH:mm:ss')
   return newTime
 })
 

@@ -21,7 +21,12 @@ const loadUserInfo = () => {
 
 // 根据用户id获取用户的详细信息
 const getUserInfoById = (id, isPrivate) => {
-  return axios.get(`/users/${id}?fileds=personal_sign;nickname;avatar_url;background;email;birth;location;following&is_private=${isPrivate}`)
+  return axios.get(`/users/${id}?fileds=personal_sign;nickname;avatar_url;background;email;birth;gender;location;following&is_private=${isPrivate}`)
+}
+
+// 指定id用户修改个人信息
+const modifyUserInfo = (id, data) => {
+  return axios.request({ method: 'PATCH', url: `/users/${id}`, data }, data)
 }
 
 // 获取注册短信验证码
@@ -229,4 +234,4 @@ const getUserDynamicComments = (id) => {
   return axios.get(`/users/${id}/getZanCommentsId`)
 }
 
-export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, getUserInfoById, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle, userZanWordHandle, userCancelZanWordHandle, userCollectWordHandle, userCancelCollectHandle, getUserZanedWordHandle, getUserCollectedWordHandle, userCollectDynamics, userCancelCollectDynamics, getUserCollectedDynamics, getFollowUserDynamcis, getOwnPublishedDynamics, getUserDynamicComments, userZanComment, userCancelZanComment }
+export { searchUsersByKeyWords, getCaptcha, getTelephoneCodeReg, getTelephoneCodeLogin, getUserInfoById, loginByTelCode, loadUserInfo, getTelephoneCodeFindPassword, checkTelephoneCode, resetPassword, userRegister, userLogin, userFollows, userCancelFollow, userFollow, getMyFans, likeDynamics, unlikeDynamics, listLikePerson, userLikeDynamics, userCollectArticle, useZanArticle, userCancelCollectArticleHandle, userCollectArticleHandle, userZanArticleHandle, userCancelZanArticleHandle, userZanPoems, userCollectPoems, userZanPoemHandle, userCancelZanPoemHandle, userCollectPoemHandle, userCancelCollectPoemHandle, userZanWordHandle, userCancelZanWordHandle, userCollectWordHandle, userCancelCollectHandle, getUserZanedWordHandle, getUserCollectedWordHandle, userCollectDynamics, userCancelCollectDynamics, getUserCollectedDynamics, getFollowUserDynamcis, getOwnPublishedDynamics, getUserDynamicComments, userZanComment, userCancelZanComment, modifyUserInfo }
