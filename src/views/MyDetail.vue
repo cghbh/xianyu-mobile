@@ -232,6 +232,7 @@ export default {
     padding-left: 28px;
     margin-top: 15px;
     font-size: 15px;
+    line-height: 24px;
   }
 
   .number {

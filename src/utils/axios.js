@@ -112,7 +112,6 @@ class HttpRequest {
     const instance = axios.create()
     // 整合本身的options和用户传递过来的options
     const newOptions = Object.assign(this.getInstanceConfig(), options)
-    console.log(options, 'options')
     this.interceptors(instance)
     return instance(newOptions)
   }

@@ -1,16 +1,44 @@
 <template>
   <div class="xianyu-userinfo-edit">
     <back-top title="我的资料"></back-top>
-    <div class="xianyu-userinfo-avatar">
+    <div class="xianyu-userinfo-avatar" @click="modifyUserAvatar">
       <span>头像</span>
-      <img src="https://xianyu-uploads.oss-cn-beijing.aliyuncs.com/upload_a1dd9fc0f81927e4bfad11eeb9beac0a.jpg" alt="头像">
+      <van-image 
+        :src="userInfo.avatar_url && userInfo.avatar_url" 
+        width="45"
+        height="45"
+        round
+        object-fit="cover"
+      />
+
+      <!-- image/*表示接受所有的图片类型的文件 -->
+
+      <input 
+        ref="avatar" 
+        type="file" 
+        accept="image/*" 
+        hidden
+        @change="avatarFileChange"
+      >
     </div>
 
     <divide-area></divide-area>
 
-    <div class="xianyu-userinfo-bg">
+    <div class="xianyu-userinfo-bg" @click="modifyBackground">
       <span>背景墙</span>
-      <img src="https://xianyu-uploads.oss-cn-beijing.aliyuncs.com/upload_db2b2600a6320a64bb3ac21d3c58201a.jpg" alt="背景墙">
+      <van-image 
+        :src="userInfo.background && userInfo.background"
+        width="90"
+        height="45"
+        object-fit="cover"
+      />
+      <input 
+        ref="background" 
+        type="file" 
+        accept="image/*" 
+        hidden
+        @change="backgroundFileChange"
+      >
     </div>
 
     <divide-area></divide-area>
@@ -57,6 +85,24 @@
     </van-cell-group>
 
     <divide-area></divide-area>
+
+    <!-- 头像编辑 -->
+    <van-popup v-model="showAvatarEdit" style="height: 100%; width: 100%;display: flex;align-items:center;">
+      <avatar-cropper
+        :file="avatarFile"
+        @cancel="showAvatarEdit = false"
+        @confirm="userConfirmEditAvatar"
+      />
+    </van-popup>
+
+    <!-- 背景图片编辑 -->
+    <van-popup v-model="showBackgroundEdit" style="height: 100%; width: 100%;display: flex;align-items:center;">
+      <background-cropper
+        :file="backgroundFile"
+        @cancel="showBackgroundEdit = false"
+        @confirm="confirmModifyBackground"
+      />
+    </van-popup>
 
     <!-- 昵称编辑 -->
     <van-popup v-model="showNicknameEdit">
@@ -136,12 +182,27 @@
 <script>
 import areaList from '@/assets/city/area.js'
 import EdituserEdit from '@/components/EditUserItem/index.vue'
+import AvatarCropper from '@/components/UserInfoEdit/UserAvatar.vue'
+import BackgroundCropper from '@/components/UserInfoEdit/UserBackground.vue'
 import dayjs from 'dayjs'
-import { getUserInfoById, modifyUserInfo } from '@/api/user.js'
+import { getUserInfoById, modifyUserInfo, fileUploads } from '@/api/user.js'
+// 导入图片裁切的文件
+
 export default {
   name: 'UserInfoEdit',
   data () {
     return {
+      showAvatarEdit: false,
+      // 头像预览
+      avatarPreview: null,
+      // 头像文件的内容
+      avatarFile: null,
+      // 背景图片的修改模态框
+      showBackgroundEdit: false,
+      // 背景图片的预览
+      backgroundPreview: null,
+      // 背景图片的原始消息
+      backgroundFile: null,
       // 编辑昵称的模态
       showNicknameEdit: false,
       nickname: '',
@@ -160,7 +221,9 @@ export default {
       person_sign: '',
       areaList: areaList,
       // 用户的个人信息
-      userInfo: {}
+      userInfo: {},
+      // 图片裁切Cropper的实例
+      cropper: null
     }
   },
   watch: {
@@ -185,6 +248,96 @@ export default {
       const result = await getUserInfoById(this.userId)
       if (result.errno === 0) {
         this.userInfo = result.data
+      }
+    },
+
+    // 修改用户的头像
+    modifyUserAvatar () {
+      // 触发文件的点击事件
+      this.$refs.avatar.click()
+    },
+
+    // 修改背景图片
+    modifyBackground () {
+      this.$refs.background.click()
+    },
+
+    // 监听上传头像文件改变
+    avatarFileChange () {
+      const newFile = window.URL.createObjectURL(this.$refs.avatar.files[0])
+      this.avatarPreview = newFile
+      this.avatarFile = this.$refs.avatar.files[0]
+      this.showAvatarEdit = true
+      // 防止相同图片不触发
+      this.$refs.avatar.value = ''
+    },
+
+    // 监听上传背景图片的改变
+    backgroundFileChange () {
+      const newFile = window.URL.createObjectURL(this.$refs.background.files[0])
+      this.backgroundPreview = newFile
+      this.backgroundFile = this.$refs.background.files[0]
+      this.showBackgroundEdit = true
+      this.$refs.background.value = ''
+    },
+
+    // 用户确定上传头像
+    async userConfirmEditAvatar (file) {
+      this.$toast.loading({
+        message: '正在上传中...',
+        forbidClick: true
+      })
+      const fd = new FormData()
+      fd.append('file', file)
+      const result = await fileUploads(fd)
+      if (result.errno === 0) {
+        const avatarUrl = result.data.img_url
+        const newResult = await modifyUserInfo(this.userId, { avatar_url: avatarUrl })
+        if (result.errno === 0) {
+          this.$toast.success('头像修改成功')
+          this.$set(this.userInfo, 'avatar_url', newResult.data.avatar_url)
+          setTimeout(() => {
+            this.showAvatarEdit = false
+          }, 20)
+        } else {
+          this.$toast.fail('头像修改失败')
+          setTimeout(() => {
+            this.showAvatarEdit = false
+          }, 20)
+        }
+      } else {
+        this.$toast.fail('头像修改失败')
+        this.showAvatarEdit = false
+      }
+    },
+
+    // 确定上传背景图片
+    async confirmModifyBackground (file) {
+      this.$toast.loading({
+        message: '正在上传中...',
+        forbidClick: true
+      })
+      const fd = new FormData()
+      fd.append('file', file)
+      const result = await fileUploads(fd)
+      if (result.errno === 0) {
+        const background = result.data.img_url
+        const newResult = await modifyUserInfo(this.userId, { background })
+        if (result.errno === 0) {
+          this.$toast.success('背景修改成功')
+          this.$set(this.userInfo, 'background', newResult.data.background)
+          setTimeout(() => {
+            this.showBackgroundEdit = false
+          }, 20)
+        } else {
+          this.$toast.fail('背景修改失败')
+          setTimeout(() => {
+            this.showBackgroundEdit = false
+          }, 20)
+        }
+      } else {
+        this.$toast.fail('背景修改失败')
+        this.showBackgroundEdit = false
       }
     },
 
@@ -299,7 +452,9 @@ export default {
     }
   },
   components: {
-    EdituserEdit
+    EdituserEdit,
+    AvatarCropper,
+    BackgroundCropper
   }
 }
 </script>

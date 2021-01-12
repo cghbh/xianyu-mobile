@@ -33,7 +33,7 @@
     </div>
 
     <div class="dynamic-item-operation">
-      <div class="share-icon">
+      <div class="share-icon" @click="userShare">
         <i class="iconfont icon-fenxiang"></i>
       </div>
       
@@ -117,6 +117,11 @@ export default {
     // 展示更多按钮的操作
     userOperate () {
       this.$emit('operate', { d_id: this.itemValue._id, nickname: this.itemValue.publisher.nickname, content: this.itemValue.content, u_id: this.itemValue.publisher._id })
+    },
+
+    // 微信等分享
+    userShare () {
+      this.$toast.success('后续实现中')
     }
   },
 
