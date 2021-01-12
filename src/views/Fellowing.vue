@@ -69,19 +69,23 @@ export default {
     this.getUserId()
     document.getElementById('xianyu-fellowing-container').addEventListener('scroll', debounce(this.getScrollTopHandle, 30))
   },
+
   activated () {
     document.getElementById('xianyu-fellowing-container').scrollTop = this.scrollTop
   },
+
   // 组件销毁之前卸载事件
   beforeDestroy () {
     document.getElementById('xianyu-fellowing-container').removeEventListener('scroll', this.getScrollTopHandle, true)
   },
+
   watch: {
     userId (newVal) {
       if (newVal) {
         this.getUserFollows(newVal)
       }
     },
+    
     followingList (newVal) {
       if (newVal.length <= 0) {
         this.tag = true
@@ -92,9 +96,11 @@ export default {
     hasFellowData () {
       return this.followingList.length > 0
     },
+
     isLogin () {
       return this.$store.state.token.token
     },
+
     // 关注者的id，如果取消关注就删除这个id
     followsId () {
       const arrayId = []
@@ -103,6 +109,7 @@ export default {
       })
       return arrayId
     },
+
     // 总的数据条数/ 每页展示的数据
     totalPage () {
       return Math.ceil(this.total / this.perPage)

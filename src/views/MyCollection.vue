@@ -9,13 +9,31 @@
       color="#409fea"
       offset-top="46">
       <van-tab title="好文">
-        <collect-article :articles="articles"/>
+        <collect-article :articles="articles" v-if="hasCollectArticle"/>
+        <van-empty 
+          :image="emptyImg" 
+          v-if="!hasCollectArticle && showArticleTag" 
+          description="还没有收藏过任何文章哟，快去看看吧" 
+          class="article-empty"
+        />
       </van-tab>
       <van-tab title="诗词">
-        <collect-poem :poems="poems"/>
+        <collect-poem v-if="hasCollectPoem" :poems="poems"/>
+        <van-empty 
+          :image="emptyImg" 
+          v-if="!hasCollectPoem && showPoemTag" 
+          description="还没有收藏过任何诗词哟，快去看看吧" 
+          class="article-empty"
+        />
       </van-tab>
       <van-tab title="词典">
-        <collect-word :words="words"/>
+        <collect-word v-if="hasCollectWord" :words="words"/>
+        <van-empty 
+          :image="emptyImg" 
+          v-if="!hasCollectWord && showWordTag" 
+          description="还没有收藏过任何词语哟，快去看看吧" 
+          class="article-empty"
+        />
       </van-tab>
     </van-tabs>
   </div>
@@ -40,7 +58,15 @@ export default {
       // 动态
       dynamics: [],
       userZanedId: [],
-      userCollectedId: []
+      userCollectedId: [],
+      // 缺省图片
+      emptyImg: require('../assets/images/empty-image-default.png'),
+      // 好文缺省的标记
+      showArticleTag: false,
+      // 诗词缺省的标记
+      showPoemTag: false,
+      // 成语缺省的标记
+      showWordTag: false
     }
   },
   watch: {
@@ -65,6 +91,24 @@ export default {
         }
       },
       immediate: true
+    },
+
+    articles (newVal) {
+      if (newVal.length <= 0) {
+        this.showArticleTag = true
+      }
+    },
+
+    poems (newVal) {
+      if (newVal.length <= 0) {
+        this.showPoemTag = true
+      }
+    },
+
+    words (newVal) {
+      if (newVal.length <= 0) {
+        this.showWordTag = true
+      }
     }
   },
 
@@ -72,8 +116,23 @@ export default {
     isLogin () {
       return this.$store.state.token.token
     },
+
     userId () {
       return this.$store.state.token.userId
+    },
+
+    // 收藏的好文数
+    hasCollectArticle () {
+      return this.articles.length > 0
+    },
+
+    // 收藏的诗词数
+    hasCollectPoem () {
+      return this.poems.length > 0
+    },
+
+    hasCollectWord () {
+      return this.words.length > 0
     }
   },
 
@@ -95,5 +154,10 @@ export default {
     font-size: 21px;
     font-weight: 500;
   }
+}
+
+.article-empty {
+  height: calc(100vh - 90px);
+  padding-top: 0;
 }
 </style>

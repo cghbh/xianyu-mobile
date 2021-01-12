@@ -362,7 +362,6 @@ export default {
 
     // 显示性别编辑框
     showSexEditHandle () {
-      console.error(1111)
       this.showSexEdit = true
       this.userInfo.gender === 'male' ? this.sexRadio = '男' : this.sexRadio = '女'
     },

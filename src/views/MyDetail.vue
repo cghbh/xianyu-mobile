@@ -44,6 +44,8 @@
         :key="item._id"
       />
     </div>
+
+    <van-empty :image="emptyImg" v-if="!hasPublishData && showTag" description="还没有发表过任何动态哟" />
   </div>
 </template>
 
@@ -64,7 +66,10 @@ export default {
       follow: 0,
       // 粉丝数
       fans: 0,
-      dynamics: []
+      dynamics: [],
+      // 缺省图片的标记
+      showTag: false,
+      emptyImg: require('../assets/images/empty-image-default.png')
     }
   },
 
@@ -76,6 +81,12 @@ export default {
         } else {
           this.getUserInfo(newVal)
         }
+      }
+    },
+
+    dynamics (newVal) {
+      if (newVal.length <= 0) {
+        this.showTag = true
       }
     }
   },
@@ -152,6 +163,11 @@ export default {
     // 如果不是自己访问的个人主页，隐私动态不予展示
     isPrivate () {
       return this.isSelf ? '1' : '0'
+    },
+
+    // 是否有发布的动态
+    hasPublishData () {
+      return this.dynamics.length > 0
     }
   },
 
@@ -180,7 +196,8 @@ export default {
 
 <style scoped lang="scss">
 .user-detail {
-  
+  height: 100%;
+  background-color: #F0F5FB;
   &-header {
     position: fixed;
     width: 100%;

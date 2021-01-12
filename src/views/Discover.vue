@@ -87,6 +87,7 @@ export default {
       showSkeleton: true
     }
   },
+
   watch: {
     activeIndex: {
       handler (newVal) {
@@ -100,15 +101,17 @@ export default {
     }
   },
   mounted () {
-    console.log(1)
     this.$refs.discover && this.$refs.discover.addEventListener('scroll', debounce(this.discoverPageScroll, 30))
   },
+
   activated () {
     this.$refs.discover && (this.$refs.discover.scrollTop = this.scrollTop)
   },
+
   beforeDestroy () {
     this.$refs.discover && this.$refs.discover.removeEventListener('scroll', this.discoverPageScroll, true)
   },
+
   methods: {
     // 推荐好文
     async getRecommendArticle () {
@@ -120,18 +123,20 @@ export default {
         }, 30)
       }
     },
+    
     async getrecommendPoem () {
       const result = await recommendPoem()
       if (result.errno === 0) {
         this.recommendPoems = result.data
       }
     },
+
     discoverPageScroll () {
-      console.log(1)
       const scrollTop = this.$refs.discover.scrollTop
       this.scrollTop = scrollTop
     }
   },
+
   components: {
     ArticleItem,
     PoemItem,

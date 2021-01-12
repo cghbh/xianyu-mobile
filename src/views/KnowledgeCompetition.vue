@@ -131,7 +131,6 @@ export default {
       }
     },
     selectOption (item) {
-      console.log(item)
       if (this.isSingle) {
         // 如果没有当前没有选择就选择一个
         if (this.selectOptions.length <= 0) {

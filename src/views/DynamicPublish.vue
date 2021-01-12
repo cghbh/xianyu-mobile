@@ -86,16 +86,16 @@ export default {
       return true
     },
     async publish () {
-      if (!this.inputValue) {
+      if (!this.inputValue.trim()) {
         return this.$toast({ message: '发表的动态内容不能为空！' })
       }
       const imgArray = []
       if (this.uploadImg) {
         this.uploadImg.forEach(item => { imgArray.push(item) })
       }
-      const data = await dynamicPublish({ content: this.inputValue.replace(/\n/g, '<br>'), avatar_url: imgArray, is_private: this.isPrivate })
+      // 处理首尾的换行和空格问题
+      const data = await dynamicPublish({ content: this.inputValue.replace(/(^\n*)|(\n*$)/g, '').replace(/\n/g, '<br>'), avatar_url: imgArray, is_private: this.isPrivate })
       if (data.errno === 0) {
-        console.log(data, '这是发布的动态')
         // 发布成功，将这条动态push到latest动态的最前面，如果关注的人有的话，推送到关注的动态的最前面
         const newLatestDynamics = JSON.parse(JSON.stringify(this.$store.state.latestDynamics))
         const newRecommendDynamics = JSON.parse(JSON.stringify(this.$store.state.recommendDynamics))

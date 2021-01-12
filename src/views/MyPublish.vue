@@ -1,7 +1,7 @@
 <template>
   <div class="xianyu-publish">
     <back-top title="我的动态"></back-top>
-    <div class="xianyu-my-publish-exble">
+    <div class="xianyu-my-publish-exble" v-if="hasPublishData">
       <dynamic-item
         v-for="(item, index) in dynamics"
         :key="item._id"
@@ -11,6 +11,9 @@
         @operate="operateHandle(item._id)"
       />
     </div>
+
+    <van-empty :image="emptyImg" v-if="!hasPublishData && showTag" description="还没有发表过任何动态哟" />
+
     <van-popup v-model="showOperateView" position="bottom">
       <van-cell-group>
         <!-- 文本复制功能实现 -->
@@ -50,13 +53,30 @@ export default {
       showOperateView: false,
       // 复制的文本内容
       copyContent: '',
-      dynamicId: null
+      dynamicId: null,
+      // 什么都没有的缺省图片
+      emptyImg: require('../assets/images/empty-image-default.png'),
+      // 缺省标记
+      showTag: false
     }
   },
 
   computed: {
     isLogin () {
       return this.$store.state.token.token
+    },
+
+    // 是否有发表的动态
+    hasPublishData () {
+      return this.dynamics.length > 0
+    }
+  },
+
+  watch: {
+    dynamics (newVal) {
+      if (newVal.length <= 0) {
+        this.showTag = true
+      }
     }
   },
 
@@ -111,7 +131,6 @@ export default {
           this.dynamicId = null
           this.copyContent = ''
         }
-        console.log(result, '动态删除的结果')
       }).catch(err => { console.log(err) })
     }
   },
@@ -150,10 +169,32 @@ export default {
       font-size: 15px!important;
     }
   }
+
+  /deep/ .van-empty {
+    position: fixed;
+    top: 46px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 150px;
+  }
 }
 .divide-line {
   width: 100%;
   height: 5px;
   background-color: rgba(38, 38, 38, .2);
+}
+
+.xianyu-my-publish-exble {
+  position: fixed;
+  top: 46px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #f0f5fb;
+  overflow-y: auto;
 }
 </style>

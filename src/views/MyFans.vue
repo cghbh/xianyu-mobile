@@ -125,11 +125,9 @@ export default {
 
     // 取消关注 debounce节流
     cancelFollow: debounce(async function cancelFollow (id) {
-      console.log(id, '取消的id')
       const result = await userCancelFollow(id)
       if (result.errno === 0) {
         const index = this.followListId.indexOf(id)
-        console.log(index, 'index索引值')
         // 存在才可以删除
         if (index > -1) {
           this.followListId.splice(index, 1)

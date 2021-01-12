@@ -255,6 +255,8 @@ export default {
     p {
       font-size: 16PX;
       line-height: 28px;
+      display: flex;
+      align-items: center;
       margin-bottom: 15px;
       color: rgba(0, 0, 0, .9);
     }
