@@ -21,7 +21,13 @@
     <!-- 用户信息展示 -->
     <div class="user-detail-info">
       <div class="user-detail-info-avatar">
-        <img :src="userInfo.avatar_url">
+        <van-image 
+          :src="userInfo.avatar_url && userInfo.avatar_url"
+          width="75"
+          height="75"
+          round
+          object-fit="cover"
+        />
       </div>
       <div class="user-detail-info-set">
         <button v-if="isSelf" @click="$router.push('/userinfo-edit')">编辑资料</button>
@@ -171,6 +177,13 @@ export default {
     }
   },
 
+  activated () {
+    this.userInfo = {}
+    this.zanNumber = 0
+    this.fans = 0
+    this.follow = 0
+  },
+
   mounted () {
     if (this.isSelf) {
       this.getUserInfo(this.userId)
@@ -283,12 +296,9 @@ export default {
       left: 25px;
       background-color: #fff;
       padding: 3px;
-
-      img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-      }
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     &-set {
