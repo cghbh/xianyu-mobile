@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { getFollowUserDynamcis, userLikeDynamics, unlikeDynamics, likeDynamics, userCancelCollectDynamics, userCollectDynamics, getUserCollectedDynamics } from '@/api/user.js'
+import { getFollowUserDynamcis, unlikeDynamics, likeDynamics, userCancelCollectDynamics, userCollectDynamics, getUserCollectedDynamics } from '@/api/user.js'
 import DynamicItem from '@/components/DynamicItem/index.vue'
 import { debounce } from 'lodash'
 export default {
@@ -72,8 +72,6 @@ export default {
       currentPage: 1,
       // 用来防止页面数据未加载状态下的闪烁
       showTag: true,
-      // 用户赞过的动态的id
-      userZanedId: [],
       userCollectedId: []
     }
   },
@@ -81,7 +79,6 @@ export default {
   mounted () {
     if (this.userId) {
       this.getFollowUserDynamcisHandle()
-      this.getUserZanedDynamicsId()
       this.getUserCollectedDynamicsHandle()
     }
     this.$refs['xianyu-dynamic-my-follow'].addEventListener('scroll', debounce(this.scrollTopHandle, 30))
@@ -91,7 +88,6 @@ export default {
     // 组件重新渲染的时候，重新加载数据，但是原始记录的高度不需要改变
     if (this.userId) {
       this.getFollowUserDynamcisHandle()
-      this.getUserZanedDynamicsId()
       this.getUserCollectedDynamicsHandle()
     }
     this.$refs['xianyu-dynamic-my-follow'].scrollTop = this.scrollTop
@@ -115,6 +111,11 @@ export default {
     // 总的页数
     totalPage () {
       return Math.ceil(this.total / this.perPage)
+    },
+
+    // 从vuex取得所有点赞过的动态id
+    userZanedId () {
+      return this.$store.state.loginUserZanDynamicsId
     }
   },
 
@@ -127,18 +128,6 @@ export default {
         if (this.followDynamics.length <= 0) {
           this.showTag = false
         }
-      }
-    },
-
-    // 获取指定id用户点赞过的动态id数组
-    async getUserZanedDynamicsId () {
-      const result = await userLikeDynamics(this.userId)
-      if (result.errno === 0) {
-        const tempArray = []
-        result.data.forEach(item => {
-          tempArray.push(item._id)
-        })
-        this.userZanedId = tempArray
       }
     },
 

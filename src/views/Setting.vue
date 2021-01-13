@@ -31,6 +31,7 @@ export default {
           this.$store.commit('setUserLoginState', { token: null, userId: null })
           this.$store.commit('removeCachedPages', 'Dynamic')
           this.$store.commit('removeCachedPages', 'Mine')
+          this.$store.commit('updateLoginUserZanDynamicsId', [])
           this.$toast('退出成功')
           this.$router.push('/mine')
         })

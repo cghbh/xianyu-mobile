@@ -167,14 +167,13 @@ export default {
       this.isNext = false
     },
     complete () {
-      // this.isCompleted = true
       this.showResult = true
       this.showResultTag++
       if (this.showResultTag % 2 === 0) {
         setTimeout(() => {
-          this.$router.go(-1)
+          this.$router.push('/')
         }, 800)
-        this.$toast('正在退出......')
+        this.$toast('正在退出中，请稍等')
       }
     }
   }

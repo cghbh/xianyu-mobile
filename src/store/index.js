@@ -7,6 +7,7 @@ Vue.use(Vuex)
 const USER_TOKEN_KEY = 'xianyu_user_login_token'
 const SEARCH_KEY_WORD = 'xianyu_user_search_key_words'
 const READ_JOKES = 'xianyu_user-read-jokes'
+const USER_ZAN_DYNAMICS_ID = 'user-zan-dynamics-id'
 
 export default new Vuex.Store({
   state: {
@@ -15,10 +16,6 @@ export default new Vuex.Store({
     // 存储已读的段子，如果已登录则推送到服务端
     readJokes: [],
     // 缓存的页面
-    // 需要缓存的页面
-    //,
-    // ,MyFans, 
-    // /,MyDetail
     cachedPages: [],
     // 推荐的动态
     recommendDynamics: {
@@ -29,7 +26,9 @@ export default new Vuex.Store({
     latestDynamics: {
       data: [],
       total: 0
-    }
+    },
+    // 已登录用户的所有点赞过的动态的id
+    loginUserZanDynamicsId: getItem(USER_ZAN_DYNAMICS_ID) || []
   },
   mutations: {
     // 用户登陆，缓存token和userid备用
@@ -87,6 +86,12 @@ export default new Vuex.Store({
       if (value.total) {
         state.recommendDynamics.total = value.total
       }
+    },
+
+    // 更新已登录用户的所有点赞过的动态的id，如果退出登录则置空
+    updateLoginUserZanDynamicsId (state, value) {
+      state.loginUserZanDynamicsId = value
+      setItem(USER_ZAN_DYNAMICS_ID, state.loginUserZanDynamicsId)
     }
   },
   actions: {

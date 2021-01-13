@@ -39,9 +39,8 @@
 import { getDynamics } from '@/api/dynamic.js'
 import DynamicItem from '@/components/DynamicItem/index.vue'
 import { debounce } from 'lodash' 
-import { userLikeDynamics, unlikeDynamics, likeDynamics } from '@/api/user.js'
+import { unlikeDynamics, likeDynamics } from '@/api/user.js'
 import DynamicSkeleton from '../components/Skeleton/DynamicSkeleton'
-// import MiteSkeleton from '../components/Skeleton/item.vue'
 export default {
   name: 'DynamicRecommend',
   data () {
@@ -60,7 +59,6 @@ export default {
       loadMoreFinished: false,
       scrollTop: 0,
       emptyImg: require('../assets/images/empty-image-default.png'),
-      userZanedId: [],
       // 控制骨架屏的显示与隐藏
       skeletonLoading: true
     }
@@ -88,14 +86,16 @@ export default {
     // 总的数据条数
     total () {
       return this.$store.state.recommendDynamics.total
+    },
+
+    // 从vuex取得所有点赞过的动态id
+    userZanedId () {
+      return this.$store.state.loginUserZanDynamicsId
     }
   },
 
   mounted () {
     this.getRecommendDynamics()
-    if (this.userId) {
-      this.getUserZanDynamics()
-    }
     this.$refs['xianyu-dynamic-recommend-r'] && this.$refs['xianyu-dynamic-recommend-r'].addEventListener('scroll', debounce(this.scrollTopHandle, 30))
   },
   activated () {
@@ -113,18 +113,6 @@ export default {
         this.$store.commit('modifyRecommendDynamics', { data: result.data, total: result.total })
         this.recommendDynamics.length > 0 ? (this.showDynamicsTag = true) : (this.showDynamicsTag = false)
         this.skeletonLoading = false
-      }
-    },
-
-    // 获取已登陆用户赞过的动态
-    async getUserZanDynamics () {
-      const result = await userLikeDynamics(this.userId)
-      if (result.errno === 0) {
-        const tempArray = []
-        result.data.forEach(item => {
-          tempArray.push(item._id)
-        })
-        this.userZanedId = tempArray
       }
     },
 
@@ -155,6 +143,7 @@ export default {
       }
     },
 
+    // 滚动距离记录
     scrollTopHandle () {
       this.scrollTop = this.$refs['xianyu-dynamic-recommend-r'].scrollTop
     },
@@ -175,6 +164,7 @@ export default {
       }
     },
 
+    // 用户点赞操作
     async userZanHandle (id) {
       if (!this.isLogin) {
         this.$dialog.confirm({

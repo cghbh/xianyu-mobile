@@ -37,7 +37,7 @@
 
 <script>
 import { getDynamics } from '@/api/dynamic.js'
-import { userLikeDynamics, unlikeDynamics, likeDynamics, getUserCollectedDynamics, userCancelCollectDynamics, userCollectDynamics } from '@/api/user.js'
+import { unlikeDynamics, likeDynamics, userCancelCollectDynamics, userCollectDynamics } from '@/api/user.js'
 import DynamicItem from '@/components/DynamicItem/index.vue'
 import { debounce } from 'lodash'
 export default {
@@ -60,17 +60,11 @@ export default {
       loadMoreFinished: false,
       // 滚动高度纪录
       scrollTop: 0,
-      // 用户赞过的动态的id
-      userZanedId: [],
       userCollectedId: []
     }
   },
   mounted () {
     this.getLatestDynamics()
-    if (this.userId) {
-      this.getUserZanedDynamicsId()
-      this.getUserCollectedDynamicsHandle()
-    }
     this.$refs['xianyu-dynamic-latest-r'].addEventListener('scroll', debounce(this.pageScrollTop, 30))
   },
 
@@ -115,6 +109,11 @@ export default {
 
     total () {
       return this.$store.state.latestDynamics.total
+    },
+
+    // 从vuex取得所有点赞过的动态id
+    userZanedId () {
+      return this.$store.state.loginUserZanDynamicsId
     }
   },
   methods: {
@@ -126,30 +125,6 @@ export default {
         if (this.latestDynamics.length <= 0) {
           this.showTag = true
         }
-      }
-    },
-
-    // 获取指定id用户点赞过的动态id数组
-    async getUserZanedDynamicsId () {
-      const result = await userLikeDynamics(this.userId)
-      if (result.errno === 0) {
-        const tempArray = []
-        result.data.forEach(item => {
-          tempArray.push(item._id)
-        })
-        this.userZanedId = tempArray
-      }
-    },
-
-    // 获取已登陆用户收藏的动态
-    async getUserCollectedDynamicsHandle () {
-      const result = await getUserCollectedDynamics(this.userId)
-      if (result.errno === 0) {
-        const tempArray = []
-        result.data.forEach(item => {
-          tempArray.push(item._id)
-        })
-        this.userCollectedId = tempArray
       }
     },
     
