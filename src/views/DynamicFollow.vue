@@ -88,7 +88,12 @@ export default {
   },
 
   activated () {
-    console.log(this.isLogin, 'isLogin')
+    // 组件重新渲染的时候，重新加载数据，但是原始记录的高度不需要改变
+    if (this.userId) {
+      this.getFollowUserDynamcisHandle()
+      this.getUserZanedDynamicsId()
+      this.getUserCollectedDynamicsHandle()
+    }
     this.$refs['xianyu-dynamic-my-follow'].scrollTop = this.scrollTop
   },
 

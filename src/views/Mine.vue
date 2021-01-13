@@ -20,15 +20,15 @@
         </div>
         <div class="xianyu-header-bottom">
           <div class="xianyu-header-bottom-dynamic" @click="$router.push('/my-publish')">
-            <h1>{{ dynamicNumber }}</h1>
+            <h1>{{ token ? dynamicNumber: '0' }}</h1>
             <p>动态</p>
           </div>
           <div class="xianyu-header-bottom-fans" @click="$router.push('/myfans')">
-            <h1>{{ fansNumber }}</h1>
+            <h1>{{ token ? fansNumber : '0' }}</h1>
             <p>粉丝</p>
           </div>
           <div class="xianyu-header-bottom-follows" @click="$router.push('/fellowing')">
-            <h1>{{ followNumber }}</h1>
+            <h1>{{ token ? followNumber : '0' }}</h1>
             <p>关注</p>
           </div>
         </div>
@@ -118,21 +118,23 @@ export default {
 
   async activated () {
     // 如果数据发生了变化才需要更新触发
-    const newResult = await Promise.all([loadUserInfo(), getMyFans(this.userId), userFollows(this.userId), getOwnPublishedDynamics()])
+    if (this.token) {
+      const newResult = await Promise.all([loadUserInfo(), getMyFans(this.userId), userFollows(this.userId), getOwnPublishedDynamics()])
       
-    if (newResult[0].errno === 0) {
-      if (JSON.stringify(newResult[0].data) !== JSON.stringify(this.userInfo)) {
-        this.userInfo = newResult[0].data
+      if (newResult[0].errno === 0) {
+        if (JSON.stringify(newResult[0].data) !== JSON.stringify(this.userInfo)) {
+          this.userInfo = newResult[0].data
+        }
       }
-    }
-    if (newResult[1].errno === 0 && this.fansNumber !== newResult[1].total) {
-      this.fansNumber = newResult[1].total
-    }
-    if (newResult[2].errno === 0 && this.followNumber !== newResult[2].total) {
-      this.followNumber = newResult[2].total
-    }
-    if (newResult[3].errno === 0 && this.dynamicNumber !== newResult[3].data.length) {
-      this.dynamicNumber = newResult[3].data.length
+      if (newResult[1].errno === 0 && this.fansNumber !== newResult[1].total) {
+        this.fansNumber = newResult[1].total
+      }
+      if (newResult[2].errno === 0 && this.followNumber !== newResult[2].total) {
+        this.followNumber = newResult[2].total
+      }
+      if (newResult[3].errno === 0 && this.dynamicNumber !== newResult[3].data.length) {
+        this.dynamicNumber = newResult[3].data.length
+      }
     }
   },
 

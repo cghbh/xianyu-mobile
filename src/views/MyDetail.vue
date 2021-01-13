@@ -5,7 +5,30 @@
         <i ref="i" class="iconfont icon-left" @click="$router.go(-1)"></i>
         <span ref="user" class="user-name">{{ userInfo.nickname }}</span>
       </div>
-      <div class="edit-user" ref="edit" v-show="isSelf" @click="$router.push('/userinfo-edit')">编辑资料</div>
+      <div 
+        class="edit-user" 
+        ref="edit" 
+        v-if="isSelf" 
+        @click="$router.push('/userinfo-edit')"
+      >
+        编辑资料
+      </div>
+      <div 
+        class="edit-user" 
+        ref="edit" 
+        v-if="!isSelf && !loginUserFollowId.includes(routeId)" 
+        @click="followHandle"
+      >
+        关注
+      </div>
+      <div 
+        class="edit-user" 
+        ref="edit" 
+        v-if="!isSelf && loginUserFollowId.includes(routeId)" 
+        @click="unfollowHandle"
+      >
+        已关注
+      </div>
     </div>
     <div 
       class="user-detail-img" 
