@@ -133,6 +133,11 @@ export default {
     }
   },
 
+  mounted () {
+    // 缓存控制
+    this.$store.commit('addCachedPages', 'Search')
+  },
+
   deactivated () {
     if (this.$router.currentRoute.fullPath.split('?')[0] === '/') {
       // 页面卸载之后，默认搜索左侧第一个内容
@@ -172,6 +177,7 @@ export default {
       return `<span style='color: #e92322'>${this.searchValue}</span>`
     }
   },
+
   watch: {
     active: {
       handler (newVal) {

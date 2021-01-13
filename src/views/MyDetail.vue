@@ -31,8 +31,21 @@
       </div>
       <div class="user-detail-info-set">
         <button v-if="isSelf" @click="$router.push('/userinfo-edit')">编辑资料</button>
-        <button class="un-follow" v-if="!isSelf && !loginUserFollowId.includes(routeId)">关注</button>
-        <button class="follow" v-if="!isSelf && loginUserFollowId.includes(routeId)">已关注</button>
+        <button 
+          v-if="!isSelf && !loginUserFollowId.includes(routeId)" 
+          class="un-follow" 
+          @click="followHandle"
+        >
+          关注
+        </button>
+
+        <button 
+          v-if="!isSelf && loginUserFollowId.includes(routeId)"
+          class="follow" 
+          @click="unfollowHandle"
+        >
+          已关注
+        </button>
       </div>
       <h1 class="user-detail-name">{{ userInfo.nickname }}</h1>
       <p class="personal_sign">{{ userInfo.personal_sign }}</p>
@@ -57,7 +70,7 @@
 
 <script>
 import DynamicItem from '@/components/DynamicItem/index.vue'
-import { getUserInfoById, userFollows } from '@/api/user.js'
+import { getUserInfoById, userFollows, userFollow, userCancelFollow } from '@/api/user.js'
 export default {
   name: 'UserDetail',
   data () {
@@ -77,6 +90,32 @@ export default {
       showTag: false,
       emptyImg: require('../assets/images/empty-image-default.png')
     }
+  },
+
+  mounted () {
+    // 缓存控制
+    this.$store.commit('addCachedPages', 'UserDetail')
+    if (this.isSelf) {
+      this.getUserInfo(this.userId)
+    } else {
+      this.getUserInfo(this.routeId)
+    }
+
+    if (this.userId) {
+      this.getUserFollows()
+    }
+    window.addEventListener('scroll', this.screenScroll)
+  },
+
+  beforeDestroy () {
+    window.removeEventListener('scroll', this.screenScroll)
+  },
+
+  activated () {
+    this.userInfo = {}
+    this.zanNumber = 0
+    this.fans = 0
+    this.follow = 0
   },
 
   watch: {
@@ -140,6 +179,7 @@ export default {
       }
     },
 
+    // 获取用户关注的人的id
     async getUserFollows () {
       const result = await userFollows(this.userId)
       if (result.errno === 0) {
@@ -147,10 +187,56 @@ export default {
         result.data.forEach(item => tempArray.push(item._id))
         this.loginUserFollowId = tempArray
       }
+    },
+
+    // 关注用户
+    async followHandle () {
+      // 判断用户是否登录，没有登录的话跳转到登录页面，并且携带当前的路径
+      if (!this.isLogin) {
+        this.$dialog.confirm({
+          message: '<p style="font-size: 16px;line-height: 25px">此操作需要登录，\n是否跳转到登录页面？</p>',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          confirmButtonColor: '#409fea',
+          cancelButtonText: '取消',
+          cancelButtonColor: '#666'
+        }).then(() => {
+          this.$router.replace({
+            path: '/login',
+            query: {
+              redirect: this.$route.fullPath
+            }
+          })
+        }).catch(err => { console.log(err) })
+      } else {
+        const result = await userFollow(this.routeId)
+        if (result.errno === 0 && !this.loginUserFollowId.includes(this.routeId)) {
+          this.loginUserFollowId.push(this.routeId)
+          this.$toast('关注成功')
+        }
+      }
+    },
+
+    // 取消关注用户
+    async unfollowHandle () {
+      const result = await userCancelFollow(this.routeId)
+      if (result.errno === 0) {
+        const index = this.loginUserFollowId.indexOf(this.routeId)
+        if (index > -1) {
+          this.loginUserFollowId.splice(index, 1)
+          this.$toast('已取消关注')
+        }
+      }
     }
   },
 
   computed: {
+    // 用户是否登录
+    isLogin () {
+      return this.$store.state.token.token
+    },
+
     // 路由传递过来的个人信息的id
     routeId () {
       return this.$route.params.userId
@@ -175,30 +261,6 @@ export default {
     hasPublishData () {
       return this.dynamics.length > 0
     }
-  },
-
-  activated () {
-    this.userInfo = {}
-    this.zanNumber = 0
-    this.fans = 0
-    this.follow = 0
-  },
-
-  mounted () {
-    if (this.isSelf) {
-      this.getUserInfo(this.userId)
-    } else {
-      this.getUserInfo(this.routeId)
-    }
-
-    if (this.userId) {
-      this.getUserFollows()
-    }
-    window.addEventListener('scroll', this.screenScroll)
-  },
-
-  beforeDestroy () {
-    window.removeEventListener('scroll', this.screenScroll)
   },
 
   components: {

@@ -69,6 +69,12 @@ export default {
       showWordTag: false
     }
   },
+
+  mounted () {
+    // 缓存控制
+    this.$store.commit('addCachedPages', 'MyCollection')
+  },
+
   watch: {
     active: {
       async handler (newVal) {

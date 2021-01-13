@@ -1,9 +1,8 @@
 <template>
   <div id="app">
-    <keep-alive>
-       <router-view v-if="$route.meta.keepAlive"></router-view>
+    <keep-alive :include="cachedPages">
+      <router-view/>
     </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive"></router-view>
   </div>
 </template>
 
@@ -12,11 +11,12 @@ import { mapState } from 'vuex'
 export default {
   name: 'App',
 
+  mounted () {
+    console.log(this.cachedPages, 'cachedPages')
+  },
+
   computed: {
-    ...mapState(['cachedPages']),
-    isLogin () {
-      return this.$store.state.token.token
-    }
+    ...mapState(['cachedPages'])
   }
 }
 </script>

@@ -59,6 +59,8 @@ export default {
   },
 
   mounted () {
+    // 缓存控制
+    this.$store.commit('addCachedPages', 'DictionaryList')
     this.getDictionaryListHandle()
     this.$refs['dictionary-list-container'].addEventListener('scroll', debounce(this.scrollHandle, 30))
   },

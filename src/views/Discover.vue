@@ -101,6 +101,8 @@ export default {
     }
   },
   mounted () {
+    // 缓存控制
+    this.$store.commit('addCachedPages', 'Discover')
     this.$refs.discover && this.$refs.discover.addEventListener('scroll', debounce(this.discoverPageScroll, 30))
   },
 

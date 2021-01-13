@@ -105,6 +105,8 @@ export default {
     }
   },
   mounted () {
+    // 缓存控制
+    this.$store.commit('addCachedPages', 'Mine')
     if (this.token) {
       this.isLogin = true
       this.loadUserInfo()
@@ -113,6 +115,30 @@ export default {
       this.getMyDynamics()
     }
   },
+
+  async activated () {
+    // 如果数据发生了变化才需要更新触发
+    const result = await loadUserInfo()
+    const fansResult = await getMyFans(this.userId)
+    const followResult = await userFollows(this.userId)
+    const publishResult = await getOwnPublishedDynamics()
+      
+    if (result.errno === 0) {
+      if (JSON.stringify(result.data) !== JSON.stringify(this.userInfo)) {
+        this.userInfo = result.data
+      }
+    }
+    if (fansResult.errno === 0 && this.fansNumber !== fansResult.total) {
+      this.fansNumber = fansResult.total
+    }
+    if (followResult.errno === 0 && this.followNumber !== fansResult.total) {
+      this.followNumber = followResult.total
+    }
+    if (publishResult.errno === 0 && this.dynamicNumber !== publishResult.data.length) {
+      this.dynamicNumber = publishResult.data.length
+    }
+  },
+
   computed: {
     token () {
       return this.$store.state.token.token

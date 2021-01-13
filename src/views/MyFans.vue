@@ -19,7 +19,7 @@
             :user="item"
             :key="item._id"
             :is-follow="followListId.some(item1 => item1 === item._id)"
-            @goDetail="$router.push('/my-detail')"
+            @goDetail="$router.push(`/my-detail/${item._id}`)"
             @cancelFollow="cancelFollow(item._id)"
             @followMyFans="userFollowHandle(item._id)"
           />
@@ -79,6 +79,8 @@ export default {
     }
   },
   mounted () {
+    // 缓存控制
+    this.$store.commit('addCachedPages', 'MyFans')
     this.loadUserInfoHandle()
     this.$refs['xianyu-fans-container'].addEventListener('scroll', debounce(this.scrollTopHandle, 30))
   },

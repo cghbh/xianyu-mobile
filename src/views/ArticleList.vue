@@ -56,6 +56,8 @@ export default {
   },
 
   mounted () {
+    // 缓存控制
+    this.$store.commit('addCachedPages', 'ArticleList')
     this.getArticleListHandle()
     document.getElementById('pull-refresh-article-container').addEventListener('scroll', debounce(this.scrollHandle, 30))
   },

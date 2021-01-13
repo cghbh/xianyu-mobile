@@ -21,7 +21,7 @@
             :key="item._id"
             :user="item"
             @cancelFollow="cancelFellowHandle(item.nickname, item._id)"
-            @click="$router.push('/my-detail')"
+            @click="$router.push(`/my-detail/${item._id}`)"
           />
         </van-list>
       </van-pull-refresh>
@@ -66,6 +66,8 @@ export default {
     }
   },
   mounted () {
+    // 缓存控制
+    this.$store.commit('addCachedPages', 'Following')
     this.getUserId()
     document.getElementById('xianyu-fellowing-container').addEventListener('scroll', debounce(this.getScrollTopHandle, 30))
   },

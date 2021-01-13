@@ -29,6 +29,7 @@ export default {
       })
         .then(() => {
           this.$store.commit('setUserLoginState', { token: null, userId: null })
+          this.$store.commit('removeCachedPages', 'Dynamic')
           this.$toast('退出成功')
           this.$router.push('/mine')
         })

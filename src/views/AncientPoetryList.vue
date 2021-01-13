@@ -70,6 +70,8 @@ export default {
   },
 
   mounted () {
+    // 缓存控制
+    this.$store.commit('addCachedPages', 'AncientPoetryList')
     this.getPoemHandle()
     document.getElementById('ancient-list-container').addEventListener('scroll', debounce(this.listScrollHandle, 30))
   },

@@ -88,6 +88,7 @@ export default {
   },
 
   activated () {
+    console.log(this.isLogin, 'isLogin')
     this.$refs['xianyu-dynamic-my-follow'].scrollTop = this.scrollTop
   },
 
@@ -111,6 +112,7 @@ export default {
       return Math.ceil(this.total / this.perPage)
     }
   },
+
   methods: {
     async getFollowUserDynamcisHandle () {
       const result = await getFollowUserDynamcis(this.userId, this.currentPage, this.perPage)
@@ -135,7 +137,7 @@ export default {
       }
     },
 
-    // 获取已登陆用户收藏的动态
+    // 获取已登陆用户收藏的动态id
     async getUserCollectedDynamicsHandle () {
       const result = await getUserCollectedDynamics(this.userId)
       if (result.errno === 0) {

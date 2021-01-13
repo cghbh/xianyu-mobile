@@ -72,6 +72,7 @@ import LatestDynamics from './DynamicLatest.vue'
 import { deleteDynamic } from '../api/dynamic.js'
 export default {
   name: 'Dynamic',
+
   data () {
     return {
       active: 0,
@@ -100,6 +101,11 @@ export default {
       // 如果是我的关注的内容，不需要屏蔽和不感兴趣的功能
       isPopupFollow: false
     }
+  },
+
+  mounted () {
+    // 缓存控制
+    this.$store.commit('addCachedPages', 'Dynamic')
   },
 
   computed: {

@@ -1,9 +1,9 @@
 <template>
   <div class="xianyu-index">
-    <keep-alive>
-       <router-view v-if="$route.meta.keepAlive"></router-view>
+    <keep-alive :include="cachedPages">
+      <router-view/>
     </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive"></router-view>
+    
     <van-tabbar route v-model="active" active-color="#409fea" inactive-color="#000">
       <van-tabbar-item v-for="item in bottomIcon" :key=item.to :to="item.to" replace>
         <span>{{ item.title }}</span>
@@ -16,8 +16,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'HomePage',
+
   data () {
     return {
       active: 0,
@@ -48,6 +50,15 @@ export default {
         }
       ]
     }
+  },
+
+  mounted () {
+    // 缓存控制
+    this.$store.commit('addCachedPages', 'HomePage')
+  },
+
+  computed: {
+    ...mapState(['cachedPages'])
   }
 }
 </script>

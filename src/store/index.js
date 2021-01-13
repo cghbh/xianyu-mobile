@@ -15,6 +15,10 @@ export default new Vuex.Store({
     // 存储已读的段子，如果已登录则推送到服务端
     readJokes: [],
     // 缓存的页面
+    // 需要缓存的页面
+    //,
+    // ,MyFans, 
+    // /,MyDetail
     cachedPages: [],
     // 推荐的动态
     recommendDynamics: {
