@@ -118,24 +118,21 @@ export default {
 
   async activated () {
     // 如果数据发生了变化才需要更新触发
-    const result = await loadUserInfo()
-    const fansResult = await getMyFans(this.userId)
-    const followResult = await userFollows(this.userId)
-    const publishResult = await getOwnPublishedDynamics()
+    const newResult = await Promise.all([loadUserInfo(), getMyFans(this.userId), userFollows(this.userId), getOwnPublishedDynamics()])
       
-    if (result.errno === 0) {
-      if (JSON.stringify(result.data) !== JSON.stringify(this.userInfo)) {
-        this.userInfo = result.data
+    if (newResult[0].errno === 0) {
+      if (JSON.stringify(newResult[0].data) !== JSON.stringify(this.userInfo)) {
+        this.userInfo = newResult[0].data
       }
     }
-    if (fansResult.errno === 0 && this.fansNumber !== fansResult.total) {
-      this.fansNumber = fansResult.total
+    if (newResult[1].errno === 0 && this.fansNumber !== newResult[1].total) {
+      this.fansNumber = newResult[1].total
     }
-    if (followResult.errno === 0 && this.followNumber !== fansResult.total) {
-      this.followNumber = followResult.total
+    if (newResult[2].errno === 0 && this.followNumber !== newResult[2].total) {
+      this.followNumber = newResult[2].total
     }
-    if (publishResult.errno === 0 && this.dynamicNumber !== publishResult.data.length) {
-      this.dynamicNumber = publishResult.data.length
+    if (newResult[3].errno === 0 && this.dynamicNumber !== newResult[3].data.length) {
+      this.dynamicNumber = newResult[3].data.length
     }
   },
 
