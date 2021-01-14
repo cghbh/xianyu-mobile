@@ -59,7 +59,7 @@ export default {
     // 缓存控制
     this.$store.commit('addCachedPages', 'ArticleList')
     this.getArticleListHandle()
-    document.getElementById('pull-refresh-article-container').addEventListener('scroll', debounce(this.scrollHandle, 30))
+    this.$refs['pull-refresh-article-container'].addEventListener('scroll', debounce(this.scrollHandle, 30))
   },
 
   computed: {

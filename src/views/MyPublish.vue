@@ -8,6 +8,9 @@
         :is-first="index === 0"
         :item-value="item"
         :delete-operate="true"
+        :is-like="isLogin && userZanedId.includes(item._id)"
+        @unlike="userCancelZan(item._id)"
+        @like="userZanHandle(item._id)"
         @operate="operateHandle(item._id)"
       />
     </div>
@@ -17,9 +20,9 @@
     <van-popup v-model="showOperateView" position="bottom">
       <van-cell-group>
         <!-- 文本复制功能实现 -->
-        <van-cell center value="复制">
-          <Copy :content="copyContent" @copyCallback="copyCallback"></Copy>
-        </van-cell>
+        <!-- <van-cell center value="复制"> -->
+          <Copy class="user-copy" :content="copyContent" @copyCallback="copyCallback">复制</Copy>
+        <!-- </van-cell> -->
         <van-cell 
           class="color-set" 
           center 
@@ -40,7 +43,7 @@
 </template>
 
 <script>
-import { getOwnPublishedDynamics } from '@/api/user.js'
+import { getOwnPublishedDynamics, unlikeDynamics, likeDynamics } from '@/api/user.js'
 import { deleteDynamic } from '@/api/dynamic.js'
 import DynamicItem from '@/components/DynamicItem/index.vue'
 export default {
@@ -57,7 +60,9 @@ export default {
       // 什么都没有的缺省图片
       emptyImg: require('../assets/images/empty-image-default.png'),
       // 缺省标记
-      showTag: false
+      showTag: false,
+      // 点击操作的动态
+      selectDynamic: {}
     }
   },
 
@@ -69,6 +74,11 @@ export default {
     // 是否有发表的动态
     hasPublishData () {
       return this.dynamics.length > 0
+    },
+
+    // 从vuex取得所有点赞过的动态id
+    userZanedId () {
+      return this.$store.state.loginUserZanDynamicsId
     }
   },
 
@@ -106,32 +116,132 @@ export default {
       this.showOperateView = true
       this.dynamicId = id
       const index = this.dynamics.findIndex(item => item._id === id)
-      this.copyContent = this.dynamics[index].content
+      this.selectDynamic = this.dynamics[index]
+      this.copyContent = this.selectDynamic.content
     },
 
     // 删除动态
     deleteDynamic () {
       this.showOperateView = false
       this.$dialog.confirm({
-        message: '<p style="font-size: 16px;line-height: 25px">确定删除该动态？</p>',
-        showConfirmButton: true,
-        showCancelButton: true,
-        confirmButtonText: '确定',
-        confirmButtonColor: '#000',
-        cancelButtonText: '取消',
-        cancelButtonColor: '#666'
-      }).then(async () => {
-        const result = await deleteDynamic(this.dynamicId)
-        if (result.errno === 0) {
-          this.$toast('删除成功')
-          const index = this.dynamics.findIndex(item => item._id === this.dynamicId)
-          if (index > -1) {
-            this.dynamics.splice(index, 1)
+        width: '315px',
+        confirmButtonColor: '#666',
+        cancelButtonColor: '#e92322',
+        confirmButtonText: '取消',
+        cancelButtonText: '确定',
+        allowHtml: true,
+        message: '<h1 style="color: #555; line-height: 24px;font-size:16px">确定要删除这条动态吗？</h1>'
+      })
+        .then(() => {})
+        .catch(async () => {
+          const result = await deleteDynamic(this.dynamicId)
+          if (result.errno === 0) {
+            this.$toast('删除成功')
+            const index = this.dynamics.findIndex(item => item._id === this.dynamicId)
+            if (index > -1) {
+              this.dynamics.splice(index, 1)
+            }
+            // 找到Vuex里面的数据进行删除和修改
+            const newLatestDynamics = JSON.parse(JSON.stringify(this.$store.state.latestDynamics))
+            const newRecommendDynamics = JSON.parse(JSON.stringify(this.$store.state.recommendDynamics))
+            let latestTotal = newLatestDynamics.total
+            let recommendTotal = newRecommendDynamics.total
+            const newLatestData = newLatestDynamics.data
+            const newRecommendData = newRecommendDynamics.data
+            const latestIndex = newLatestData.findIndex(item => item._id === this.selectDynamic._id)
+            const recommendIndex = newRecommendData.findIndex(item => item._id === this.selectDynamic._id)
+            if (latestIndex > -1) {
+              newLatestData.splice(latestIndex, 1)
+            }
+            if (recommendIndex > -1) {
+              newRecommendData.splice(recommendIndex, 1)
+            }
+            latestTotal -= 1
+            recommendTotal -= 1
+            this.$store.commit('modifyLatestDynamics', { data: newLatestData, total: latestTotal })
+            this.$store.commit('modifyRecommendDynamics', { data: newRecommendData, total: recommendTotal })
+            this.dynamicId = null
+            this.copyContent = ''
           }
-          this.dynamicId = null
-          this.copyContent = ''
+        })
+    },
+
+    // 用户取消点赞
+    async userCancelZan (id) {
+      const result = await unlikeDynamics(id)
+      if (result.errno === 0) {
+        const zanIdArray = JSON.parse(JSON.stringify(this.userZanedId))
+        const zanIdIndex = zanIdArray.indexOf(id)
+        const index = this.dynamics.findIndex(item => item._id === id)
+        // 深度拷贝隔离
+        if (zanIdIndex > -1) {
+          zanIdArray.splice(zanIdIndex, 1)
+          this.$store.commit('updateLoginUserZanDynamicsId', zanIdArray)
+          const newDynamic = JSON.parse(JSON.stringify(this.dynamics[`${index}`]))
+          newDynamic.zan_number--
+          this.$set(this.dynamics, index, newDynamic)
+          // 找到store中的最新和推荐数据进行修改
+          const recommendDynamics = JSON.parse(JSON.stringify(this.$store.state.recommendDynamics)).data
+          const latestDynamics = JSON.parse(JSON.stringify(this.$store.state.latestDynamics)).data
+          const recommendIndex = recommendDynamics.findIndex(item => item._id === id)
+          const latestIndex = latestDynamics.findIndex(item => item._id === id)
+          if (recommendIndex > -1) {
+            recommendDynamics[recommendIndex].zan_number--
+          }
+          if (latestIndex > -1) {
+            latestDynamics[latestIndex].zan_number--
+          }
+          this.$store.commit('modifyRecommendDynamics', { data: recommendDynamics })
+          this.$store.commit('modifyLatestDynamics', { data: latestDynamics })
         }
-      }).catch(err => { console.log(err) })
+      }
+    },
+
+    // 用户点赞
+    async userZanHandle (id) {
+      // 判断用户是否登录，没有登录的话跳转到登录页面，并且携带当前的路径
+      if (!this.isLogin) {
+        this.$dialog.confirm({
+          message: '<p style="font-size: 16px;line-height: 25px">此操作需要登录，\n是否跳转到登录页面？</p>',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          confirmButtonColor: '#409fea',
+          cancelButtonText: '取消',
+          cancelButtonColor: '#666'
+        }).then(() => {
+          this.$router.replace({
+            path: '/login',
+            query: {
+              redirect: this.$route.fullPath
+            }
+          })
+        }).catch(err => { console.log(err) })
+      } else {
+        const result = await likeDynamics(id)
+        if (result.errno === 0 && !this.userZanedId.includes(id)) {
+          const zanIdArray = JSON.parse(JSON.stringify(this.$store.state.loginUserZanDynamicsId))
+          zanIdArray.push(id)
+          this.$store.commit('updateLoginUserZanDynamicsId', zanIdArray)
+          const detailIndex = this.dynamics.findIndex(item => item._id === id)
+          const newDynamic = JSON.parse(JSON.stringify(this.dynamics[`${detailIndex}`]))
+          newDynamic.zan_number++
+          this.$set(this.dynamics, detailIndex, newDynamic)
+          // 找到store中的最新和推荐数据进行修改
+          const recommendDynamics = JSON.parse(JSON.stringify(this.$store.state.recommendDynamics)).data
+          const latestDynamics = JSON.parse(JSON.stringify(this.$store.state.latestDynamics)).data
+          const recommendIndex = recommendDynamics.findIndex(item => item._id === id)
+          const latestIndex = latestDynamics.findIndex(item => item._id === id)
+          if (recommendIndex > -1) {
+            recommendDynamics[recommendIndex].zan_number++
+          }
+          if (latestIndex > -1) {
+            latestDynamics[latestIndex].zan_number++
+          }
+          this.$store.commit('modifyRecommendDynamics', { data: recommendDynamics })
+          this.$store.commit('modifyLatestDynamics', { data: latestDynamics })
+        }
+      }
     }
   },
 
@@ -196,5 +306,14 @@ export default {
   bottom: 0;
   background-color: #f0f5fb;
   overflow-y: auto;
+}
+
+.user-copy {
+  padding: 10px 16px;
+  font-size: 15px;
+  text-align: center;
+  line-height: 25px;
+  border-bottom: 1px solid #eaeaea;
+  box-sizing: border-box;
 }
 </style>

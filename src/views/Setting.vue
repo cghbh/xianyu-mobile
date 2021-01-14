@@ -3,7 +3,12 @@
     <back-top title="设置"></back-top>
     <div class="xianyu-setting-container">
       <van-cell-group>
-        <van-cell class="xianyu-settings-cell" is-link title="账号注销" />
+        <van-cell 
+          class="xianyu-settings-cell" 
+          is-link 
+          title="账号注销"
+          @click="destroyAccount"
+        />
       </van-cell-group>
 
       <van-cell-group class="xianyu-settings-logout">
@@ -36,6 +41,11 @@ export default {
           this.$router.push('/mine')
         })
         .catch(() => {})
+    },
+
+    // 账号注销
+    destroyAccount () {
+      this.$toast.success('后续实现！')
     }
   }
 }

@@ -14,7 +14,7 @@
         <h3>{{ itemValue.createdAt | timeformat }}</h3>
       </div>
       </div>
-      <i class="iconfont icon-gengduo" @click="userOperate"></i>
+      <i class="iconfont icon-gengduo" v-if="showOperate" @click="userOperate"></i>
     </div>
 
     <div class="dynamic-item-area" @click="goDynamicDetail" ref="homepage-item-area">
@@ -78,6 +78,10 @@ export default {
     isPrivate: {
       type: Boolean,
       default: false
+    },
+    showOperate: {
+      type: Boolean,
+      default: true
     }
   },
 

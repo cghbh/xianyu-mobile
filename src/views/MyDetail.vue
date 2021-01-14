@@ -318,11 +318,9 @@ export default {
           console.log('确定')
         })
         .catch(async () => {
-          console.log(this.selectDynamic._id, 'this.selectDynamic._id')
           const result = await deleteDynamic(this.selectDynamic._id)
           if (result.errno === 0) {
             const detailIndex = this.dynamics.findIndex(item => item._id === this.selectDynamic._id)
-            console.log(detailIndex, 'detailIndex')
             if (detailIndex > -1) {
               this.dynamics.splice(detailIndex, 1)
             }
@@ -346,7 +344,6 @@ export default {
             this.$store.commit('modifyRecommendDynamics', { data: newRecommendData, total: recommendTotal })
             this.$toast('删除成功')
           }
-          console.log('取消')
         })
     },
 
@@ -416,7 +413,6 @@ export default {
           const detailIndex = this.dynamics.findIndex(item => item._id === id)
           const newDynamic = JSON.parse(JSON.stringify(this.dynamics[`${detailIndex}`]))
           newDynamic.zan_number++
-          console.log(newDynamic, 'newDynamic')
           this.$set(this.dynamics, detailIndex, newDynamic)
           // 找到store中的最新和推荐数据进行修改
           const recommendDynamics = JSON.parse(JSON.stringify(this.$store.state.recommendDynamics)).data
