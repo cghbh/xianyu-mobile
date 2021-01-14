@@ -370,6 +370,19 @@ export default {
           const newDynamic = JSON.parse(JSON.stringify(this.dynamics[`${index}`]))
           newDynamic.zan_number--
           this.$set(this.dynamics, index, newDynamic)
+          // 找到store中的最新和推荐数据进行修改
+          const recommendDynamics = JSON.parse(JSON.stringify(this.$store.state.recommendDynamics)).data
+          const latestDynamics = JSON.parse(JSON.stringify(this.$store.state.latestDynamics)).data
+          const recommendIndex = recommendDynamics.findIndex(item => item._id === id)
+          const latestIndex = latestDynamics.findIndex(item => item._id === id)
+          if (recommendIndex > -1) {
+            recommendDynamics[recommendIndex].zan_number--
+          }
+          if (latestIndex > -1) {
+            latestDynamics[latestIndex].zan_number--
+          }
+          this.$store.commit('modifyRecommendDynamics', { data: recommendDynamics })
+          this.$store.commit('modifyLatestDynamics', { data: latestDynamics })
         }
       }
     },
@@ -410,8 +423,12 @@ export default {
           const latestDynamics = JSON.parse(JSON.stringify(this.$store.state.latestDynamics)).data
           const recommendIndex = recommendDynamics.findIndex(item => item._id === id)
           const latestIndex = latestDynamics.findIndex(item => item._id === id)
-          recommendDynamics[recommendIndex].zan_number++
-          latestDynamics[latestIndex].zan_number++
+          if (recommendIndex > -1) {
+            recommendDynamics[recommendIndex].zan_number++
+          }
+          if (latestIndex > -1) {
+            latestDynamics[latestIndex].zan_number++
+          }
           this.$store.commit('modifyRecommendDynamics', { data: recommendDynamics })
           this.$store.commit('modifyLatestDynamics', { data: latestDynamics })
         }
