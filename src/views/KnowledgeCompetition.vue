@@ -66,8 +66,11 @@
 
 <script>
 import { getSubjects } from '@/api/subject.js'
+import Meta from '@/config/vueMetaInfo.js'
 export default {
   name: 'KnowledgeCompetition',
+
+  metaInfo: Meta.Competition,
   data () {
     return {
       // 当前是第几题

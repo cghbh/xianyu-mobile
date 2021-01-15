@@ -56,8 +56,11 @@ import RecomendDynamics from './DynamicRecommend.vue'
 import FollowDynamics from './DynamicFollow.vue'
 import LatestDynamics from './DynamicLatest.vue'
 import { deleteDynamic } from '../api/dynamic.js'
+import Meta from '@/config/vueMetaInfo.js'
 export default {
   name: 'Dynamic',
+
+  metaInfo: Meta.Dynamic,
 
   data () {
     return {

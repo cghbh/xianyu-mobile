@@ -22,6 +22,7 @@
     "tb-skeleton": "^0.3.6",
     "vant": "^2.10.9",
     "vue": "^2.6.11",
+    "vue-meta-info": "^0.1.7",
     "vue-router": "^3.2.0",
     "vue-to-copy": "^0.1.4",
     "vuex": "^3.4.0"

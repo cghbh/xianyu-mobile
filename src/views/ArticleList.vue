@@ -35,8 +35,10 @@ import ArticleItem from '@/components/ArticleItem/index.vue'
 import ArticleSkeleton from '../components/Skeleton/ArticleSkeleton'
 import { getArticleList } from '@/api/article.js'
 import { debounce } from 'lodash'
+import Meta from '@/config/vueMetaInfo.js'
 export default {
   name: 'ArticleList',
+  metaInfo: Meta.ArticleList,
   data () {
     return {
       // 当前请求的分页页码

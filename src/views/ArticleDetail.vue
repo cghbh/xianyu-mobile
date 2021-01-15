@@ -37,8 +37,10 @@
 import ArticleSkeleton from '@/components/Skeleton/ArticleDetailSkeleton.vue'
 import { getArticleById } from '@/api/article.js'
 import { loadUserInfo, userCollectArticle, userCancelCollectArticleHandle, userCollectArticleHandle, useZanArticle, userCancelZanArticleHandle, userZanArticleHandle } from '@/api/user.js'
+import Meta from '@/config/vueMetaInfo.js'
 export default {
   name: 'GoodArticle',
+  metaInfo: Meta.ArticleDetail,
   data () {
     return {
       article: {},

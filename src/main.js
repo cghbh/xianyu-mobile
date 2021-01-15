@@ -12,6 +12,8 @@ import Copy from 'vue-to-copy'
 import BackTop from './components/BackTop/index.js'
 import DivideArea from './components/PublicComponents/DivideArea.js'
 
+// SEO的插件
+import MetaInfo from 'vue-meta-info'
 // 骨架屏组件
 import skeleton from 'tb-skeleton'
 
@@ -30,6 +32,7 @@ Vue.use(BackTop)
 Vue.use(DivideArea)
 Vue.use(Copy)
 Vue.use(skeleton)
+Vue.use(MetaInfo)
 
 Vue.config.productionTip = false
 

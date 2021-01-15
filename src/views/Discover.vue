@@ -76,8 +76,10 @@ import HomeSkeleton from '@/components/Skeleton/HomeSkeleton.vue'
 import { getHotArticle } from '@/api/article.js'
 import { recommendPoem } from '@/api/poem.js'
 import { debounce } from 'lodash'
+import Meta from '@/config/vueMetaInfo.js'
 export default {
   name: 'Discover',
+  metaInfo: Meta.Discover,
   data () {
     return {
       activeIndex: 1,
