@@ -95,6 +95,7 @@
 
     <!-- 弹出层操作 -->
     <van-popup
+      class="new-popup"
       v-model="showPopup"
     >
       <div class="my-detail-operate">
@@ -606,7 +607,7 @@ export default {
 }
 
 .user-detail {
-  /deep/ .van-popup {
+  /deep/ .new-popup {
     height: 112px;
     width: 280px;
     margin-top: 214px;

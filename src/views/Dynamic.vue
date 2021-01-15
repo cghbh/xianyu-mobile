@@ -17,23 +17,9 @@
 
     <van-popup 
       v-model="showPopup" 
+      class="dy-popup"
       :class="{ 'unlogin': !isLogin, 'login-self': isSelf, 'follow': isPopupFollow }">
       <div class="dynamic-operate">
-        <div 
-          class="dynamic-operate-item no-interesting" 
-          v-if="isLogin && !isSelf && !isPopupFollow"
-          @click="noInterestingHandle">
-          <div class="line"></div>
-          不感兴趣
-        </div>
-        <div 
-          class="dynamic-operate-item user-shield" 
-          v-if="isLogin && !isSelf && !isPopupFollow"
-          @click="shieldHandle">
-          <div class="line"></div>
-          屏蔽：{{ operateDynamic.nickname }}
-        </div>
-
         <div class="dynamic-operate-item user-report" @click="reportHandle" v-if="isLogin && !isSelf">
           <div class="line"></div>
           举报
@@ -270,15 +256,23 @@ export default {
 
 .xianyu-home-page {
   /deep/ .van-popup {
-    height: 224px;
+    height: 112px;
     width: 280px;
-    margin-top: 128px;
+    margin-top: 180px;
     border-radius: 12px;
+  }
+
+  /deep/ .dy-popup {
+    z-index: 100006!important;
+  }
+
+  /deep/ .van-overlay {
+    z-index: 100005!important;
   }
 
   /deep/ .van-popup.unlogin {
     height: 56px;
-    margin-top: 200px;
+    margin-top: 180px;
   }
 
   // 已登录的判断是否是自己
@@ -316,8 +310,6 @@ export default {
     color: #409fea;
   }
 
-  .no-interesting .line,
-  .user-shield .line,
   .user-report .line,
   .copy-operate .line {
     position: absolute;

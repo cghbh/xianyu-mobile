@@ -4,7 +4,7 @@
       <router-view/>
     </keep-alive>
     
-    <van-tabbar route v-model="active" active-color="#409fea" inactive-color="#000">
+    <van-tabbar route v-model="active" class="active-tabbar" active-color="#409fea" inactive-color="#000">
       <van-tabbar-item v-for="item in bottomIcon" :key=item.to :to="item.to" replace>
         <span>{{ item.title }}</span>
         <template #icon="props">
