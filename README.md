@@ -4,7 +4,8 @@
 
 个人全栈项目，后端接口使用Node.js+Koa2+MongoDB+Redis，使用了阿里云的短信服务，阿里云OSS。
 
-[后端项目地址]: https://github.com/cghbh/xianyu-api	"后端项目地址"
+后端项目地址： https://github.com/cghbh/xianyu-api
+
 
 
 
@@ -24,5 +25,5 @@ npm run serve
 
 ## 项目已发布
 
-[浏览地址]: www.cghbh.com	"项目地址"
+线上地址：www.cghbh.com
 
