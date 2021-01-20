@@ -1,5 +1,5 @@
 <template>
-  <div class="xianyu-dictionary">
+  <div class="xianyu-dictionary" :style="{'background': showSkeleton ? '#fff' : 'rgba(240, 239, 226, .9'}">
     <back-top title="成语词典"></back-top>
     <div v-if="showSkeleton" class="xianyu-word-detail-skeleton">
       <detail-skeleton></detail-skeleton>

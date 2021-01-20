@@ -4,7 +4,7 @@
     <div v-if="showSkeleton" class="poem-detail-skeleton">
       <poem-skeleton></poem-skeleton>
     </div>
-    <div v-else class="poem-total-container">
+    <div v-else class="poem-total-container" :style="{'background': showSkeleton ? '#fff' : 'rgba(240, 239, 226, .9'}">
       <div class="ancient-poetry-container" style="min-height: 300px;font-size: 14px; text-align: center;line-height: 32px;padding-top: 15px; color: #555;">
         <h1 style="font-size: 18px;font-weight: bold;">{{ poemObj.poem_title }}</h1>
         <p style="font-size: 15px; color: #666; margin: 8px 0;">{{ poemObj.poem_author }}</p>

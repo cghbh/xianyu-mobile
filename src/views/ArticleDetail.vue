@@ -1,5 +1,5 @@
 <template>
-  <div class="good-article">
+  <div class="good-article" :style="{'background': showSkeleton ? '#fff' : 'rgba(240, 239, 226, .9'}">
     <back-top title="好文"></back-top>
 
     <!-- 骨架屏 -->
@@ -281,7 +281,6 @@ export default {
 }
 
 .good-article {
-  background-color: #fff;
   padding-bottom: 30px;
 
   h1 {
@@ -295,7 +294,7 @@ export default {
   h3 {
     margin-bottom: 15px;
     font-size: 14px;
-    color: #666;
+    color: #888;
   }
 
   &-content {
