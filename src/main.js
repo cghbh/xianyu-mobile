@@ -18,8 +18,8 @@ import MetaInfo from 'vue-meta-info'
 import skeleton from 'tb-skeleton'
 
 import './assets/style/reset.css'
-import './vant/index.js'
-import 'vant/lib/index.css'
+// import './vant/index.js'
+// import 'vant/lib/index.css'
 import 'amfe-flexible/index.js'
 import './assets/style/iconfont.css'
 // 骨架屏组件的样式

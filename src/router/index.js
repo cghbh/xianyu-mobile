@@ -48,97 +48,97 @@ const routes = [
   },
   {
     path: '/search',
-    component: () => import('../views/Search.vue'),
+    component: () => import(/* webpackChunkName: "group-homepage" */'../views/Search.vue'),
     name: 'Search',
     meta: { requiresAuth: false }
   },
   {
     path: '/mycollection',
-    component: () => import('../views/MyCollection.vue'),
+    component: () => import(/* webpackChunkName: "group-user" */'../views/MyCollection.vue'),
     name: 'MyCollection',
     meta: { requiresAuth: true }
   },
   {
     path: '/fellowing',
-    component: () => import('../views/Fellowing.vue'),
+    component: () => import(/* webpackChunkName: "group-user" */'../views/Fellowing.vue'),
     name: 'Fellowing',
     meta: { requiresAuth: true }
   },
   {
     path: '/knowledge-competition',
-    component: () => import('../views/KnowledgeCompetition.vue'),
+    component: () => import(/* webpackChunkName: "group-knowledge" */'../views/KnowledgeCompetition.vue'),
     name: 'KnowledgeCompetition',
     meta: { requiresAuth: true }
   },
   {
     path: '/my-publish',
-    component: () => import('../views/MyPublish.vue'),
+    component: () => import(/* webpackChunkName: "group-user" */'../views/MyPublish.vue'),
     name: 'MyPublish',
     meta: { requiresAuth: true }
   },
   {
     path: '/myfans',
-    component: () => import('../views/MyFans.vue'),
+    component: () => import(/* webpackChunkName: "group-user" */'../views/MyFans.vue'),
     name: 'MyFans',
     meta: { requiresAuth: true }
   },
   {
     path: '/article-detail/:artId',
-    component: () => import('../views/ArticleDetail.vue'),
+    component: () => import(/* webpackChunkName: "group-article" */'../views/ArticleDetail.vue'),
     name: 'ArticleDetail',
     meta: { requiresAuth: false }
   },
   {
     path: '/article-list',
-    component: () => import('../views/ArticleList.vue'),
+    component: () => import(/* webpackChunkName: "group-article" */'../views/ArticleList.vue'),
     name: 'ArticleList',
     meta: { requiresAuth: false }
   },
   {
     path: '/ancient-poetry/:poemId',
-    component: () => import('../views/AncientPoetry.vue'),
+    component: () => import(/* webpackChunkName: "group-article" */'../views/AncientPoetry.vue'),
     name: 'AncientPoetry',
     meta: { requiresAuth: false }
   },
   {
     path: '/ancient-poetrylist',
-    component: () => import('../views/AncientPoetryList.vue'),
+    component: () => import(/* webpackChunkName: "group-poem" */'../views/AncientPoetryList.vue'),
     name: 'AncientPoetryList',
     meta: { requiresAuth: false }
   },
   {
     path: '/dynamic-publish',
-    component: () => import('../views/DynamicPublish.vue'),
+    component: () => import(/* webpackChunkName: "group-user" */'../views/DynamicPublish.vue'),
     name: 'DynamicPublish',
     meta: { requiresAuth: true }
   },
   {
     path: '/dynamic-detail/:id',
-    component: () => import('../views/DynamicDetail.vue'),
+    component: () => import(/* webpackChunkName: "group-dynamic" */'../views/DynamicDetail.vue'),
     name: 'DynamicDetail',
     meta: { requiresAuth: false }
   },
   {
     path: '/dictionary-list',
-    component: () => import('../views/DictionaryList.vue'),
+    component: () => import(/* webpackChunkName: "group-word" */'../views/DictionaryList.vue'),
     name: 'DictionaryList',
     meta: { requiresAuth: false }
   },
   {
     path: '/dictionary-detail/:dicId',
-    component: () => import('../views/DictionaryDetail.vue'),
+    component: () => import(/* webpackChunkName: "group-word" */'../views/DictionaryDetail.vue'),
     name: 'DictionaryDetail',
     meta: { requiresAuth: false }
   },
   {
     path: '/joke',
-    component: () => import('../views/MomentJoke.vue'),
+    component: () => import(/* webpackChunkName: "group-joker" */'../views/MomentJoke.vue'),
     name: 'joke',
     meta: { requiresAuth: false }
   },
   {
     path: '/forget-password',
-    component: () => import('../views/ForgetPassword.vue'),
+    component: () => import(/* webpackChunkName: "group-user" */'../views/ForgetPassword.vue'),
     name: 'ForgetPassword',
     meta: { requiresAuth: false }
   },
@@ -150,7 +150,7 @@ const routes = [
   },
   {
     path: '/my-detail/:userId',
-    component: () => import('../views/MyDetail.vue'),
+    component: () => import(/* webpackChunkName: "group-user" */'../views/MyDetail.vue'),
     name: 'MyDetail',
     meta: { requiresAuth: false }
   },
@@ -162,25 +162,25 @@ const routes = [
   },
   {
     path: '/userinfo-edit',
-    component: () => import('../views/UserInfoEdit.vue'),
+    component: () => import(/* webpackChunkName: "group-user" */'../views/UserInfoEdit.vue'),
     name: 'UserInfoEdit',
     meta: { requiresAuth: true }
   },
   {
     path: '/setting',
-    component: () => import('../views/Setting.vue'),
+    component: () => import(/* webpackChunkName: "group-user" */'../views/Setting.vue'),
     name: 'Setting',
     meta: { requiresAuth: true }
   },
   {
     path: '/mylike',
-    component: () => import('../views/MyLike.vue'),
+    component: () => import(/* webpackChunkName: "group-user" */'../views/MyLike.vue'),
     name: 'MyLike',
     meta: { requiresAuth: true }
   },
   {
     path: '*',
-    component: () => import('../views/404.vue')
+    component: () => import(/* webpackChunkName: "group-none404" */'../views/404.vue')
   }
 ]
 

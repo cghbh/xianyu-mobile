@@ -15,5 +15,23 @@ module.exports = {
   productionSourceMap: true,
   chainWebpack: config => {
     config.plugins.delete('prefetch')
+
+    // 这是生产者模式
+    config.when(process.env.NODE_ENV === 'production', config => {
+      // 在生产模式里面配置CDN优化的策略
+      config.set('externals', {
+        vue: 'Vue',
+        vuex: 'Vuex',
+        'vue-router': 'VueRouter',
+        axios: 'axios',
+        lodash: '_'
+      })
+
+      // 在生成者模式情况里面配置自定义的index.html的内容，包括在开发者模式下不引人外部的CDN文件，以及显示开发者模式下的title
+      config.plugin('html').tap(args => {
+        args[0].isProd = true
+        return args
+      })
+    })
   }
 }

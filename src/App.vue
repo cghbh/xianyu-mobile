@@ -21,15 +21,10 @@ export default {
   },
 
   mounted () {
-    console.log('App')
     // 利用根组件只会渲染一次的特性，将已登录用户的点赞过的动态的id存储到vuex和localStorage中
     if (this.userId) {
       this.getUserZanDynamics(this.userId)
     }
-  },
-
-  activated () {
-    console.log(1, 'activated')
   },
 
   computed: {
