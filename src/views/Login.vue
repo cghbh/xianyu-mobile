@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { getCaptcha, userLogin, getTelephoneCodeLogin, loginByTelCode } from '@/api/user.js'
+import { getCaptcha, getTelephoneCodeLogin } from '@/api/user.js'
 const reg = /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[3-8]{1})|(18[0-9]{1})|(19[0-9]{1})|(14[5-7]{1}))+\d{8})$/
 export default {
   name: 'Login',
@@ -204,30 +204,37 @@ export default {
       }
     },
 
-    // 验证码登录
+    // 短信登录
     async loginByTelephoneCode () {
-      const codeResult = await loginByTelCode({ telephone: this.telephone1, code: this.code })
-      if (codeResult.errno === 0) {
-        this.$store.commit('setUserLoginState', { token: codeResult.token, userId: codeResult.id })
-        this.$toast({ message: codeResult.message + '，正在飞速跳转中', duration: 400 })
-        setTimeout(() => {
-          this.$router.push(this.$route.query.redirect || '/')
-          this.telephone1 = ''
-          this.code = ''
-        }, 500)
-      } else {
-        this.$toast({ message: codeResult.message, duration: 1000 })
+      try {
+        const codeResult = await this.$store.dispatch('logonAsyncByCode', { telephone: this.telephone1, code: this.code })
+        console.log(codeResult, 'codeResult')
+        if (codeResult.errno === 0) {
+          this.$toast({ message: codeResult.message + '，正在飞速跳转中', duration: 400 })
+          setTimeout(() => {
+            this.$router.push(this.$route.query.redirect || '/')
+            this.telephone1 = ''
+            this.code = ''
+          }, 500)
+        } else {
+          this.$toast({ message: codeResult.message, duration: 1000 })
+        }
+      } catch (err) {
+        this.$toast({ message: err.message, duration: 1000 })
       }
     },
 
+    // 密码登陆
     async loginByPassword () {
       if (this.userCaptcha.toLocaleLowerCase() !== this.rightCaptcha.toLocaleLowerCase()) {
-        return this.$toast({ message: '验证码错误' })
+        // 验证码输入错误重新获取，防止暴力撞库登陆
+        this.$toast({ message: '验证码错误' })
+        this.getCaptcha()
+        return
       }
       try {
-        const result = await userLogin({ telephone: this.telephone2, password: this.password })
+        const result = await this.$store.dispatch('loginAsyncByPassword', { telephone: this.telephone2, password: this.password })
         if (result.errno === 0) {
-          this.$store.commit('setUserLoginState', { token: result.token, userId: result.id })
           this.$toast({
             message: result.message + '，正在飞速跳转中',
             duration: 400
@@ -238,14 +245,9 @@ export default {
             this.telephone2 = ''
             this.password = ''
           }, 500)
-        } else {
-          this.$toast({
-            message: result.message,
-            duration: 2000
-          })
         }
       } catch (err) {
-        this.$toast('' + err)
+        this.$toast(err.message)
       }
     },
 

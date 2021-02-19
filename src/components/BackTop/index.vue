@@ -32,9 +32,6 @@ export default {
     to: {
       type: String
     }
-  },
-  mounted () {
-    console.log(this.to)
   }
 }
 </script>

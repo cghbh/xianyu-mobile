@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { getItem, setItem } from '@/utils/storage'
+import { loginByTelCode, userLogin } from '@/api/user.js'
 
 Vue.use(Vuex)
 
@@ -95,6 +96,33 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    // 验证码登陆
+    logonAsyncByCode ({ commit }, value) {
+      return new Promise((resolve, reject) => {
+        loginByTelCode({ telephone: value.telephone, code: value.code }).then(result => {
+          if (result.errno === 0) {
+            commit('setUserLoginState', { token: result.token, userId: result.id })
+            resolve(result)
+          } else {
+            reject(result)
+          }
+        })
+      })
+    },
+
+    // 密码登陆
+    loginAsyncByPassword ({ commit }, value) {
+      return new Promise((resolve, reject) => {
+        userLogin({ telephone: value.telephone, password: value.password }).then(result => {
+          if (result.errno === 0) {
+            commit('setUserLoginState', { token: result.token, userId: result.id })
+            resolve(result)
+          } else {
+            reject(result)
+          }
+        })
+      })
+    }
   },
   modules: {
   }
