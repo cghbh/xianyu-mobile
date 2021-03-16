@@ -12,6 +12,12 @@ import { userLikeDynamics } from './api/user.js'
 export default {
   name: 'App',
 
+  data () {
+    return {
+      a: {}
+    }
+  },
+
   watch: {
     userId (newVal) {
       if (newVal) {

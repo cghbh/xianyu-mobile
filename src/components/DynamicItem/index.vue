@@ -42,8 +42,7 @@
         <span class="dynamic-exble-style">{{ itemValue.comment_number > 999 ? '999+': itemValue.comment_number }}</span>
       </div>
       <div class="zan-icon">
-        <img src="//at.alicdn.com/t/font_2139142_y6mqd5ktj7.css" alt="">
-        <i @click="$emit('unlike')" v-show="isLike" class="iconfont icon-dianzan"></i>
+        <i @click="$emit('unlike')" v-if="isLike" class="iconfont icon-dianzan"></i>
         <i v-show="!isLike" @click="$emit('like')" class="iconfont icon-dianzan1"></i>
         <span class="dynamic-exble-style">{{ itemValue.zan_number > 999 ? '999+': itemValue.zan_number }}</span>
       </div>

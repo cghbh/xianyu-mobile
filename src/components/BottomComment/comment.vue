@@ -12,7 +12,7 @@
     </van-sticky>
     <div class="comment-list-container" v-if="comments.length > 0">
       <div class="comment-item" v-for="(item1, index1) in comments" :key="index1">
-        <img :src="item1.commentator && item1.commentator.avatar_url">
+        <img @click="$router.push('/my-detail/' + item1.commentator._id)" :src="item1.commentator && item1.commentator.avatar_url">
         <div class="comment-item-content">
           <div class="first-user">
             <div class="first-user-left">

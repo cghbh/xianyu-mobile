@@ -1,6 +1,6 @@
 <template>
   <div class="comment-sub-item" :style="{ 'margin-bottom': marginbottom + 'px' }">
-    <img :src="comment.commentator && comment.commentator.avatar_url">
+    <img @click="$router.push('/my-detail/' + comment.commentator._id)" :src="comment.commentator && comment.commentator.avatar_url">
     <div class="item-container">
       <div class="item-container-user">
         <div class="item-container-user-left">

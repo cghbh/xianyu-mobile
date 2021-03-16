@@ -200,12 +200,13 @@ export default {
 
     &-container {
       position: absolute;
-      bottom: -60px;
-      height: 164px;
+      bottom: -56px;
+      height: 144px;
       left: 18px;
       right: 18px;
       border-radius: 10px;
       background-color: #fff;
+      padding-bottom: 12px;
     }
   }
 }
@@ -214,7 +215,7 @@ export default {
   .xianyu-header-top {
     display: flex;
     justify-content: flex-start;
-    padding: 15px;
+    padding: 10px 15px 15px 15px;
     height: 100px;
     box-sizing: border-box;
     align-items: center;
@@ -257,7 +258,7 @@ export default {
 
   .xianyu-header-bottom {
     display: flex;
-    padding: 10px 30px 20px 30px;
+    padding: 0px 30px 12px 30px;
     justify-content: space-between;
     height: 60px;
     box-sizing: border-box;
@@ -290,7 +291,8 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 25px 14px;
+    padding: 0px 14px;
+    height: 64px;
 
     &-left,
     &-right {
@@ -322,7 +324,7 @@ export default {
 .xianyu-mine-settings.settings-one {
   margin: 0 18px;
   background-color: #fff;
-  margin-top: 80px;
+  margin-top: 72px;
   border-radius: 10px;
   box-sizing: border-box;
 }
@@ -331,7 +333,7 @@ export default {
 .xianyu-mine-settings.settings-three {
   margin: 0 18px;
   background-color: #fff;
-  margin-top: 20px;
+  margin-top: 15px;
   border-radius: 10px;
   box-sizing: border-box;
 }

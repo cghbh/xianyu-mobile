@@ -379,6 +379,21 @@ export default {
     CommentList,
     DivideArea,
     DynamicSkeleton
+  },
+
+  beforeRouteUpdate (to, from, next) {
+    console.log(to, from, '-----')
+    next()
+  },
+
+  // 组件内的独享守卫钩子
+  beforeRouteLeave (to, from, next) {
+    if (to.name === 'MyDetail') {
+      this.$store.commit('addCachedPages', 'DynamicDetail')
+    } else {
+      this.$store.commit('removeCachedPages', 'DynamicDetail')
+    }
+    next()
   }
 }
 </script>

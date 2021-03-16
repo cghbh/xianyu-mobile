@@ -1,3 +1,4 @@
+const webpack = require('webpack')
 module.exports = {
   css: {
     loaderOptions: {
@@ -33,5 +34,13 @@ module.exports = {
         return args
       })
     })
+  },
+  configureWebpack: {
+    // 隐藏线上source-map文件
+    devtool: 'none',
+    // 在这里进行webpack的plugin模块配置
+    plugins: [
+      new webpack.BannerPlugin('2020-12-31日上线，闲语H5是陈刚的第一个全栈项目，自己完成从前端设计，\n到后端接口的设计，\n以及Linux系统上Redis和MongoDB数据库安装使用，Nginx代理部署，HTTPS以及域名申请，\n见证了过去半年所有空闲时间的努力！新的一年，奥利给！我轻轻的来了，又轻轻地走了......')
+    ]
   }
 }
