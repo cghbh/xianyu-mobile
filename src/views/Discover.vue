@@ -12,7 +12,7 @@
           disabled
         />
         <div style="padding: 0 15px; margin-top: 15px; border-radius: 10px;overflow: hidden;height: 180px">
-          <img style="width:100%; height: 100%; border-radius: 6px; object-fit: cover;" src="../assets/images/shanghai.jpeg" alt="">
+          <img style="width:100%; height: 100%; border-radius: 6px; object-fit: cover;" src="../assets/images/poem_demo.jpeg" alt="">
         </div>
         <!-- <div class="xianyu-discover-touser" v-if="false">
           <h1>致用户大人</h1>
