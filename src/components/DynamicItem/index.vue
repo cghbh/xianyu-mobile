@@ -347,5 +347,6 @@ export default {
 
 .img-preview-container {
   display: flex;
+  flex-wrap: wrap;
 }
 </style>

@@ -52,7 +52,7 @@ export default {
       // 避免出现没有数据的空状态闪烁
       showDynamicsTag: true,
       currentPage: 1,
-      perPage: 20,
+      perPage: 30,
       // 上拉加载的状态
       loadMore: false,
       // 上拉加载完成状态

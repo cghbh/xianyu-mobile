@@ -51,7 +51,7 @@ export default {
       // 总的页数
       // total: 0,
       // 每页展示的数据
-      perPage: 20,
+      perPage: 30,
       // 避免初始情况下数据加载出现没有数据的空白展示页
       showTag: false,
       // 上拉加载更多
