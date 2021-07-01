@@ -28,7 +28,6 @@ jobs:
           rm -rf /deploy/*
           cd /deploy
           git clone https://github.com/cghbh/xianyu-mobile.git
-          cd /deploy/xianyu-mobile
           rm -rf /web/xianyu-mobile-pages/public/*
           mv /deploy/xianyu-mobile/dist/ /web/xianyu-mobile-pages/public/
           cd /web/xianyu-mobile-pages
