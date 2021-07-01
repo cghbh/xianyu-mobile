@@ -8,5 +8,7 @@ npm run build
 rm -rf /web/xianyu-mobile-pages/public/
 # 将打包好的文件拷贝过去
 mv /tmp/xianyu-mobile/dist/* /web/xianyu-mobile-pages/public
+cd /web/xianyu-mobile-pages
+pm2 restart index.js
 # 删除clone的代码
 rm -rf /tmp/xianyu-mobile
