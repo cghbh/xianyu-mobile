@@ -29,6 +29,6 @@ jobs:
           cd /deploy
           git clone https://github.com/cghbh/xianyu-mobile.git
           rm -rf /web/xianyu-mobile-pages/public/*
-          mv /deploy/xianyu-mobile/dist/ /web/xianyu-mobile-pages/public/
+          mv /deploy/xianyu-mobile/dist/* /web/xianyu-mobile-pages/public/
           cd /web/xianyu-mobile-pages
           pm2 restart index.js
