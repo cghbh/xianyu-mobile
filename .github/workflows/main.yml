@@ -23,7 +23,6 @@ jobs:
         # 移动到远程服务器中部署的文件夹
         # 下载上传到GitHub到release包，并且解压
         # 安装生产依赖项目
-        # 重新启动pm2服务
         debug: true
         script: |
           rm -rf /tmp/xianyu-mobile
