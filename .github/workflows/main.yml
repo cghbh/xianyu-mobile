@@ -18,7 +18,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.ALIYUN }}
-        password: ${{ secrets.PASSWORD }}
+        # password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         # 移动到远程服务器中部署的文件夹
         # 下载上传到GitHub到release包，并且解压
