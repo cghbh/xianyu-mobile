@@ -25,11 +25,11 @@ jobs:
         # 安装生产依赖项目
         debug: true
         script: |
-          rm -rf /tmp/xianyu-mobile
-          cd /tmp
+          rm -rf /deploy/*
+          cd /deploy
           git clone https://github.com/cghbh/xianyu-mobile.git
-          cd /tmp/xianyu-mobile
+          cd /deploy/xianyu-mobile
           rm -rf /web/xianyu-mobile-pages/public/*
-          mv /tmp/xianyu-mobile/dist/ /web/xianyu-mobile-pages/public/
+          mv /deploy/xianyu-mobile/dist/ /web/xianyu-mobile-pages/public/
           cd /web/xianyu-mobile-pages
           pm2 restart index.js
