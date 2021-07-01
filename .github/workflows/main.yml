@@ -1,0 +1,33 @@
+name: Publish And Deploy Demo
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  # 构建和部署
+  build-and-deploy:
+    # 运行的环境
+    runs-on: ubuntu-18.04
+    steps:
+
+    # 部署到服务器
+    - name: Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.ALIYUN }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        # 移动到远程服务器中部署的文件夹
+        # 下载上传到GitHub到release包，并且解压
+        # 安装生产依赖项目
+        # 重新启动pm2服务
+        debug: true
+        script: |
+          cd /tmp
+          git clone https://github.com/cghbh/xianyu-mobile.git
+          cd /tmp/xianyu-mobile
+          chmod +x ./deploy.sh
+          ./deploy.sh
