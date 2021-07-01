@@ -8,7 +8,7 @@ jobs:
   # 构建和部署
   build-and-deploy:
     # 运行的环境
-    runs-on: centos-latest
+    runs-on: ubuntu-18.04
     steps:
 
     # 下载源码
