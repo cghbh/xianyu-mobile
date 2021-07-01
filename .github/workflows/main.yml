@@ -26,8 +26,8 @@ jobs:
         # 重新启动pm2服务
         debug: true
         script: |
-          cd /tmp
           rm -rf /tmp/xianyu-mobile
+          cd /tmp
           git clone https://github.com/cghbh/xianyu-mobile.git
           cd /tmp/xianyu-mobile
           chmod +x ./deploy.sh
