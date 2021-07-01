@@ -16,7 +16,7 @@ module.exports = {
   productionSourceMap: true,
   chainWebpack: config => {
     config.plugins.delete('prefetch')
-
+    // 123
     // 这是生产者模式
     config.when(process.env.NODE_ENV === 'production', config => {
       // 在生产模式里面配置CDN优化的策略
