@@ -1,0 +1,7 @@
+/*!
+ * 2020-12-31日上线，闲语H5是陈刚的第一个全栈项目，自己完成从前端设计，
+ * 到后端接口的设计，
+ * 以及Linux系统上Redis和MongoDB数据库安装使用，Nginx代理部署，HTTPS以及域名申请，
+ * 见证了过去半年所有空闲时间的努力！新的一年，奥利给！我轻轻的来了，又轻轻地走了......
+ */
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["group-none404"],{"04c9":function(n,t,u){"use strict";u("9da0")},"0f20":function(n,t,u){"use strict";u.d(t,"a",(function(){return e})),u.d(t,"b",(function(){return f}));var e=function(){var n=this,t=n.$createElement,u=n._self._c||t;return u("div",{staticClass:"not-found"},[n._m(0),u("p",{staticClass:"not-found-tips"},[n._v("外星人把这个页面吃掉了o((⊙﹏⊙))o.")]),u("button",{staticClass:"not-found-back",on:{click:function(t){return n.$router.push("/")}}},[n._v("返回首页")])])},f=[function(){var n=this,t=n.$createElement,u=n._self._c||t;return u("div",{staticClass:"not-found-number-tips"},[u("span",[n._v("404")]),u("p",[n._v("NOT FOUND")])])}]},"27f4":function(n,t){},"8cdb":function(n,t,u){"use strict";u.r(t);var e=u("0f20"),f=u("f7e1");for(var o in f)["default"].indexOf(o)<0&&function(n){u.d(t,n,(function(){return f[n]}))}(o);u("04c9");var r=u("2877"),c=Object(r["a"])(f["default"],e["a"],e["b"],!1,null,"61dafbb2",null);t["default"]=c.exports},"9da0":function(n,t,u){},f7e1:function(n,t,u){"use strict";u.r(t);var e=u("27f4"),f=u.n(e);for(var o in e)["default"].indexOf(o)<0&&function(n){u.d(t,n,(function(){return e[n]}))}(o);t["default"]=f.a}}]);

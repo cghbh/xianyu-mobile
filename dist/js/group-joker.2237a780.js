@@ -1,0 +1,7 @@
+/*!
+ * 2020-12-31日上线，闲语H5是陈刚的第一个全栈项目，自己完成从前端设计，
+ * 到后端接口的设计，
+ * 以及Linux系统上Redis和MongoDB数据库安装使用，Nginx代理部署，HTTPS以及域名申请，
+ * 见证了过去半年所有空闲时间的努力！新的一年，奥利给！我轻轻的来了，又轻轻地走了......
+ */
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["group-joker"],{6477:function(t,e,n){},c6c5:function(t,e,n){"use strict";n.r(e);var o=function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("div",{staticClass:"moment-joke"},[n("van-sticky",[n("van-nav-bar",{attrs:{title:"开心一刻","right-text":"换一个",sticky:"","left-arrow":""},on:{"click-left":function(e){return t.$router.go(-1)},"click-right":t.switchOne},scopedSlots:t._u([{key:"left",fn:function(){return[n("div",{staticClass:"back-container"},[n("i",{staticClass:"iconfont icon-left"})])]},proxy:!0}])})],1),n("div",{staticClass:"moment-joke-content"},[t._v(t._s(t.joke.content))])],1)},a=[],s=n("751a");const c=()=>s["a"].post("/jokes/random");var i=n("60bb"),r={name:"MomentJoke",data(){return{joke:{}}},mounted(){this.getJokeRandomHandle()},methods:{async getJokeRandomHandle(){const t=await c();0===t.errno&&(this.joke=t.data,this.$store.commit("addReadJokes",t.data._id))},switchOne:Object(i["debounce"])((function(){c().then(t=>{0===t.errno&&(this.joke=t.data,this.$store.commit("addReadJokes",t.data._id))})}),150)}},d=r,u=(n("c818"),n("2877")),k=Object(u["a"])(d,o,a,!1,null,"23e3e375",null);e["default"]=k.exports},c818:function(t,e,n){"use strict";n("6477")}}]);

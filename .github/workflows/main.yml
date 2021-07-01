@@ -27,11 +27,8 @@ jobs:
         script: |
           rm -rf /tmp/xianyu-mobile
           cd /tmp
-          git clone https://gitee.com/cghbh/xianyu-mobile.git
+          git clone https://github.com/cghbh/xianyu-mobile.git
           cd /tmp/xianyu-mobile
-          npm install
-          cd /tmp/xianyu-mobile
-          npm run build
           rm -rf /web/xianyu-mobile-pages/public/*
           mv /tmp/xianyu-mobile/dist/ /web/xianyu-mobile-pages/public/
           cd /web/xianyu-mobile-pages
