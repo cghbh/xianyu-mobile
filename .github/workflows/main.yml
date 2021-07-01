@@ -66,6 +66,6 @@ jobs:
         # 重新启动pm2服务
         script: |
           cd /data/www/xianyu-mobile/
-          wget https://github.com/lipengzhou/realworld-nuxtjs/releases/latest/download/release.tgz -O release.tgz
+          wget https://github.com/cghbh/xianyu-mobile/releases/latest/download/release.tgz -O release.tgz
           tar zxvf release.tgz
           npm install --production
