@@ -47,10 +47,6 @@ const errorHandle = (status, other) => {
       tip('请求的资源不存在')
       break
 
-    case 500:
-      tip('服务器错误')
-      break
-
     default:
       console.log(other)
   }
