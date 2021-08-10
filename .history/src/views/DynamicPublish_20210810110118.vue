@@ -67,7 +67,8 @@ export default {
           file.message = ''
           const filename = item.file.name
           // 解决图片只能上传一张的问题，因为map设置的键是同一个值，如果是相同图片的话
-          map.set(`${Math.random()}-${filename}`, res)
+          // map.set(`${Math.random()}-${filename}`, res)
+          map.set(filename, res)
           this.uploadImg = map
         }).catch(err => {
           file.status = 'failed'
