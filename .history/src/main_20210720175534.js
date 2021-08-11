@@ -26,7 +26,6 @@ import './assets/style/iconfont.css'
 import 'tb-skeleton/dist/skeleton.css'
 
 // 根据环境来使用vConsole，避免ESlint错误
-console.log('自动化部署测试')
 // var vc = new VConsole() // eslint-disable-line no-unused-vars
 
 Vue.use(BackTop)
