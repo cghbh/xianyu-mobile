@@ -340,22 +340,10 @@ export default {
 
   .keep-record::before {
     content: "";
-    position: absolute;
-    width: 68px;
+    width: 50px;
     height: 1px;
-    background-color: #ccc;
-    top: 50%;
-    left: -76px;
-  }
-
-    .keep-record::after {
-    content: "";
-    position: absolute;
-    width: 68px;
-    height: 1px;
-    background-color: #ccc;
-    top: 50%;
-    right: -76px;
+    background-color: red;
+    left: 0;
   }
 }
 </style>

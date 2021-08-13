@@ -332,30 +332,8 @@ export default {
   padding: 10px 0;
 
   .keep-record {
-    font-size: 14px;
-    position: relative;
-    color: #aaa;
-    display: block;
-  }
-
-  .keep-record::before {
-    content: "";
-    position: absolute;
-    width: 68px;
-    height: 1px;
-    background-color: #ccc;
-    top: 50%;
-    left: -76px;
-  }
-
-    .keep-record::after {
-    content: "";
-    position: absolute;
-    width: 68px;
-    height: 1px;
-    background-color: #ccc;
-    top: 50%;
-    right: -76px;
+      font-size: 14px;
+      color: #aaa;
   }
 }
 </style>

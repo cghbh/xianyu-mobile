@@ -343,7 +343,7 @@ export default {
     position: absolute;
     width: 68px;
     height: 1px;
-    background-color: #ccc;
+    background-color: #ddd;
     top: 50%;
     left: -76px;
   }
@@ -353,7 +353,7 @@ export default {
     position: absolute;
     width: 68px;
     height: 1px;
-    background-color: #ccc;
+    background-color: #ddd;
     top: 50%;
     right: -76px;
   }

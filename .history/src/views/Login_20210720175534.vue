@@ -224,7 +224,6 @@ export default {
       }
     },
 
-
     // 密码登陆
     async loginByPassword () {
       if (this.userCaptcha.toLocaleLowerCase() !== this.rightCaptcha.toLocaleLowerCase()) {
