@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <keep-alive :include="cachedPages">
-      <router-view/>
+      <router-view />
     </keep-alive>
   </div>
 </template>
@@ -47,7 +47,7 @@ export default {
       const result = await userLikeDynamics(id)
       if (result.errno === 0) {
         const tempArray = []
-        result.data.forEach(item => {
+        result.data.forEach((item) => {
           tempArray.push(item._id)
         })
         this.$store.commit('updateLoginUserZanDynamicsId', tempArray)
