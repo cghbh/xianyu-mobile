@@ -18,18 +18,6 @@ const tip = msg => {
   })
 }
 
-/* 跳转登录页
-  携带当前的路由,方便在登录之后返回当前的页面
-*/
-// const toLogin = () => {
-//   router.replace({
-//     path: '/login',
-//     query: {
-//       redirect: router.currentRoute.fullPath
-//     }
-//   })
-// }
-
 /* 请求错误后的统一处理
 @param { Number } status请求失败的状态码 */
 const errorHandle = (status, other) => {
